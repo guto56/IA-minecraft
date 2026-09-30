@@ -46,6 +46,7 @@ import type {
   TradeLevel,
 } from '../data/types';
 import { setIconNameResolver } from '../components/ItemIcon';
+import { VERSION } from '../config';
 
 export const items = itemsJson as Record<string, Item>;
 export const recipes = recipesJson as Recipe[];
@@ -70,7 +71,7 @@ export const curatedStructures = cStructJson as CuratedStructure[];
 export const tips = tipsJson as Tip[];
 export const novidades = novidadesJson as Novidade[];
 
-export const VERSION = meta.version;
+export { VERSION };
 export const GAME_SOURCE = `Java ${VERSION} · fonte: arquivos do jogo`;
 
 /* ------------------------------ índices ------------------------------ */

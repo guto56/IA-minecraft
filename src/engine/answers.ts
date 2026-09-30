@@ -645,7 +645,7 @@ export function novidadeAnswer(id: string | null): Answer {
 export function notUnderstood(suggestions: string[], why?: string): Answer {
   return {
     type: 'not_understood',
-    text: [why ?? 'Não entendi essa. Eu só sei de Minecraft Java 26.3 e respondo com os dados do jogo.', 'Tente perguntar assim:'],
+    text: [why ?? `Não entendi essa. Eu só sei de Minecraft Java ${VERSION} e respondo com os dados do jogo.`, 'Tente perguntar assim:'],
     suggestions: suggestions.slice(0, 3),
     source: GAME_SOURCE,
   };

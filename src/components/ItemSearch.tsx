@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { KIND_LABEL, useSearch } from '../lib/useSearch';
 import { ItemIcon } from './ItemIcon';
 import { IconSearch } from './Icons';
+import { VERSION } from '../config';
 
 interface Props {
   open: boolean;
@@ -68,7 +69,7 @@ export function ItemSearch({ open, onClose, onAsk }: Props) {
       </div>
       <ul id="search-results" role="listbox" className="max-h-[50vh] overflow-y-auto py-1">
         {q.trim().length < 2 ? <li className="px-4 py-6 text-center text-[14px] text-muted">Digite o nome em português ou inglês.</li> : null}
-        {q.trim().length >= 2 && !results.length ? <li className="px-4 py-6 text-center text-[14px] text-muted">Nada com esse nome nos dados da 26.3.</li> : null}
+        {q.trim().length >= 2 && !results.length ? <li className="px-4 py-6 text-center text-[14px] text-muted">Nada com esse nome nos dados da {VERSION}.</li> : null}
         {results.map((e, i) => (
           <li
             key={`${e.kind}:${e.id}`}

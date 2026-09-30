@@ -4,6 +4,7 @@ import { useChat } from '../store/chat';
 import { ItemIcon } from './ItemIcon';
 import { warmEngine } from '../lib/warm';
 import { IconSend, IconStop } from './Icons';
+import { VERSION } from '../config';
 
 export interface ComposerHandle {
   focus: () => void;
@@ -84,9 +85,9 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ on
           ))}
         </ul>
       ) : null}
-      <div className={`flex items-end gap-2 rounded-2xl border border-line bg-surface-2 p-2 pl-4 transition-colors duration-150 focus-within:border-muted ${big ? 'min-h-[64px]' : ''}`}>
+      <div className={`flex items-end gap-2 rounded-2xl border border-line bg-surface-2 p-2 pl-4 transition-colors duration-150 focus-within:border-emerald/60 ${big ? 'min-h-[64px]' : ''}`}>
         <label htmlFor="composer" className="sr-only">
-          Pergunte sobre Minecraft Java 26.3
+          Pergunte sobre Minecraft Java {VERSION}
         </label>
         <textarea
           id="composer"
@@ -126,7 +127,7 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ on
               submit();
             }
           }}
-          className="max-h-[200px] flex-1 resize-none self-center bg-transparent py-1.5 text-[15px] leading-6 text-fg outline-none placeholder:text-muted"
+          className="max-h-[200px] flex-1 resize-none self-center bg-transparent py-1.5 text-[15px] leading-6 text-fg outline-none placeholder:text-muted focus-visible:outline-none"
         />
         {animatingId ? (
           <button type="button" onClick={() => finish(animatingId)} aria-label="Parar" title="Parar" className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-fg text-bg transition-transform duration-150 hover:scale-105">

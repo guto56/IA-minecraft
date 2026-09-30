@@ -3,6 +3,10 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import config from './craftbot.config.json';
+
+// Versão exposta ao index.html (%VITE_MC_VERSION%).
+process.env.VITE_MC_VERSION = config.minecraftVersion;
 
 export default defineConfig({
   plugins: [
@@ -14,7 +18,7 @@ export default defineConfig({
       manifest: {
         name: 'CraftBot',
         short_name: 'CraftBot',
-        description: 'Receitas, farms, drops e dicas do Minecraft Java 26.3, direto dos arquivos do jogo.',
+        description: `Receitas, farms, drops e dicas do Minecraft Java ${config.minecraftVersion}, direto dos arquivos do jogo.`,
         lang: 'pt-BR',
         theme_color: '#141517',
         background_color: '#141517',

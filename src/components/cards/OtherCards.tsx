@@ -205,10 +205,10 @@ export function LocationCard({ a }: { a: Extract<Answer, { type: 'location' }> }
   return (
     <CardShell title={a.title} icon={a.icon} subtitle={ore ? (ore.dimension === 'nether' ? 'Nether' : 'Overworld') : undefined}>
       {ore ? (
-        <div className="flex items-center gap-6">
-          <div>
+        <div className="flex items-center gap-4 sm:gap-6">
+          <div className="min-w-0">
             <p className="text-[13px] text-muted">Melhor altura</p>
-            <p className="tabular font-mono text-[56px] leading-none font-medium tracking-[-0.03em] text-emerald">
+            <p className="tabular font-mono text-[44px] leading-none font-medium tracking-[-0.03em] whitespace-nowrap text-emerald sm:text-[56px]">
               <span className="text-[28px] text-muted">Y</span> {fmtY(ore.yIdeal)}
             </p>
             {ore.yExtra.length ? <p className="mt-2 text-[13px] text-muted">Também: {ore.yExtra.map((y) => `Y ${fmtY(y)}`).join(', ')}</p> : null}

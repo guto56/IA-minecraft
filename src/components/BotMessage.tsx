@@ -6,6 +6,7 @@ import { ItemIcon } from './ItemIcon';
 import { RichText, wordCount } from './RichText';
 import { AnswerCard, thinkingBudget } from './AnswerView';
 import { IconCheck, IconChevron, IconShare } from './Icons';
+import { VERSION } from '../config';
 
 type Phase = 'understanding' | 'identified' | 'searching' | 'building' | 'streaming' | 'done';
 const ORDER: Phase[] = ['understanding', 'identified', 'searching', 'building', 'streaming', 'done'];
@@ -13,7 +14,7 @@ const ORDER: Phase[] = ['understanding', 'identified', 'searching', 'building', 
 const STEP_LABEL: Record<Exclude<Phase, 'done' | 'streaming'>, string> = {
   understanding: 'Entendendo a pergunta…',
   identified: 'Identificado',
-  searching: 'Buscando nos dados da 26.3…',
+  searching: `Buscando nos dados da ${VERSION}…`,
   building: 'Montando a resposta…',
 };
 
@@ -160,7 +161,7 @@ function sourceLine(source: string) {
   const before = source.slice(0, m.index).replace(/\s*\+\s*$/, '');
   return (
     <>
-      {before ? `${before} + ` : 'Java 26.3 · fonte: '}
+      {before ? `${before} + ` : `Java ${VERSION} · fonte: `}
       <a href={url} target="_blank" rel="noreferrer" className="text-muted underline decoration-line hover:text-fg">
         {host}
       </a>

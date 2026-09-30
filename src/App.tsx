@@ -11,6 +11,7 @@ import { useIsMobile } from './hooks/useMedia';
 const Messages = lazy(() => import('./components/Messages'));
 import { useActiveConversation, useChat } from './store/chat';
 import { warmEngine } from './lib/warm';
+import { VERSION } from './config';
 
 const EXAMPLES: { q: string; icon: string }[] = [
   { q: 'Como faz um pistão?', icon: 'piston' },
@@ -18,7 +19,7 @@ const EXAMPLES: { q: string; icon: string }[] = [
   { q: 'Onde acho diamante?', icon: 'diamond' },
   { q: 'O que o creeper dropa?', icon: 'gunpowder' },
   { q: 'Poção de visão noturna', icon: 'golden_carrot' },
-  { q: 'O que tem de novo na 26.3?', icon: 'poplar_sapling' },
+  { q: `O que tem de novo na ${VERSION}?`, icon: 'poplar_sapling' },
 ];
 
 export default function App() {
@@ -126,14 +127,14 @@ export default function App() {
                   ))}
                 </ul>
                 <p className="mt-8 text-center text-[12.5px] text-muted">
-                  Sem IA: respostas montadas com os arquivos do Minecraft Java 26.3. Atalhos: <kbd className="font-mono">/</kbd> escrever · <kbd className="font-mono">Ctrl K</kbd> buscar item
+                  Sem IA: respostas montadas com os arquivos do Minecraft Java {VERSION}. Atalhos: <kbd className="font-mono">/</kbd> escrever · <kbd className="font-mono">Ctrl K</kbd> buscar item
                 </p>
               </div>
             </div>
           ) : (
             <>
               <div ref={scroller} className="min-h-0 flex-1 overflow-y-auto">
-                <Suspense fallback={<div className="mx-auto max-w-[760px] px-4 pt-6 text-[14px] text-muted">Carregando os dados da 26.3…</div>}>
+                <Suspense fallback={<div className="mx-auto max-w-[760px] px-4 pt-6 text-[14px] text-muted">Carregando os dados da {VERSION}…</div>}>
                   <Messages messages={conv!.messages} />
                 </Suspense>
               </div>
