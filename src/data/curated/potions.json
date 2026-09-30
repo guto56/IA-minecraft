@@ -1,0 +1,280 @@
+[
+ {
+  "id": "night_vision",
+  "pocao": "night_vision",
+  "duracao": "3:00",
+  "duracao_estendida": "8:00",
+  "duracao_fortalecida": null,
+  "descricao": "Enxerga tudo claro no escuro e debaixo d'água.",
+  "apelidos": [
+   "visao noturna",
+   "night vision",
+   "ver no escuro"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ },
+ {
+  "id": "invisibility",
+  "pocao": "invisibility",
+  "duracao": "3:00",
+  "duracao_estendida": "8:00",
+  "duracao_fortalecida": null,
+  "descricao": "Fica invisível; mobs só notam de perto (armadura aparece).",
+  "apelidos": [
+   "invisibilidade",
+   "invisivel"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ },
+ {
+  "id": "leaping",
+  "pocao": "leaping",
+  "duracao": "3:00",
+  "duracao_estendida": "8:00",
+  "duracao_fortalecida": "1:30",
+  "descricao": "Pula mais alto e reduz dano de queda.",
+  "apelidos": [
+   "salto",
+   "pulo",
+   "jump"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ },
+ {
+  "id": "fire_resistance",
+  "pocao": "fire_resistance",
+  "duracao": "3:00",
+  "duracao_estendida": "8:00",
+  "duracao_fortalecida": null,
+  "descricao": "Imune a fogo e lava. Essencial no Nether.",
+  "apelidos": [
+   "resistencia ao fogo",
+   "fire resistance",
+   "anti fogo",
+   "lava"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ },
+ {
+  "id": "swiftness",
+  "pocao": "swiftness",
+  "duracao": "3:00",
+  "duracao_estendida": "8:00",
+  "duracao_fortalecida": "1:30",
+  "descricao": "Anda 20% mais rápido (40% no nível II).",
+  "apelidos": [
+   "velocidade",
+   "agilidade",
+   "speed",
+   "swiftness",
+   "rapidez"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ },
+ {
+  "id": "slowness",
+  "pocao": "slowness",
+  "duracao": "1:30",
+  "duracao_estendida": "4:00",
+  "duracao_fortalecida": "0:20",
+  "descricao": "Deixa o alvo 15% mais lento (60% no nível IV).",
+  "apelidos": [
+   "lentidao",
+   "slowness"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ },
+ {
+  "id": "turtle_master",
+  "pocao": "turtle_master",
+  "duracao": "0:20",
+  "duracao_estendida": "0:40",
+  "duracao_fortalecida": "0:20",
+  "descricao": "Lentidão IV + Resistência III: vira um tanque.",
+  "apelidos": [
+   "mestre tartaruga",
+   "turtle master",
+   "tartaruga"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ },
+ {
+  "id": "water_breathing",
+  "pocao": "water_breathing",
+  "duracao": "3:00",
+  "duracao_estendida": "8:00",
+  "duracao_fortalecida": null,
+  "descricao": "Respira debaixo d'água.",
+  "apelidos": [
+   "respiracao aquatica",
+   "water breathing",
+   "respirar na agua"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ },
+ {
+  "id": "healing",
+  "pocao": "healing",
+  "duracao": null,
+  "duracao_estendida": null,
+  "duracao_fortalecida": "instantânea",
+  "descricao": "Cura 4 de vida na hora (8 no nível II).",
+  "apelidos": [
+   "cura",
+   "healing",
+   "vida instantanea"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ },
+ {
+  "id": "harming",
+  "pocao": "harming",
+  "duracao": null,
+  "duracao_estendida": null,
+  "duracao_fortalecida": "instantânea",
+  "descricao": "Causa 6 de dano na hora (12 no nível II). Cura mortos-vivos.",
+  "apelidos": [
+   "dano",
+   "harming",
+   "dano instantaneo"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ },
+ {
+  "id": "poison",
+  "pocao": "poison",
+  "duracao": "0:45",
+  "duracao_estendida": "1:30",
+  "duracao_fortalecida": "0:21",
+  "descricao": "Tira vida aos poucos, mas não mata (para em 1).",
+  "apelidos": [
+   "veneno",
+   "poison"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ },
+ {
+  "id": "regeneration",
+  "pocao": "regeneration",
+  "duracao": "0:45",
+  "duracao_estendida": "1:30",
+  "duracao_fortalecida": "0:22",
+  "descricao": "Regenera vida aos poucos.",
+  "apelidos": [
+   "regeneracao",
+   "regen",
+   "regeneration"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ },
+ {
+  "id": "strength",
+  "pocao": "strength",
+  "duracao": "3:00",
+  "duracao_estendida": "8:00",
+  "duracao_fortalecida": "1:30",
+  "descricao": "+3 de dano corpo a corpo (+6 no nível II).",
+  "apelidos": [
+   "forca",
+   "strength",
+   "dano extra"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ },
+ {
+  "id": "weakness",
+  "pocao": "weakness",
+  "duracao": "1:30",
+  "duracao_estendida": "4:00",
+  "duracao_fortalecida": null,
+  "descricao": "−4 de dano corpo a corpo. Usada para curar aldeão zumbi.",
+  "apelidos": [
+   "fraqueza",
+   "weakness"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ },
+ {
+  "id": "slow_falling",
+  "pocao": "slow_falling",
+  "duracao": "1:30",
+  "duracao_estendida": "4:00",
+  "duracao_fortalecida": null,
+  "descricao": "Cai devagar e não toma dano de queda.",
+  "apelidos": [
+   "queda lenta",
+   "slow falling",
+   "cair devagar"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ },
+ {
+  "id": "wind_charged",
+  "pocao": "wind_charged",
+  "duracao": "3:00",
+  "duracao_estendida": null,
+  "duracao_fortalecida": null,
+  "descricao": "Ao morrer, o alvo solta uma rajada de vento.",
+  "apelidos": [
+   "ventania",
+   "wind charged",
+   "vento"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ },
+ {
+  "id": "weaving",
+  "pocao": "weaving",
+  "duracao": "3:00",
+  "duracao_estendida": null,
+  "duracao_fortalecida": null,
+  "descricao": "Ao morrer, o alvo solta teias; teias atrapalham menos.",
+  "apelidos": [
+   "tecitura",
+   "weaving",
+   "teia"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ },
+ {
+  "id": "oozing",
+  "pocao": "oozing",
+  "duracao": "3:00",
+  "duracao_estendida": null,
+  "duracao_fortalecida": null,
+  "descricao": "Ao morrer, o alvo solta 2 slimes médios.",
+  "apelidos": [
+   "pegajosa",
+   "oozing",
+   "slime"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ },
+ {
+  "id": "infested",
+  "pocao": "infested",
+  "duracao": "3:00",
+  "duracao_estendida": null,
+  "duracao_fortalecida": null,
+  "descricao": "Ao tomar dano, o alvo pode soltar traças.",
+  "apelidos": [
+   "infestacao",
+   "infested",
+   "traca"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ },
+ {
+  "id": "luck",
+  "pocao": "luck",
+  "duracao": "5:00",
+  "duracao_estendida": null,
+  "duracao_fortalecida": null,
+  "descricao": "+1 de sorte (baús e pesca). Só por comando/criativo.",
+  "apelidos": [
+   "sorte",
+   "luck"
+  ],
+  "fonte": "https://minecraft.wiki/w/Potion"
+ }
+]

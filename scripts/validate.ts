@@ -78,6 +78,13 @@ if (fs.existsSync(curatedDir)) {
       if (e.pocao && !potions.potions[e.pocao]) errors.push(`${where}: poção inexistente ${e.pocao}`);
     }
   }
+  const farms = JSON.parse(fs.readFileSync(path.join(curatedDir, 'farms.json'), 'utf8')) as any[];
+  const farmIds = new Set(farms.map((f) => f.id));
+  for (const f of farms) {
+    for (const a of f.alimenta) if (!farmIds.has(a)) errors.push(`farm ${f.id}: alimenta farm inexistente ${a}`);
+    if (!/^https:\/\/www\.youtube\.com\/watch\?v=/.test(f.video)) errors.push(`farm ${f.id}: vídeo inválido`);
+    if (f.passos.length < 5 || f.passos.length > 10) errors.push(`farm ${f.id}: precisa de 5 a 10 passos`);
+  }
 } else warn.push('pasta src/data/curated ainda não existe');
 
 for (const w of warn) console.warn(`aviso: ${w}`);

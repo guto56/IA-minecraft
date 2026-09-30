@@ -1,0 +1,92 @@
+[
+ {
+  "id": "diamond_ore",
+  "item": "diamond_ore",
+  "y_ideal": -59,
+  "y_extra": null,
+  "dica": "Mais comum perto de Y −59. Minerar em −58/−59 evita lava do fundo. Minério em contato com ar tem 50% de chance de não gerar.",
+  "fonte": "https://minecraft.wiki/w/Ore"
+ },
+ {
+  "id": "iron_ore",
+  "item": "iron_ore",
+  "y_ideal": 16,
+  "y_extra": [
+   232
+  ],
+  "dica": "Dois picos: Y 16 (cavernas) e Y 232 (montanhas altas). Veios grandes de ferro aparecem entre Y −60 e −8.",
+  "fonte": "https://minecraft.wiki/w/Ore"
+ },
+ {
+  "id": "gold_ore",
+  "item": "gold_ore",
+  "y_ideal": -16,
+  "y_extra": null,
+  "dica": "Mais comum perto de Y −16. Nos badlands (mesa) gera muito mais, de Y 32 a 256.",
+  "fonte": "https://minecraft.wiki/w/Ore"
+ },
+ {
+  "id": "redstone_ore",
+  "item": "redstone_ore",
+  "y_ideal": -59,
+  "y_extra": null,
+  "dica": "Mais comum no fundo do mundo, perto de Y −59.",
+  "fonte": "https://minecraft.wiki/w/Ore"
+ },
+ {
+  "id": "lapis_ore",
+  "item": "lapis_ore",
+  "y_ideal": 0,
+  "y_extra": null,
+  "dica": "Mais comum perto de Y 0 (dados reais mostram pico em −2).",
+  "fonte": "https://minecraft.wiki/w/Ore"
+ },
+ {
+  "id": "coal_ore",
+  "item": "coal_ore",
+  "y_ideal": 96,
+  "y_extra": null,
+  "dica": "Muito comum. Pico de geração em Y 96; perto da superfície é fácil achar exposto.",
+  "fonte": "https://minecraft.wiki/w/Ore"
+ },
+ {
+  "id": "copper_ore",
+  "item": "copper_ore",
+  "y_ideal": 48,
+  "y_extra": null,
+  "dica": "Mais comum perto de Y 48. Nas cavernas de gotejamento os veios são maiores.",
+  "fonte": "https://minecraft.wiki/w/Ore"
+ },
+ {
+  "id": "emerald_ore",
+  "item": "emerald_ore",
+  "y_ideal": 232,
+  "y_extra": null,
+  "dica": "Só em biomas de montanha. Quanto mais alto, mais comum (pico em Y 232).",
+  "fonte": "https://minecraft.wiki/w/Ore"
+ },
+ {
+  "id": "ancient_debris",
+  "item": "ancient_debris",
+  "y_ideal": 15,
+  "y_extra": null,
+  "dica": "Só no Nether. Mais comum em Y 15; resiste a explosões: use camas ou TNT para abrir túneis.",
+  "fonte": "https://minecraft.wiki/w/Ore"
+ },
+ {
+  "id": "nether_gold_ore",
+  "item": "nether_gold_ore",
+  "y_ideal": 64,
+  "y_extra": null,
+  "dica": "Espalhado pelo Nether entre Y 10 e 117; mais comum nos deltas de basalto.",
+  "fonte": "https://minecraft.wiki/w/Ore"
+ },
+ {
+  "id": "nether_quartz_ore",
+  "item": "nether_quartz_ore",
+  "y_ideal": 64,
+  "y_extra": null,
+  "dica": "Espalhado pelo Nether entre Y 10 e 117; o dobro nos deltas de basalto.",
+  "fonte": "https://minecraft.wiki/w/Ore"
+ }
+]

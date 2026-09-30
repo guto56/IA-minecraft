@@ -1,0 +1,347 @@
+[
+ {
+  "id": "primeiro-dia",
+  "titulo": "Como começar (primeiro dia)",
+  "apelidos": [
+   "como comecar",
+   "primeiro dia",
+   "o que fazer primeiro",
+   "comecei agora",
+   "dicas para iniciante",
+   "comeco",
+   "iniciante",
+   "primeiros passos"
+  ],
+  "texto": [
+   "Quebre madeira e faça uma **bancada** e **ferramentas de madeira**.",
+   "Pegue pedra e troque por **ferramentas de pedra**.",
+   "Antes da noite: faça **tochas** (carvão + graveto) e um abrigo.",
+   "Mate ovelhas para 3 lãs e faça uma **cama**: dormir pula a noite.",
+   "Depois: fornalha, ferro e armadura."
+  ],
+  "itens": [
+   "crafting_table",
+   "wooden_pickaxe",
+   "torch",
+   "white_bed"
+  ],
+  "fonte": "https://minecraft.wiki/w/Tutorial:Beginner%27s_guide"
+ },
+ {
+  "id": "dormir-phantom",
+  "titulo": "Dormir e phantoms",
+  "apelidos": [
+   "phantom",
+   "fantasma",
+   "dormir",
+   "nao dormi",
+   "insonia",
+   "bicho voador"
+  ],
+  "texto": [
+   "Dormir na **cama** pula a noite e define seu ponto de renascimento.",
+   "Se você fica **3 noites sem dormir**, aparecem **phantoms**.",
+   "A **cama de palha** (26.3) passa a noite **sem** mudar o renascimento e quebra depois.",
+   "Camas explodem no Nether e no End."
+  ],
+  "itens": [
+   "white_bed",
+   "straw_bed",
+   "phantom_membrane"
+  ],
+  "fonte": "https://minecraft.wiki/w/Phantom"
+ },
+ {
+  "id": "piglin-ouro",
+  "titulo": "Piglins e ouro",
+  "apelidos": [
+   "piglin",
+   "piglins",
+   "ouro no nether",
+   "escambo",
+   "troca com piglin",
+   "barter"
+  ],
+  "texto": [
+   "Use **pelo menos 1 peça de armadura de ouro** no Nether: piglins não atacam.",
+   "Jogue **lingote de ouro** para um piglin: ele devolve um item aleatório (escambo).",
+   "Abrir baús ou minerar ouro perto deles deixa todos irritados.",
+   "Piglins **brutos** (bastião) atacam sempre."
+  ],
+  "itens": [
+   "golden_helmet",
+   "gold_ingot",
+   "ender_pearl"
+  ],
+  "fonte": "https://minecraft.wiki/w/Piglin"
+ },
+ {
+  "id": "warden",
+  "titulo": "Warden e deep dark",
+  "apelidos": [
+   "warden",
+   "deep dark",
+   "sculk",
+   "cidade ancestral perigo",
+   "como fugir do warden"
+  ],
+  "texto": [
+   "O **Warden** tem 500 de vida: não é para lutar.",
+   "Ande **agachado**: não ativa sensores de sculk.",
+   "Os **berradores de sculk** invocam o Warden após 4 ativações.",
+   "Distraia com **bolas de neve** ou flechas; **lã** abafa vibrações."
+  ],
+  "itens": [
+   "sculk_shrieker",
+   "sculk_sensor",
+   "white_wool",
+   "snowball"
+  ],
+  "fonte": "https://minecraft.wiki/w/Warden"
+ },
+ {
+  "id": "achar-diamante",
+  "titulo": "Como achar diamante",
+  "apelidos": [
+   "achar diamante",
+   "minerar diamante",
+   "como achar dima",
+   "estrategia de mineracao",
+   "branch mining"
+  ],
+  "texto": [
+   "Desça até **Y −58/−59**: é onde mais tem diamante.",
+   "Faça túneis com **2 blocos de espaçamento** (branch mining).",
+   "Use picareta de **ferro** ou melhor; **Fortuna III** multiplica os diamantes.",
+   "Leve balde de água: lava é comum no fundo."
+  ],
+  "itens": [
+   "diamond_ore",
+   "iron_pickaxe",
+   "water_bucket"
+  ],
+  "fonte": "https://minecraft.wiki/w/Diamond_Ore"
+ },
+ {
+  "id": "ir-nether",
+  "titulo": "Como ir ao Nether",
+  "apelidos": [
+   "ir pro nether",
+   "portal do nether",
+   "como entrar no nether",
+   "fazer portal"
+  ],
+  "texto": [
+   "Monte um retângulo de **obsidiana** de pelo menos 4×5 (os cantos são opcionais).",
+   "Acenda com **isqueiro** (pederneira e aço).",
+   "Use **ouro** e leve **poção de resistência ao fogo**.",
+   "Cada bloco no Nether equivale a 8 no Overworld."
+  ],
+  "itens": [
+   "obsidian",
+   "flint_and_steel",
+   "golden_helmet"
+  ],
+  "fonte": "https://minecraft.wiki/w/Nether_portal"
+ },
+ {
+  "id": "achar-end",
+  "titulo": "Como achar o End",
+  "apelidos": [
+   "ir pro end",
+   "achar o end",
+   "portal do end",
+   "fortaleza do end",
+   "stronghold",
+   "olho do ender como usar"
+  ],
+  "texto": [
+   "Faça **olhos do ender** (pérola do ender + pó de blaze).",
+   "Jogue um olho: ele voa na direção da **fortaleza (stronghold)**.",
+   "Cave até achar a sala do portal e complete os 12 blocos com olhos.",
+   "Leve arco, blocos e cama só se for jogar no Overworld: no End cama explode."
+  ],
+  "itens": [
+   "ender_eye",
+   "end_portal_frame",
+   "blaze_powder"
+  ],
+  "fonte": "https://minecraft.wiki/w/Stronghold"
+ },
+ {
+  "id": "dragao",
+  "titulo": "Como matar o Ender Dragon",
+  "apelidos": [
+   "matar o dragao",
+   "ender dragon",
+   "dragao do end",
+   "zerar o jogo"
+  ],
+  "texto": [
+   "Destrua os **cristais do End** nas torres com flechas.",
+   "Leve **arco** com muitas flechas, blocos e poções.",
+   "Quando ele pousar no centro, bata com a espada.",
+   "Não use cama para explodir se não souber: arriscado."
+  ],
+  "itens": [
+   "bow",
+   "arrow",
+   "end_crystal"
+  ],
+  "fonte": "https://minecraft.wiki/w/Ender_Dragon"
+ },
+ {
+  "id": "curar-zumbi",
+  "titulo": "Curar aldeão zumbi",
+  "apelidos": [
+   "curar aldeao zumbi",
+   "curar zumbi",
+   "desconto aldeao",
+   "zombie villager cure"
+  ],
+  "texto": [
+   "Jogue **poção de fraqueza de arremesso** no aldeão zumbi.",
+   "Dê uma **maçã dourada** a ele.",
+   "Espere uns 3 a 5 minutos sem sol direto.",
+   "Ele volta a ser aldeão com **grandes descontos** para você."
+  ],
+  "itens": [
+   "splash_potion",
+   "golden_apple",
+   "zombie_villager_spawn_egg"
+  ],
+  "fonte": "https://minecraft.wiki/w/Zombie_Villager"
+ },
+ {
+  "id": "remendo",
+  "titulo": "Como pegar Remendo",
+  "apelidos": [
+   "remendo",
+   "mending",
+   "livro de remendo",
+   "conseguir mending"
+  ],
+  "texto": [
+   "**Remendo** não sai na mesa de encantamento.",
+   "Pegue com **bibliotecário** (troque até aparecer), **pesca** ou **baús**.",
+   "Aplique na **bigorna**.",
+   "Ele usa a XP que você coleta para reparar o item."
+  ],
+  "itens": [
+   "enchanted_book",
+   "lectern",
+   "anvil"
+  ],
+  "fonte": "https://minecraft.wiki/w/Mending"
+ },
+ {
+  "id": "elitros",
+  "titulo": "Como pegar élitros",
+  "apelidos": [
+   "elitros",
+   "elytra",
+   "asa",
+   "voar"
+  ],
+  "texto": [
+   "Os **élitros** ficam nos **navios do End**, nas cidades do End.",
+   "Use **foguetes** (papel + pólvora) para ganhar velocidade.",
+   "Coloque **Inquebrável** e **Remendo**.",
+   "Repare com membrana de phantom na bigorna."
+  ],
+  "itens": [
+   "elytra",
+   "firework_rocket",
+   "phantom_membrane"
+  ],
+  "fonte": "https://minecraft.wiki/w/Elytra"
+ },
+ {
+  "id": "creeper-dica",
+  "titulo": "Como lidar com creepers",
+  "apelidos": [
+   "creeper explode",
+   "fugir do creeper",
+   "creeper destruiu minha casa"
+  ],
+  "texto": [
+   "Bata e **recue**: o knockback interrompe a explosão.",
+   "**Escudo** bloqueia a explosão.",
+   "**Gatos** e jaguatiricas espantam creepers.",
+   "Ilumine tudo: creepers só nascem no escuro total (luz 0)."
+  ],
+  "itens": [
+   "shield",
+   "torch",
+   "creeper_head"
+  ],
+  "fonte": "https://minecraft.wiki/w/Creeper"
+ },
+ {
+  "id": "iluminacao",
+  "titulo": "Luz e spawn de monstros",
+  "apelidos": [
+   "nascer monstro",
+   "spawn de mob",
+   "luz para nao nascer",
+   "iluminar",
+   "mobs aparecendo na casa"
+  ],
+  "texto": [
+   "Monstros comuns só nascem com **luz de bloco 0**.",
+   "Uma **tocha** a cada ~12 blocos evita spawns no chão.",
+   "Lajes de cima, vidro e tapetes também impedem spawn.",
+   "Blazes e endermen seguem regras próprias."
+  ],
+  "itens": [
+   "torch",
+   "lantern",
+   "glowstone"
+  ],
+  "fonte": "https://minecraft.wiki/w/Light"
+ },
+ {
+  "id": "encantar",
+  "titulo": "Como encantar bem",
+  "apelidos": [
+   "como encantar",
+   "mesa de encantamento",
+   "encantar nivel 30",
+   "estantes"
+  ],
+  "texto": [
+   "Coloque **15 estantes** em volta da mesa, com 1 bloco de ar entre elas.",
+   "Isso libera encantamentos de **nível 30**.",
+   "Usa **lápis-lazúli** e XP.",
+   "Combine livros na **bigorna** para juntar encantamentos."
+  ],
+  "itens": [
+   "enchanting_table",
+   "bookshelf",
+   "lapis_lazuli"
+  ],
+  "fonte": "https://minecraft.wiki/w/Enchanting_Table"
+ },
+ {
+  "id": "comida",
+  "titulo": "Melhor comida",
+  "apelidos": [
+   "melhor comida",
+   "fome",
+   "comida boa",
+   "o que comer"
+  ],
+  "texto": [
+   "**Cenoura dourada** tem a melhor saturação.",
+   "**Bife** e **costeleta assada** são ótimos no dia a dia.",
+   "**Pão** é fácil no começo.",
+   "Farms de vaca e galinha assada resolvem a comida para sempre."
+  ],
+  "itens": [
+   "golden_carrot",
+   "cooked_beef",
+   "bread"
+  ],
+  "fonte": "https://minecraft.wiki/w/Food"
+ }
+]

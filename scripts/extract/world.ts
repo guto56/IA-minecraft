@@ -143,7 +143,8 @@ export function extractWorld(jar: Jar, lang: Lang, biomeTags: TagMap) {
     if (!range) continue;
     const distribution = stripNs(range.type) === 'trapezoid' ? 'trapezoid' : 'uniform';
     const min = anchor(range.min_inclusive, dimension);
-    const max = anchor(range.max_inclusive, dimension);
+    // No Nether o teto de bedrock fica em Y 127: acima disso não há onde o minério gerar.
+    const max = dimension === 'nether' ? Math.min(anchor(range.max_inclusive, dimension), 127) : anchor(range.max_inclusive, dimension);
     const placement: OrePlacement = {
       feature: pid,
       distribution,

@@ -1,0 +1,85 @@
+[
+ {
+  "id": "26.3",
+  "versao": "26.3",
+  "nome": "Wilderness Bound",
+  "data": "2026-09-15",
+  "destaques": [
+   "Bioma novo: **Floresta Salpicada** (dappled forest), com **álamos** de folhas vermelhas, laranjas e amarelas.",
+   "Estrutura nova: **acampamento abandonado**, em 18 biomas, com baús e novos mapas de explorador.",
+   "**Cama de palha**: passa a noite sem mudar o renascimento (4 com 3 fardos de feno).",
+   "**Escadas e lajes de lã e de concreto**, e **almofadas** para sentar.",
+   "**Cogumelo-prateleira** e **arbusto vermelho**."
+  ],
+  "itens": [
+   "poplar_log",
+   "straw_bed",
+   "white_cushion",
+   "white_concrete_stairs",
+   "shelf_mushroom",
+   "red_shrub",
+   "poplar_sapling"
+  ],
+  "apelidos": [
+   "wilderness bound",
+   "26.3",
+   "ultima versao",
+   "versao atual",
+   "novidades"
+  ],
+  "fonte": "https://minecraft.wiki/w/Java_Edition_26.3"
+ },
+ {
+  "id": "26.2",
+  "versao": "26.2",
+  "nome": "Chaos Cubed",
+  "data": "2026-06-16",
+  "destaques": [
+   "Bioma de caverna novo: **cavernas de enxofre**.",
+   "Mob novo: **cubo de enxofre**, passivo, absorve blocos e muda de comportamento.",
+   "Blocos de **enxofre** e **cinábrio**, **enxofre potente** e **gêiseres** sobre magma.",
+   "**Aranhas das cavernas** agora nascem naturalmente lá.",
+   "Disco novo: **\"Bounce\"**."
+  ],
+  "itens": [
+   "sulfur",
+   "cinnabar",
+   "potent_sulfur",
+   "sulfur_spike",
+   "sulfur_cube_spawn_egg",
+   "music_disc_bounce"
+  ],
+  "apelidos": [
+   "chaos cubed",
+   "26.2",
+   "cubo de enxofre",
+   "enxofre"
+  ],
+  "fonte": "https://minecraft.wiki/w/Chaos_Cubed"
+ },
+ {
+  "id": "26.1",
+  "versao": "26.1",
+  "nome": "Tiny Takeover",
+  "data": "2026-03-24",
+  "destaques": [
+   "Todos os **filhotes** ganharam modelos novos.",
+   "**Dente-de-leão dourado**: impede o filhote de crescer (8 pepitas de ouro + dente-de-leão).",
+   "**Etiqueta de nome craftável**: papel + qualquer pepita.",
+   "Cortador de pedras transforma pedra em pedregulho.",
+   "Primeira versão com número novo e que exige **Java 25**."
+  ],
+  "itens": [
+   "golden_dandelion",
+   "name_tag",
+   "stonecutter"
+  ],
+  "apelidos": [
+   "tiny takeover",
+   "26.1",
+   "filhotes",
+   "dente de leao dourado"
+  ],
+  "fonte": "https://minecraft.wiki/w/Tiny_Takeover"
+ }
+]

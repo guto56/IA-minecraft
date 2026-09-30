@@ -1,0 +1,284 @@
+[
+ {
+  "id": "village",
+  "familia": "village",
+  "nome": "Vila",
+  "apelidos": [
+   "vila",
+   "vilarejo",
+   "aldeia",
+   "village"
+  ],
+  "descricao": "Casas com aldeões, camas, blocos de trabalho e às vezes um ferreiro com baú.",
+  "item": "bell",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "abandoned_camp",
+  "familia": "abandoned_camp",
+  "nome": "Acampamento abandonado",
+  "apelidos": [
+   "acampamento",
+   "acampamento abandonado",
+   "abandoned camp",
+   "camp"
+  ],
+  "descricao": "Novo na 26.3: barracas com camas de palha, almofadas e baús com loot.",
+  "item": "straw_bed",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "ancient_city",
+  "familia": "ancient_city",
+  "nome": "Cidade ancestral",
+  "apelidos": [
+   "cidade ancestral",
+   "ancient city",
+   "cidade antiga"
+  ],
+  "descricao": "No deep dark (abaixo de Y 0). Loot ótimo, mas cuidado com o Warden.",
+  "item": "sculk_shrieker",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "bastion_remnant",
+  "familia": "bastion_remnant",
+  "nome": "Bastião em ruínas",
+  "apelidos": [
+   "bastiao",
+   "bastion"
+  ],
+  "descricao": "Castelo de pedra-negra no Nether com piglins brutos e muito ouro.",
+  "item": "gilded_blackstone",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "buried_treasure",
+  "familia": "buried_treasure",
+  "nome": "Tesouro enterrado",
+  "apelidos": [
+   "tesouro enterrado",
+   "buried treasure",
+   "mapa do tesouro"
+  ],
+  "descricao": "Baú na praia achado com o mapa de tesouro dos naufrágios. Tem Coração do Mar.",
+  "item": "heart_of_the_sea",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "desert_pyramid",
+  "familia": "desert_pyramid",
+  "nome": "Pirâmide do deserto",
+  "apelidos": [
+   "piramide",
+   "templo do deserto",
+   "desert temple"
+  ],
+  "descricao": "Tem baús no subsolo protegidos por TNT com placa de pressão.",
+  "item": "chiseled_sandstone",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "end_city",
+  "familia": "end_city",
+  "nome": "Cidade do End",
+  "apelidos": [
+   "cidade do end",
+   "end city"
+  ],
+  "descricao": "Nas ilhas externas do End. Tem shulkers e às vezes um navio com élitros.",
+  "item": "purpur_block",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "fortress",
+  "familia": "fortress",
+  "nome": "Fortaleza do Nether",
+  "apelidos": [
+   "fortaleza do nether",
+   "nether fortress",
+   "fortaleza"
+  ],
+  "descricao": "Tem blazes, esqueletos wither e fungo do Nether (verruga).",
+  "item": "nether_bricks",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "igloo",
+  "familia": "igloo",
+  "nome": "Iglu",
+  "apelidos": [
+   "iglu",
+   "igloo"
+  ],
+  "descricao": "Em biomas nevados; às vezes tem um porão com aldeão zumbi para curar.",
+  "item": "snow_block",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "jungle_pyramid",
+  "familia": "jungle_pyramid",
+  "nome": "Templo da selva",
+  "apelidos": [
+   "templo da selva",
+   "jungle temple"
+  ],
+  "descricao": "Na selva, com armadilhas de flechas e baús.",
+  "item": "mossy_cobblestone",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "mansion",
+  "familia": "mansion",
+  "nome": "Mansão da floresta",
+  "apelidos": [
+   "mansao",
+   "woodland mansion",
+   "mansao da floresta"
+  ],
+  "descricao": "Na floresta escura. Evocadores dropam o totem da imortalidade.",
+  "item": "dark_oak_planks",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "mineshaft",
+  "familia": "mineshaft",
+  "nome": "Mina abandonada",
+  "apelidos": [
+   "mina",
+   "mina abandonada",
+   "mineshaft"
+  ],
+  "descricao": "Túneis com trilhos, carrinhos com baú e aranhas das cavernas.",
+  "item": "rail",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "monument",
+  "familia": "monument",
+  "nome": "Monumento oceânico",
+  "apelidos": [
+   "monumento",
+   "ocean monument",
+   "templo do mar"
+  ],
+  "descricao": "No fundo do oceano, com guardiões e 8 blocos de ouro.",
+  "item": "prismarine_bricks",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "ocean_ruin",
+  "familia": "ocean_ruin",
+  "nome": "Ruínas oceânicas",
+  "apelidos": [
+   "ruinas oceanicas",
+   "ocean ruins"
+  ],
+  "descricao": "Ruínas submersas com afogados e mapas do tesouro.",
+  "item": "prismarine",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "pillager_outpost",
+  "familia": "pillager_outpost",
+  "nome": "Posto avançado de saqueadores",
+  "apelidos": [
+   "posto avancado",
+   "pillager outpost",
+   "torre de saqueadores"
+  ],
+  "descricao": "Torre de saqueadores; às vezes tem allays presos.",
+  "item": "dark_oak_log",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "ruined_portal",
+  "familia": "ruined_portal",
+  "nome": "Portal em ruínas",
+  "apelidos": [
+   "portal em ruinas",
+   "ruined portal",
+   "portal quebrado"
+  ],
+  "descricao": "Portal do Nether incompleto com baú de ouro e obsidiana chorona.",
+  "item": "crying_obsidian",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "shipwreck",
+  "familia": "shipwreck",
+  "nome": "Naufrágio",
+  "apelidos": [
+   "naufragio",
+   "navio afundado",
+   "shipwreck"
+  ],
+  "descricao": "Navio afundado com baús de suprimentos e mapa do tesouro.",
+  "item": "oak_planks",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "stronghold",
+  "familia": "stronghold",
+  "nome": "Fortaleza do End",
+  "apelidos": [
+   "stronghold",
+   "fortaleza do fim",
+   "portal do end"
+  ],
+  "descricao": "Subterrânea; tem o portal do End. Ache jogando olhos do ender.",
+  "item": "end_portal_frame",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "swamp_hut",
+  "familia": "swamp_hut",
+  "nome": "Cabana da bruxa",
+  "apelidos": [
+   "cabana da bruxa",
+   "swamp hut",
+   "casa da bruxa"
+  ],
+  "descricao": "No pântano, com uma bruxa e um gato preto.",
+  "item": "spruce_planks",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "trail_ruins",
+  "familia": "trail_ruins",
+  "nome": "Ruínas da trilha",
+  "apelidos": [
+   "ruinas da trilha",
+   "trail ruins",
+   "arqueologia"
+  ],
+  "descricao": "Enterradas; use o pincel no cascalho suspeito para achar cacos e ovos de farejador.",
+  "item": "brush",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "trial_chambers",
+  "familia": "trial_chambers",
+  "nome": "Câmaras do julgamento",
+  "apelidos": [
+   "camaras do julgamento",
+   "trial chambers",
+   "camara de teste"
+  ],
+  "descricao": "Subterrâneas, com geradores do julgamento, brisas e a maça.",
+  "item": "trial_spawner",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ },
+ {
+  "id": "nether_fossil",
+  "familia": "nether_fossil",
+  "nome": "Fóssil do Nether",
+  "apelidos": [
+   "fossil do nether",
+   "nether fossil"
+  ],
+  "descricao": "Ossadas no vale das almas.",
+  "item": "bone_block",
+  "fonte": "https://minecraft.wiki/w/Structure"
+ }
+]

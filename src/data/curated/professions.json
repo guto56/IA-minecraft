@@ -1,0 +1,80 @@
+[
+ {
+  "id": "armorer",
+  "profissao": "armorer",
+  "item": "blast_furnace",
+  "fonte": "https://minecraft.wiki/w/Villager#Professions"
+ },
+ {
+  "id": "butcher",
+  "profissao": "butcher",
+  "item": "smoker",
+  "fonte": "https://minecraft.wiki/w/Villager#Professions"
+ },
+ {
+  "id": "cartographer",
+  "profissao": "cartographer",
+  "item": "cartography_table",
+  "fonte": "https://minecraft.wiki/w/Villager#Professions"
+ },
+ {
+  "id": "cleric",
+  "profissao": "cleric",
+  "item": "brewing_stand",
+  "fonte": "https://minecraft.wiki/w/Villager#Professions"
+ },
+ {
+  "id": "farmer",
+  "profissao": "farmer",
+  "item": "composter",
+  "fonte": "https://minecraft.wiki/w/Villager#Professions"
+ },
+ {
+  "id": "fisherman",
+  "profissao": "fisherman",
+  "item": "barrel",
+  "fonte": "https://minecraft.wiki/w/Villager#Professions"
+ },
+ {
+  "id": "fletcher",
+  "profissao": "fletcher",
+  "item": "fletching_table",
+  "fonte": "https://minecraft.wiki/w/Villager#Professions"
+ },
+ {
+  "id": "leatherworker",
+  "profissao": "leatherworker",
+  "item": "cauldron",
+  "fonte": "https://minecraft.wiki/w/Villager#Professions"
+ },
+ {
+  "id": "librarian",
+  "profissao": "librarian",
+  "item": "lectern",
+  "fonte": "https://minecraft.wiki/w/Villager#Professions"
+ },
+ {
+  "id": "mason",
+  "profissao": "mason",
+  "item": "stonecutter",
+  "fonte": "https://minecraft.wiki/w/Villager#Professions"
+ },
+ {
+  "id": "shepherd",
+  "profissao": "shepherd",
+  "item": "loom",
+  "fonte": "https://minecraft.wiki/w/Villager#Professions"
+ },
+ {
+  "id": "toolsmith",
+  "profissao": "toolsmith",
+  "item": "smithing_table",
+  "fonte": "https://minecraft.wiki/w/Villager#Professions"
+ },
+ {
+  "id": "weaponsmith",
+  "profissao": "weaponsmith",
+  "item": "grindstone",
+  "fonte": "https://minecraft.wiki/w/Villager#Professions"
+ }
+]

@@ -1,0 +1,1004 @@
+[
+ {
+  "id": "cana",
+  "nome": "Farm de cana-de-açúcar",
+  "apelidos": [
+   "farm de cana",
+   "cana de acucar",
+   "sugar cane farm",
+   "sugarcane",
+   "farm de papel"
+  ],
+  "dificuldade": 1,
+  "rende": {
+   "texto": "~300 a 600 canas/hora por fileira de 8 (varia com o design)",
+   "fonte": "https://minecraft.wiki/w/Tutorial:Sugar_cane_farming"
+  },
+  "materiais": [
+   {
+    "item": "sugar_cane",
+    "qtd": 8
+   },
+   {
+    "item": "sand",
+    "qtd": 8
+   },
+   {
+    "item": "water_bucket",
+    "qtd": 2
+   },
+   {
+    "item": "observer",
+    "qtd": 8
+   },
+   {
+    "item": "piston",
+    "qtd": 8
+   },
+   {
+    "item": "hopper",
+    "qtd": 8
+   },
+   {
+    "item": "chest",
+    "qtd": 2
+   },
+   {
+    "item": "glass",
+    "qtd": 16
+   }
+  ],
+  "requisitos": [
+   "Nenhum: funciona no começo do jogo"
+  ],
+  "passos": [
+   "Faça uma fileira de 8 blocos de areia ou terra com água corrente ao lado.",
+   "Plante a cana em cada bloco.",
+   "Na altura do 2º bloco da cana, coloque um pistão virado para ela.",
+   "Atrás de cada pistão, coloque um observador olhando para a cana, 1 bloco acima do pistão.",
+   "Embaixo da areia, passe uma linha de funis ligada a um baú.",
+   "Feche as laterais com vidro para os itens não escaparem."
+  ],
+  "erros_comuns": [
+   "Observador virado para o lado errado: a \"cara\" deve olhar para a cana.",
+   "Esquecer a água: a cana só cresce ao lado de água.",
+   "Itens caindo fora: feche tudo com vidro."
+  ],
+  "video": "https://www.youtube.com/watch?v=017MTGfWlbw",
+  "video_titulo": "NEW UPDATE Minecraft 26.1.2 Sugar Cane Farm Tutorial",
+  "alimenta": [
+   "trading-hall"
+  ],
+  "fonte": [
+   "https://minecraft.wiki/w/Tutorial:Sugar_cane_farming",
+   "https://www.youtube.com/watch?v=017MTGfWlbw"
+  ]
+ },
+ {
+  "id": "bambu",
+  "nome": "Farm de bambu",
+  "apelidos": [
+   "farm de bambu",
+   "bamboo farm",
+   "bambu automatico",
+   "combustivel infinito"
+  ],
+  "dificuldade": 1,
+  "rende": {
+   "texto": "milhares de bambus/hora em fileiras longas; ótimo combustível",
+   "fonte": "https://minecraft.wiki/w/Tutorial:Bamboo_farming"
+  },
+  "materiais": [
+   {
+    "item": "bamboo",
+    "qtd": 8
+   },
+   {
+    "item": "observer",
+    "qtd": 8
+   },
+   {
+    "item": "piston",
+    "qtd": 8
+   },
+   {
+    "item": "hopper",
+    "qtd": 4
+   },
+   {
+    "item": "chest",
+    "qtd": 2
+   },
+   {
+    "item": "glass",
+    "qtd": 24
+   }
+  ],
+  "requisitos": [
+   "Bambu (selva de bambu, pesca ou panda)"
+  ],
+  "passos": [
+   "Plante uma fileira de bambu em terra ou grama.",
+   "Coloque pistões na altura do 2º bloco do bambu.",
+   "Coloque observadores acima dos pistões olhando para o bambu.",
+   "Quando o bambu cresce, o observador ativa o pistão e quebra o caule.",
+   "Colete com funis no chão ligados a um baú.",
+   "Feche a área com vidro."
+  ],
+  "erros_comuns": [
+   "Bambu só é quebrado a partir do 2º bloco: não coloque o pistão na base.",
+   "Pouca luz faz o bambu crescer devagar."
+  ],
+  "video": "https://www.youtube.com/watch?v=nomAf223zJ0",
+  "video_titulo": "NEW UPDATE Minecraft 26.1.2 Bamboo Farm Tutorial",
+  "alimenta": [
+   "ouro"
+  ],
+  "fonte": [
+   "https://minecraft.wiki/w/Tutorial:Bamboo_farming",
+   "https://www.youtube.com/watch?v=nomAf223zJ0"
+  ]
+ },
+ {
+  "id": "cacto",
+  "nome": "Farm de cacto",
+  "apelidos": [
+   "farm de cacto",
+   "cactus farm",
+   "cacto automatico",
+   "farm de tinta verde"
+  ],
+  "dificuldade": 1,
+  "rende": {
+   "texto": "centenas a milhares de cactos/hora, dependendo do tamanho",
+   "fonte": "https://minecraft.wiki/w/Tutorial:Cactus_farming"
+  },
+  "materiais": [
+   {
+    "item": "cactus",
+    "qtd": 16
+   },
+   {
+    "item": "sand",
+    "qtd": 16
+   },
+   {
+    "item": "oak_fence",
+    "qtd": 16
+   },
+   {
+    "item": "hopper",
+    "qtd": 2
+   },
+   {
+    "item": "chest",
+    "qtd": 1
+   },
+   {
+    "item": "water_bucket",
+    "qtd": 1
+   }
+  ],
+  "requisitos": [
+   "Cacto (deserto ou badlands)"
+  ],
+  "passos": [
+   "Coloque blocos de areia com 1 espaço entre eles.",
+   "Plante o cacto em cada areia.",
+   "Coloque uma cerca (ou outro bloco sólido) ao lado do 2º bloco de altura de cada cacto.",
+   "Quando o cacto cresce e encosta na cerca, ele quebra e vira item.",
+   "Leve os itens com água até um funil e um baú.",
+   "Suba camadas iguais para multiplicar a produção."
+  ],
+  "erros_comuns": [
+   "Cacto não pode ter bloco encostado na base, só no bloco que vai crescer.",
+   "Os itens queimam se caírem em lava ou tocarem o cacto por muito tempo."
+  ],
+  "video": "https://www.youtube.com/watch?v=K98IQy3lxPo",
+  "video_titulo": "Minecraft Cactus Farm Tutorial (26.1.2 and Older)",
+  "alimenta": [],
+  "fonte": [
+   "https://minecraft.wiki/w/Tutorial:Cactus_farming",
+   "https://www.youtube.com/watch?v=K98IQy3lxPo"
+  ]
+ },
+ {
+  "id": "abobora-melancia",
+  "nome": "Farm de abóbora e melancia",
+  "apelidos": [
+   "farm de abobora",
+   "farm de melancia",
+   "pumpkin farm",
+   "melon farm",
+   "farm de melao"
+  ],
+  "dificuldade": 2,
+  "rende": {
+   "texto": "~18 packs/hora em designs médios (segundo vídeo); ótima para trocar com fazendeiro",
+   "fonte": "https://www.youtube.com/watch?v=J4v-lzSNRdQ"
+  },
+  "materiais": [
+   {
+    "item": "pumpkin_seeds",
+    "qtd": 8
+   },
+   {
+    "item": "melon_seeds",
+    "qtd": 8
+   },
+   {
+    "item": "observer",
+    "qtd": 16
+   },
+   {
+    "item": "piston",
+    "qtd": 16
+   },
+   {
+    "item": "hopper",
+    "qtd": 8
+   },
+   {
+    "item": "chest",
+    "qtd": 2
+   },
+   {
+    "item": "water_bucket",
+    "qtd": 2
+   },
+   {
+    "item": "wooden_hoe",
+    "qtd": 1
+   }
+  ],
+  "requisitos": [
+   "Sementes de abóbora e melancia",
+   "Luz (dia ou tochas)"
+  ],
+  "passos": [
+   "Are uma fileira de terra com água a no máximo 4 blocos.",
+   "Plante as sementes e deixe 1 bloco de terra livre ao lado de cada caule.",
+   "Sobre o espaço livre, coloque um observador olhando para baixo.",
+   "Ao lado, um pistão virado para o espaço onde nasce o fruto.",
+   "Quando o fruto nasce, o observador ativa o pistão e quebra.",
+   "Colete com funis ou água até o baú."
+  ],
+  "erros_comuns": [
+   "O fruto precisa de terra (ou grama) livre ao lado do caule.",
+   "Pistão empurrando o caule: ele deve apontar só para o espaço do fruto."
+  ],
+  "video": "https://www.youtube.com/watch?v=MqNOlEB-pZg",
+  "video_titulo": "Java & Bedrock Automatic Pumpkin/Melon Farm in Minecraft 26.3+ (Tutorial)",
+  "alimenta": [
+   "trading-hall"
+  ],
+  "fonte": [
+   "https://minecraft.wiki/w/Tutorial:Pumpkin_and_melon_farming",
+   "https://www.youtube.com/watch?v=MqNOlEB-pZg"
+  ]
+ },
+ {
+  "id": "comida-aldeao",
+  "nome": "Farm de comida com aldeão (cenoura e batata)",
+  "apelidos": [
+   "farm de cenoura",
+   "farm de batata",
+   "farm de comida",
+   "villager crop farm",
+   "farm com fazendeiro",
+   "farm de trigo"
+  ],
+  "dificuldade": 2,
+  "rende": {
+   "texto": "~700 cenouras/batatas por hora com 1 fazendeiro",
+   "fonte": "https://www.youtube.com/watch?v=q0bq-RnttBU"
+  },
+  "materiais": [
+   {
+    "item": "composter",
+    "qtd": 1
+   },
+   {
+    "item": "white_bed",
+    "qtd": 1
+   },
+   {
+    "item": "carrot",
+    "qtd": 16
+   },
+   {
+    "item": "potato",
+    "qtd": 16
+   },
+   {
+    "item": "hopper",
+    "qtd": 3
+   },
+   {
+    "item": "chest",
+    "qtd": 1
+   },
+   {
+    "item": "water_bucket",
+    "qtd": 1
+   },
+   {
+    "item": "glass",
+    "qtd": 20
+   },
+   {
+    "item": "hopper_minecart",
+    "qtd": 1
+   },
+   {
+    "item": "rail",
+    "qtd": 9
+   }
+  ],
+  "requisitos": [
+   "1 aldeão fazendeiro (bloco de trabalho: composteira)"
+  ],
+  "passos": [
+   "Faça um quadrado de terra arada 9×9 com água no centro.",
+   "Plante cenouras e batatas.",
+   "Coloque um aldeão fazendeiro dentro, com cama e composteira.",
+   "O fazendeiro colhe e replanta; o que sobra ele joga fora.",
+   "Recolha com um carrinho com funil andando embaixo da terra.",
+   "Envie os itens para um baú."
+  ],
+  "erros_comuns": [
+   "Aldeão sem cama ou sem composteira para de trabalhar.",
+   "Sem pegar os itens, o fazendeiro guarda tudo no inventário."
+  ],
+  "video": "https://www.youtube.com/watch?v=JlgOM7nMLnc",
+  "video_titulo": "Best Automatic Villager Crop Farms 2026 (Playerless 24/7 Carrot, Potato, Wheat, Beet, Bread farms)",
+  "alimenta": [
+   "breeder",
+   "trading-hall"
+  ],
+  "fonte": [
+   "https://minecraft.wiki/w/Tutorial:Crop_farming",
+   "https://www.youtube.com/watch?v=JlgOM7nMLnc"
+  ]
+ },
+ {
+  "id": "breeder",
+  "nome": "Breeder de aldeões",
+  "apelidos": [
+   "breeder",
+   "criador de aldeoes",
+   "farm de aldeao",
+   "villager breeder",
+   "reproduzir aldeao",
+   "cruzar aldeao"
+  ],
+  "dificuldade": 3,
+  "rende": {
+   "texto": "um aldeão bebê a cada poucos minutos (depende de camas e comida)",
+   "fonte": "https://minecraft.wiki/w/Tutorial:Villager_farming"
+  },
+  "materiais": [
+   {
+    "item": "white_bed",
+    "qtd": 3
+   },
+   {
+    "item": "composter",
+    "qtd": 1
+   },
+   {
+    "item": "carrot",
+    "qtd": 16
+   },
+   {
+    "item": "water_bucket",
+    "qtd": 1
+   },
+   {
+    "item": "glass",
+    "qtd": 24
+   },
+   {
+    "item": "oak_trapdoor",
+    "qtd": 4
+   },
+   {
+    "item": "hopper",
+    "qtd": 1
+   }
+  ],
+  "requisitos": [
+   "2 aldeões adultos",
+   "Nenhuma outra vila a menos de ~80 blocos"
+  ],
+  "passos": [
+   "Prenda 2 aldeões num espaço fechado.",
+   "Coloque 3 camas acessíveis (mais camas que aldeões).",
+   "Dê comida: 3 pães, 12 cenouras, batatas ou beterrabas cada.",
+   "Ou deixe um fazendeiro colhendo uma plantação ali dentro.",
+   "Os bebês pulam nas camas e caem num buraco para fora.",
+   "Leve os bebês para a farm de ferro ou o trading hall."
+  ],
+  "erros_comuns": [
+   "Não use o design do ImpulseSV: ele quebrou na 26.1+.",
+   "Camas precisam de 2 blocos livres em cima.",
+   "Aldeões só cruzam com camas sobrando e comida suficiente."
+  ],
+  "video": "https://www.youtube.com/watch?v=H47HqwcExc4",
+  "video_titulo": "Easy Villager Breeder Minecraft Java & Bedrock 26.3 | Simple & Fast!",
+  "alimenta": [
+   "ferro",
+   "trading-hall"
+  ],
+  "fonte": [
+   "https://minecraft.wiki/w/Tutorial:Villager_farming",
+   "https://www.youtube.com/watch?v=H47HqwcExc4",
+   "https://www.youtube.com/watch?v=NVGxaz6S-_s"
+  ]
+ },
+ {
+  "id": "ferro",
+  "nome": "Farm de ferro",
+  "apelidos": [
+   "farm de ferro",
+   "iron farm",
+   "farm de golem",
+   "golem de ferro",
+   "ferro infinito"
+  ],
+  "dificuldade": 3,
+  "rende": {
+   "texto": "~240 a 400 lingotes/hora por módulo (máx. teórico ~404)",
+   "fonte": "https://minecraft.wiki/w/Tutorial:Iron_golem_farming"
+  },
+  "materiais": [
+   {
+    "item": "white_bed",
+    "qtd": 3
+   },
+   {
+    "item": "composter",
+    "qtd": 3
+   },
+   {
+    "item": "lava_bucket",
+    "qtd": 1
+   },
+   {
+    "item": "water_bucket",
+    "qtd": 2
+   },
+   {
+    "item": "hopper",
+    "qtd": 2
+   },
+   {
+    "item": "chest",
+    "qtd": 1
+   },
+   {
+    "item": "glass",
+    "qtd": 32
+   },
+   {
+    "item": "name_tag",
+    "qtd": 1
+   },
+   {
+    "item": "oak_sign",
+    "qtd": 4
+   }
+  ],
+  "requisitos": [
+   "3 aldeões",
+   "1 zumbi (preso e com etiqueta de nome)"
+  ],
+  "passos": [
+   "Prenda 3 aldeões lado a lado, cada um com cama perto.",
+   "Coloque 1 zumbi preso à vista deles (com etiqueta de nome para não sumir).",
+   "O medo faz os aldeões invocarem golens de ferro.",
+   "O golem nasce numa plataforma e a água leva até a lava.",
+   "A lava mata o golem; o ferro cai num funil.",
+   "O funil leva os lingotes até o baú."
+  ],
+  "erros_comuns": [
+   "Aldeões precisam dormir: sem cama a farm para.",
+   "Zumbi sem etiqueta de nome some (despawn).",
+   "Deixe placas segurando a lava para não queimar os itens."
+  ],
+  "video": "https://www.youtube.com/watch?v=DOF-yOSeMjs",
+  "video_titulo": "NEW UPDATED Minecraft Java 26.1.2 Iron Farm Tutorial 4500 Iron Per Hour",
+  "alimenta": [
+   "trading-hall"
+  ],
+  "fonte": [
+   "https://minecraft.wiki/w/Tutorial:Iron_golem_farming",
+   "https://www.youtube.com/watch?v=DOF-yOSeMjs"
+  ]
+ },
+ {
+  "id": "mob-xp",
+  "nome": "Farm de mobs e XP (dark room)",
+  "apelidos": [
+   "farm de xp",
+   "farm de mob",
+   "mob farm",
+   "dark room",
+   "xp farm",
+   "farm de experiencia",
+   "farm de monstros"
+  ],
+  "dificuldade": 3,
+  "rende": {
+   "texto": "~6.600 drops/hora no design do vídeo (sem spawner)",
+   "fonte": "https://www.youtube.com/watch?v=brR5n9Q6VyE"
+  },
+  "materiais": [
+   {
+    "item": "cobblestone",
+    "qtd": 512
+   },
+   {
+    "item": "water_bucket",
+    "qtd": 8
+   },
+   {
+    "item": "oak_trapdoor",
+    "qtd": 40
+   },
+   {
+    "item": "hopper",
+    "qtd": 6
+   },
+   {
+    "item": "chest",
+    "qtd": 2
+   }
+  ],
+  "requisitos": [
+   "Construir longe de cavernas (ou no céu, acima de Y 150)",
+   "Ficar a ~24-128 blocos da área de spawn"
+  ],
+  "passos": [
+   "Construa uma sala escura (luz 0) com andares de spawn.",
+   "Use água nos corredores para empurrar os mobs até um buraco.",
+   "Os mobs caem numa queda de ~22 blocos até ficarem com meia vida.",
+   "Bata em cada um para pegar XP e drops.",
+   "Funis embaixo levam os itens ao baú.",
+   "Ilumine cavernas próximas para concentrar os spawns na farm."
+  ],
+  "erros_comuns": [
+   "Qualquer luz dentro da sala impede os spawns.",
+   "Ficar perto demais (menos de 24 blocos) impede spawn.",
+   "Aranhas travam em designs estreitos: use alçapões."
+  ],
+  "video": "https://www.youtube.com/watch?v=HzrzyXDRa_4",
+  "video_titulo": "NEW UPDATE Minecraft 26.1.2 Mob Farm Tutorial | Easy XP Farm Build",
+  "alimenta": [
+   "creeper"
+  ],
+  "fonte": [
+   "https://minecraft.wiki/w/Tutorial:Mob_farm",
+   "https://www.youtube.com/watch?v=HzrzyXDRa_4"
+  ]
+ },
+ {
+  "id": "vaca",
+  "nome": "Farm de vaca (semi-automática)",
+  "apelidos": [
+   "farm de vaca",
+   "cow farm",
+   "farm de couro",
+   "farm de carne",
+   "farm de bife"
+  ],
+  "dificuldade": 2,
+  "rende": {
+   "texto": "couro e carne limitados pelo crescimento dos bezerros (~20 min cada)",
+   "fonte": "https://minecraft.wiki/w/Tutorial:Animal_farming"
+  },
+  "materiais": [
+   {
+    "item": "wheat",
+    "qtd": 32
+   },
+   {
+    "item": "hopper",
+    "qtd": 2
+   },
+   {
+    "item": "chest",
+    "qtd": 1
+   },
+   {
+    "item": "oak_fence",
+    "qtd": 16
+   },
+   {
+    "item": "glass",
+    "qtd": 20
+   },
+   {
+    "item": "lava_bucket",
+    "qtd": 1
+   }
+  ],
+  "requisitos": [
+   "2 vacas",
+   "Trigo"
+  ],
+  "passos": [
+   "Prenda as vacas num cercado pequeno.",
+   "Alimente duas com trigo para nascer um bezerro.",
+   "Os bebês são menores e passam por um vão de meio bloco.",
+   "Quando crescem, ficam na área de abate.",
+   "Mate as adultas (ou use lava para carne assada).",
+   "No Java o dispensador NÃO alimenta animais: você mesmo precisa dar o trigo."
+  ],
+  "erros_comuns": [
+   "Tentar automatizar com dispensador: no Java não funciona.",
+   "Cercado grande demais: as vacas se espalham e não cruzam."
+  ],
+  "video": "https://www.youtube.com/watch?v=7Rm58lgRQ9U",
+  "video_titulo": "Easiest Automatic Cow Farm in Minecraft 26.1 (Tutorial)",
+  "alimenta": [],
+  "fonte": [
+   "https://minecraft.wiki/w/Tutorial:Animal_farming",
+   "https://www.youtube.com/watch?v=7Rm58lgRQ9U"
+  ]
+ },
+ {
+  "id": "galinha",
+  "nome": "Farm de galinha assada (chicken cooker)",
+  "apelidos": [
+   "farm de galinha",
+   "chicken cooker",
+   "chicken farm",
+   "farm de frango",
+   "frango assado",
+   "farm de ovo",
+   "farm de pena"
+  ],
+  "dificuldade": 2,
+  "rende": {
+   "texto": "~120 frangos assados/hora com ~30 galinhas",
+   "fonte": "https://www.youtube.com/watch?v=ZUhGoxX3h4M"
+  },
+  "materiais": [
+   {
+    "item": "egg",
+    "qtd": 16
+   },
+   {
+    "item": "dispenser",
+    "qtd": 1
+   },
+   {
+    "item": "hopper",
+    "qtd": 4
+   },
+   {
+    "item": "chest",
+    "qtd": 2
+   },
+   {
+    "item": "lava_bucket",
+    "qtd": 1
+   },
+   {
+    "item": "oak_slab",
+    "qtd": 8
+   },
+   {
+    "item": "comparator",
+    "qtd": 1
+   },
+   {
+    "item": "redstone",
+    "qtd": 4
+   },
+   {
+    "item": "glass",
+    "qtd": 20
+   }
+  ],
+  "requisitos": [
+   "Ovos ou algumas galinhas"
+  ],
+  "passos": [
+   "Prenda galinhas adultas sobre funis: os ovos caem nos funis.",
+   "Os funis levam os ovos a um dispensador.",
+   "Um relógio de redstone faz o dispensador atirar os ovos e nascem pintinhos.",
+   "Os pintinhos crescem até tocar a lava num bloco acima.",
+   "A lava assa e o frango cai no funil do baú.",
+   "Adultas continuam botando ovos: ciclo automático."
+  ],
+  "erros_comuns": [
+   "Lava alta demais queima os pintinhos cedo.",
+   "Muitas galinhas no mesmo bloco causam lag."
+  ],
+  "video": "https://www.youtube.com/watch?v=ZUhGoxX3h4M",
+  "video_titulo": "EASY Automatic Chicken Farm in Minecraft 26.1 (Tutorial) [Java]",
+  "alimenta": [],
+  "fonte": [
+   "https://minecraft.wiki/w/Tutorial:Egg_farming",
+   "https://www.youtube.com/watch?v=ZUhGoxX3h4M"
+  ]
+ },
+ {
+  "id": "creeper",
+  "nome": "Farm de creeper",
+  "apelidos": [
+   "farm de creeper",
+   "creeper farm",
+   "farm de polvora",
+   "gunpowder farm",
+   "polvora infinita"
+  ],
+  "dificuldade": 4,
+  "rende": {
+   "texto": "~2.500 pólvoras/hora no design do vídeo",
+   "fonte": "https://www.youtube.com/watch?v=krCGtUPiu7U"
+  },
+  "materiais": [
+   {
+    "item": "oak_trapdoor",
+    "qtd": 64
+   },
+   {
+    "item": "cobblestone",
+    "qtd": 384
+   },
+   {
+    "item": "water_bucket",
+    "qtd": 4
+   },
+   {
+    "item": "hopper",
+    "qtd": 4
+   },
+   {
+    "item": "chest",
+    "qtd": 2
+   },
+   {
+    "item": "magma_block",
+    "qtd": 4
+   }
+  ],
+  "requisitos": [
+   "Construir no céu, longe do chão (sobre o oceano é ideal)",
+   "Gatos opcionais para espantar creepers"
+  ],
+  "passos": [
+   "Monte plataformas escuras no céu, sobre o oceano.",
+   "Cubra com alçapões para só creepers (1 bloco de largura) conseguirem spawnar.",
+   "Água empurra os creepers para o buraco central.",
+   "Eles caem até blocos de magma ou dano de queda.",
+   "A pólvora cai num funil e vai ao baú.",
+   "Fique AFK acima da farm, a ~128 blocos do chão."
+  ],
+  "erros_comuns": [
+   "Construir perto de terra deixa cavernas roubarem os spawns.",
+   "Luz em qualquer andar reduz muito a produção."
+  ],
+  "video": "https://www.youtube.com/watch?v=krCGtUPiu7U",
+  "video_titulo": "NEW UPDATED Minecraft Java 26.1.2 Creeper Farm Tutorial 2500 Gunpowder Per Hour Easy!",
+  "alimenta": [],
+  "fonte": [
+   "https://minecraft.wiki/w/Tutorial:Creeper_farming",
+   "https://www.youtube.com/watch?v=krCGtUPiu7U"
+  ]
+ },
+ {
+  "id": "trading-hall",
+  "nome": "Trading hall (salão de trocas)",
+  "apelidos": [
+   "trading hall",
+   "salao de trocas",
+   "centro de trocas",
+   "hall de aldeoes",
+   "trocas com aldeao"
+  ],
+  "dificuldade": 3,
+  "rende": {
+   "texto": "acesso fácil às melhores trocas; com cura de zumbi as trocas caem para 1 esmeralda",
+   "fonte": "https://www.youtube.com/watch?v=w5-ptrMW7Z4"
+  },
+  "materiais": [
+   {
+    "item": "lectern",
+    "qtd": 4
+   },
+   {
+    "item": "composter",
+    "qtd": 2
+   },
+   {
+    "item": "smithing_table",
+    "qtd": 1
+   },
+   {
+    "item": "rail",
+    "qtd": 32
+   },
+   {
+    "item": "minecart",
+    "qtd": 4
+   },
+   {
+    "item": "glass",
+    "qtd": 40
+   }
+  ],
+  "requisitos": [
+   "Aldeões (use o breeder)",
+   "Blocos de trabalho das profissões que você quer"
+  ],
+  "passos": [
+   "Faça celas de 1×1 com um bloco de trabalho em frente a cada aldeão.",
+   "Leve os aldeões até as celas de carrinho.",
+   "Sem ter trocado ainda, quebre e recoloque o bloco até aparecer a troca que você quer.",
+   "Troque uma vez para travar a profissão.",
+   "Para descontos, transforme em aldeão zumbi e cure com poção de fraqueza + maçã dourada.",
+   "Deixe os aldeões perto de camas para reporem estoque."
+  ],
+  "erros_comuns": [
+   "Trocar antes de achar a troca certa trava a oferta.",
+   "Aldeão longe do bloco de trabalho não repõe estoque."
+  ],
+  "video": "https://www.youtube.com/watch?v=w5-ptrMW7Z4",
+  "video_titulo": "NEW UPDATED Minecraft 26.1 Villager Trading Hall Tutorial | All Trades 1 Emerald",
+  "alimenta": [],
+  "fonte": [
+   "https://minecraft.wiki/w/Tutorial:Trading",
+   "https://www.youtube.com/watch?v=w5-ptrMW7Z4"
+  ]
+ },
+ {
+  "id": "ouro",
+  "nome": "Farm de ouro (teto do Nether)",
+  "apelidos": [
+   "farm de ouro",
+   "gold farm",
+   "farm de piglin",
+   "farm de zombie piglin",
+   "teto do nether",
+   "nether roof"
+  ],
+  "dificuldade": 5,
+  "rende": {
+   "texto": "~600 lingotes de ouro/hora no design do vídeo",
+   "fonte": "https://www.youtube.com/watch?v=7ywsMK-WpvI"
+  },
+  "materiais": [
+   {
+    "item": "obsidian",
+    "qtd": 14
+   },
+   {
+    "item": "flint_and_steel",
+    "qtd": 1
+   },
+   {
+    "item": "ender_pearl",
+    "qtd": 4
+   },
+   {
+    "item": "cobblestone",
+    "qtd": 1024
+   },
+   {
+    "item": "magma_block",
+    "qtd": 64
+   },
+   {
+    "item": "oak_trapdoor",
+    "qtd": 64
+   },
+   {
+    "item": "turtle_egg",
+    "qtd": 1
+   },
+   {
+    "item": "hopper",
+    "qtd": 4
+   },
+   {
+    "item": "chest",
+    "qtd": 2
+   }
+  ],
+  "requisitos": [
+   "Acesso ao Nether",
+   "Chegar ao teto de bedrock (pérola do ender)",
+   "Ovo de tartaruga como isca"
+  ],
+  "passos": [
+   "Suba ao teto do Nether (acima de Y 128) com pérolas do ender.",
+   "Construa uma grande plataforma sobre um bioma de Nether Wastes.",
+   "Os piglins zumbis nascem ali e são atraídos por um ovo de tartaruga.",
+   "Eles caem por um buraco até a área de abate.",
+   "O ouro e as pepitas caem nos funis.",
+   "Fique AFK no ponto indicado para os spawns acontecerem."
+  ],
+  "erros_comuns": [
+   "Construir sobre floresta carmesim/distorcida rende muito menos.",
+   "Deixar portal perto: mobs vão para o Overworld."
+  ],
+  "video": "https://www.youtube.com/watch?v=7ywsMK-WpvI",
+  "video_titulo": "NEW UPDATED Minecraft Java 26.1.2 Gold Farm Tutorial | 600+ Gold Per Hour!",
+  "alimenta": [
+   "trading-hall"
+  ],
+  "fonte": [
+   "https://minecraft.wiki/w/Tutorial:Zombified_piglin_farming",
+   "https://www.youtube.com/watch?v=7ywsMK-WpvI"
+  ]
+ },
+ {
+  "id": "blaze",
+  "nome": "Farm de blaze",
+  "apelidos": [
+   "farm de blaze",
+   "blaze farm",
+   "vara de blaze",
+   "farm de vara de blaze",
+   "blaze rod"
+  ],
+  "dificuldade": 4,
+  "rende": {
+   "texto": "centenas de varas de blaze/hora (depende do spawner)",
+   "fonte": "https://minecraft.wiki/w/Tutorial:Blaze_farming"
+  },
+  "materiais": [
+   {
+    "item": "cobblestone",
+    "qtd": 256
+   },
+   {
+    "item": "water_bucket",
+    "qtd": 4
+   },
+   {
+    "item": "hopper",
+    "qtd": 2
+   },
+   {
+    "item": "chest",
+    "qtd": 1
+   },
+   {
+    "item": "glass",
+    "qtd": 32
+   },
+   {
+    "item": "oak_slab",
+    "qtd": 16
+   }
+  ],
+  "requisitos": [
+   "Achar um gerador de blaze numa fortaleza do Nether",
+   "Resistência ao fogo ajuda"
+  ],
+  "passos": [
+   "Ache um gerador de blaze numa fortaleza do Nether.",
+   "Cerque a área do spawner (9×9) com blocos sólidos.",
+   "Use água ou pistões para levar os blazes até um ponto de abate.",
+   "Deixe os blazes com pouca vida e finalize você mesmo.",
+   "A vara de blaze só cai se o jogador matar.",
+   "Colete os drops com funis até o baú."
+  ],
+  "erros_comuns": [
+   "Matar só com fogo/queda: blaze não dropa vara se o jogador não matar.",
+   "Luz alta perto do spawner impede spawns (luz 11 ou menos)."
+  ],
+  "video": "https://www.youtube.com/watch?v=3XWTG6frKtY",
+  "video_titulo": "EASIEST Blaze Farm in Minecraft 26.1.2 | Java & Bedrock",
+  "alimenta": [],
+  "fonte": [
+   "https://minecraft.wiki/w/Tutorial:Blaze_farming",
+   "https://www.youtube.com/watch?v=3XWTG6frKtY"
+  ]
+ }
+]

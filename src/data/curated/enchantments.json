@@ -1,0 +1,260 @@
+[
+ {
+  "id": "aqua_affinity",
+  "encantamento": "aqua_affinity",
+  "descricao": "Minera na velocidade normal debaixo d'água.",
+  "fonte": "https://minecraft.wiki/w/Aqua_Affinity"
+ },
+ {
+  "id": "bane_of_arthropods",
+  "encantamento": "bane_of_arthropods",
+  "descricao": "Mais dano contra aranhas, traças, endermites e abelhas, e deixa lentos.",
+  "fonte": "https://minecraft.wiki/w/Bane_of_Arthropods"
+ },
+ {
+  "id": "binding_curse",
+  "encantamento": "binding_curse",
+  "descricao": "A peça não sai do corpo até você morrer (ou quebrar).",
+  "fonte": "https://minecraft.wiki/w/Curse_of_Binding"
+ },
+ {
+  "id": "blast_protection",
+  "encantamento": "blast_protection",
+  "descricao": "Reduz dano de explosões e o empurrão delas.",
+  "fonte": "https://minecraft.wiki/w/Blast_Protection"
+ },
+ {
+  "id": "breach",
+  "encantamento": "breach",
+  "descricao": "Ignora parte da armadura do alvo. Exclusivo da maça.",
+  "fonte": "https://minecraft.wiki/w/Breach"
+ },
+ {
+  "id": "channeling",
+  "encantamento": "channeling",
+  "descricao": "O tridente invoca um raio no alvo durante tempestades.",
+  "fonte": "https://minecraft.wiki/w/Channeling"
+ },
+ {
+  "id": "density",
+  "encantamento": "density",
+  "descricao": "Mais dano da maça por cada bloco de queda.",
+  "fonte": "https://minecraft.wiki/w/Density"
+ },
+ {
+  "id": "depth_strider",
+  "encantamento": "depth_strider",
+  "descricao": "Anda mais rápido debaixo d'água.",
+  "fonte": "https://minecraft.wiki/w/Depth_Strider"
+ },
+ {
+  "id": "efficiency",
+  "encantamento": "efficiency",
+  "descricao": "Quebra blocos mais rápido.",
+  "fonte": "https://minecraft.wiki/w/Efficiency"
+ },
+ {
+  "id": "feather_falling",
+  "encantamento": "feather_falling",
+  "descricao": "Reduz dano de queda. Essencial nas botas.",
+  "fonte": "https://minecraft.wiki/w/Feather_Falling"
+ },
+ {
+  "id": "fire_aspect",
+  "encantamento": "fire_aspect",
+  "descricao": "Coloca fogo no alvo. Mobs que dropam carne dropam cozida.",
+  "fonte": "https://minecraft.wiki/w/Fire_Aspect"
+ },
+ {
+  "id": "fire_protection",
+  "encantamento": "fire_protection",
+  "descricao": "Reduz dano de fogo e o tempo pegando fogo.",
+  "fonte": "https://minecraft.wiki/w/Fire_Protection"
+ },
+ {
+  "id": "flame",
+  "encantamento": "flame",
+  "descricao": "As flechas do arco pegam fogo.",
+  "fonte": "https://minecraft.wiki/w/Flame"
+ },
+ {
+  "id": "fortune",
+  "encantamento": "fortune",
+  "descricao": "Mais drops de minérios (diamante, carvão, redstone...) e plantações.",
+  "fonte": "https://minecraft.wiki/w/Fortune"
+ },
+ {
+  "id": "frost_walker",
+  "encantamento": "frost_walker",
+  "descricao": "Congela a água embaixo de você ao andar. Tesouro.",
+  "fonte": "https://minecraft.wiki/w/Frost_Walker"
+ },
+ {
+  "id": "impaling",
+  "encantamento": "impaling",
+  "descricao": "Mais dano do tridente em mobs aquáticos.",
+  "fonte": "https://minecraft.wiki/w/Impaling"
+ },
+ {
+  "id": "infinity",
+  "encantamento": "infinity",
+  "descricao": "O arco não gasta flechas (precisa de 1 no inventário). Incompatível com Remendo.",
+  "fonte": "https://minecraft.wiki/w/Infinity"
+ },
+ {
+  "id": "knockback",
+  "encantamento": "knockback",
+  "descricao": "Empurra o alvo mais longe.",
+  "fonte": "https://minecraft.wiki/w/Knockback"
+ },
+ {
+  "id": "looting",
+  "encantamento": "looting",
+  "descricao": "Mais drops dos mobs e mais chance de itens raros.",
+  "fonte": "https://minecraft.wiki/w/Looting"
+ },
+ {
+  "id": "loyalty",
+  "encantamento": "loyalty",
+  "descricao": "O tridente volta para você depois de lançado.",
+  "fonte": "https://minecraft.wiki/w/Loyalty"
+ },
+ {
+  "id": "luck_of_the_sea",
+  "encantamento": "luck_of_the_sea",
+  "descricao": "Mais chance de tesouro na pesca.",
+  "fonte": "https://minecraft.wiki/w/Luck_of_the_Sea"
+ },
+ {
+  "id": "lunge",
+  "encantamento": "lunge",
+  "descricao": "A lança avança você ao atacar.",
+  "fonte": "https://minecraft.wiki/w/Lunge"
+ },
+ {
+  "id": "lure",
+  "encantamento": "lure",
+  "descricao": "Os peixes mordem a isca mais rápido.",
+  "fonte": "https://minecraft.wiki/w/Lure"
+ },
+ {
+  "id": "mending",
+  "encantamento": "mending",
+  "descricao": "Repara o item com a XP que você coleta. Só vem de trocas, pesca e baús.",
+  "fonte": "https://minecraft.wiki/w/Mending"
+ },
+ {
+  "id": "multishot",
+  "encantamento": "multishot",
+  "descricao": "A besta dispara 3 flechas de uma vez.",
+  "fonte": "https://minecraft.wiki/w/Multishot"
+ },
+ {
+  "id": "piercing",
+  "encantamento": "piercing",
+  "descricao": "A flecha da besta atravessa vários alvos.",
+  "fonte": "https://minecraft.wiki/w/Piercing"
+ },
+ {
+  "id": "power",
+  "encantamento": "power",
+  "descricao": "Mais dano das flechas do arco.",
+  "fonte": "https://minecraft.wiki/w/Power"
+ },
+ {
+  "id": "projectile_protection",
+  "encantamento": "projectile_protection",
+  "descricao": "Reduz dano de flechas e outros projéteis.",
+  "fonte": "https://minecraft.wiki/w/Projectile_Protection"
+ },
+ {
+  "id": "protection",
+  "encantamento": "protection",
+  "descricao": "Reduz quase todo tipo de dano. Não combina com as outras proteções.",
+  "fonte": "https://minecraft.wiki/w/Protection"
+ },
+ {
+  "id": "punch",
+  "encantamento": "punch",
+  "descricao": "As flechas do arco empurram mais.",
+  "fonte": "https://minecraft.wiki/w/Punch"
+ },
+ {
+  "id": "quick_charge",
+  "encantamento": "quick_charge",
+  "descricao": "A besta recarrega mais rápido.",
+  "fonte": "https://minecraft.wiki/w/Quick_Charge"
+ },
+ {
+  "id": "respiration",
+  "encantamento": "respiration",
+  "descricao": "Aumenta o tempo que você aguenta debaixo d'água.",
+  "fonte": "https://minecraft.wiki/w/Respiration"
+ },
+ {
+  "id": "riptide",
+  "encantamento": "riptide",
+  "descricao": "O tridente lança você na água ou na chuva.",
+  "fonte": "https://minecraft.wiki/w/Riptide"
+ },
+ {
+  "id": "sharpness",
+  "encantamento": "sharpness",
+  "descricao": "Mais dano corpo a corpo em qualquer mob.",
+  "fonte": "https://minecraft.wiki/w/Sharpness"
+ },
+ {
+  "id": "silk_touch",
+  "encantamento": "silk_touch",
+  "descricao": "O bloco cai inteiro (minério, vidro, gelo...). Não combina com Fortuna.",
+  "fonte": "https://minecraft.wiki/w/Silk_Touch"
+ },
+ {
+  "id": "smite",
+  "encantamento": "smite",
+  "descricao": "Mais dano contra mortos-vivos (zumbis, esqueletos, Wither).",
+  "fonte": "https://minecraft.wiki/w/Smite"
+ },
+ {
+  "id": "soul_speed",
+  "encantamento": "soul_speed",
+  "descricao": "Anda mais rápido em areia e terra das almas. Só no bastião/troca com piglin.",
+  "fonte": "https://minecraft.wiki/w/Soul_Speed"
+ },
+ {
+  "id": "sweeping_edge",
+  "encantamento": "sweeping_edge",
+  "descricao": "Aumenta o dano do ataque em área da espada.",
+  "fonte": "https://minecraft.wiki/w/Sweeping_Edge"
+ },
+ {
+  "id": "swift_sneak",
+  "encantamento": "swift_sneak",
+  "descricao": "Anda mais rápido agachado. Só nas cidades ancestrais.",
+  "fonte": "https://minecraft.wiki/w/Swift_Sneak"
+ },
+ {
+  "id": "thorns",
+  "encantamento": "thorns",
+  "descricao": "Devolve dano a quem bate em você, mas gasta a armadura.",
+  "fonte": "https://minecraft.wiki/w/Thorns"
+ },
+ {
+  "id": "unbreaking",
+  "encantamento": "unbreaking",
+  "descricao": "O item dura mais (gasta durabilidade com menos frequência).",
+  "fonte": "https://minecraft.wiki/w/Unbreaking"
+ },
+ {
+  "id": "vanishing_curse",
+  "encantamento": "vanishing_curse",
+  "descricao": "O item some quando você morre.",
+  "fonte": "https://minecraft.wiki/w/Curse_of_Vanishing"
+ },
+ {
+  "id": "wind_burst",
+  "encantamento": "wind_burst",
+  "descricao": "A maça lança você para cima após um golpe de queda.",
+  "fonte": "https://minecraft.wiki/w/Wind_Burst"
+ }
+]
