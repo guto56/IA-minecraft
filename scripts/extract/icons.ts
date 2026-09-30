@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { PNG } from 'pngjs';
+import sharp from 'sharp';
 import { stripNs, type Jar } from './util.ts';
 
 /* ------------------------------------------------------------------ */
@@ -578,12 +579,14 @@ export interface IconReport {
   columns: number;
   /** Itens desenhados em 3D (bloco isométrico). */
   iso: string[];
+  /** Ícones do atlas pequeno da tela inicial (ordem = posição). */
+  ui: string[];
 }
 
-export function renderIcons(jar: Jar, itemIds: string[], outDir: string, sizes = [32, 64]): IconReport {
+export async function renderIcons(jar: Jar, itemIds: string[], outDir: string, sizes = [32, 64], uiIds: string[] = []): Promise<IconReport> {
   const textures = new TextureStore(jar);
   const tints = new Tints(textures);
-  const report: IconReport = { rendered: 0, kinds: {}, missing: [], index: {}, columns: 0, iso: [] };
+  const report: IconReport = { rendered: 0, kinds: {}, missing: [], index: {}, columns: 0, iso: [], ui: [] };
   const rendered = new Map<number, Map<string, Canvas>>(sizes.map((s) => [s, new Map()]));
 
   for (const id of itemIds) {
@@ -667,7 +670,18 @@ export function renderIcons(jar: Jar, itemIds: string[], outDir: string, sizes =
       const src = PNG.sync.read(c.toPng());
       PNG.bitblt(src, atlas, 0, 0, size, size, ox, oy);
     });
-    fs.writeFileSync(path.join(outDir, `atlas-${size}.png`), PNG.sync.write(atlas, { deflateLevel: 9 }));
+    // Recomprime sem perdas (o PNG do pngjs sai ~2x maior).
+    fs.writeFileSync(path.join(outDir, `atlas-${size}.png`), await sharp(PNG.sync.write(atlas)).png({ compressionLevel: 9, effort: 10 }).toBuffer());
+  }
+
+  // Atlas mínimo com os ícones da tela inicial: carrega na hora, sem esperar o atlas completo.
+  const ui = uiIds.filter((id) => rendered.get(64)!.has(id));
+  report.ui = ui;
+  for (const size of sizes) {
+    const atlas = new PNG({ width: ui.length * size, height: size });
+    atlas.data.fill(0);
+    ui.forEach((id, i) => PNG.bitblt(PNG.sync.read(rendered.get(size)!.get(id)!.toPng()), atlas, 0, 0, size, size, i * size, 0));
+    fs.writeFileSync(path.join(outDir, `ui-${size}.png`), await sharp(PNG.sync.write(atlas)).png({ compressionLevel: 9, effort: 10 }).toBuffer());
   }
   return report;
 }

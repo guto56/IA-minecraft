@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { KIND_LABEL, defaultQuestion, searchEntities } from '../lib/search';
+import { KIND_LABEL, useSearch } from '../lib/useSearch';
 import { ItemIcon } from './ItemIcon';
 import { IconSearch } from './Icons';
 
@@ -15,7 +15,8 @@ export function ItemSearch({ open, onClose, onAsk }: Props) {
   const input = useRef<HTMLInputElement>(null);
   const [q, setQ] = useState('');
   const [active, setActive] = useState(0);
-  const results = searchEntities(q, 12);
+  const search = useSearch(open);
+  const results = search ? search.searchEntities(q, 12) : [];
 
   useEffect(() => {
     const d = ref.current;
@@ -33,7 +34,7 @@ export function ItemSearch({ open, onClose, onAsk }: Props) {
     const e = results[i];
     if (!e) return;
     onClose();
-    onAsk(defaultQuestion(e));
+    onAsk(search!.defaultQuestion(e));
   };
 
   return (

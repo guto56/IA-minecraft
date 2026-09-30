@@ -45,6 +45,7 @@ import type {
   Tip,
   TradeLevel,
 } from '../data/types';
+import { setIconNameResolver } from '../components/ItemIcon';
 
 export const items = itemsJson as Record<string, Item>;
 export const recipes = recipesJson as Recipe[];
@@ -206,3 +207,5 @@ export function mobIcon(id: string): string | undefined {
   const egg = `${id}_spawn_egg`;
   return items[egg] ? egg : undefined;
 }
+
+setIconNameResolver((id) => items[id]?.name ?? id);

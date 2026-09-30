@@ -1,4 +1,4 @@
-import { VERSION, meta } from '../lib/kb';
+import meta from '../data/meta.json';
 import { useChat, useTheme } from '../store/chat';
 import { ItemIcon } from './ItemIcon';
 import { IconMoon, IconPlus, IconSearch, IconSidebar, IconSun, IconTrash } from './Icons';
@@ -105,7 +105,7 @@ export function Sidebar({ open, onClose, onAsk, onSearch, mobile }: Props) {
       <div className="flex items-center justify-between gap-2 border-t border-line px-3 py-3">
         <span className="inline-flex items-center gap-2 rounded-md border border-emerald/40 bg-emerald/10 px-2 py-1 font-mono text-[12px] text-emerald" title={`${meta.dropName} · dados extraídos em ${meta.extractedAt}`}>
           <span className="h-1.5 w-1.5 bg-emerald" aria-hidden="true" />
-          Java {VERSION}
+          Java {meta.version}
         </span>
         <button type="button" onClick={toggle} aria-label={theme === 'dark' ? 'Usar tema claro (Calcita)' : 'Usar tema escuro (Deepslate)'} title={theme === 'dark' ? 'Tema Calcita' : 'Tema Deepslate'} className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-surface-2 hover:text-fg">
           {theme === 'dark' ? <IconSun /> : <IconMoon />}

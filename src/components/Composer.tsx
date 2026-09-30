@@ -1,7 +1,8 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
-import { searchEntities, KIND_LABEL } from '../lib/search';
+import { KIND_LABEL, useSearch } from '../lib/useSearch';
 import { useChat } from '../store/chat';
 import { ItemIcon } from './ItemIcon';
+import { warmEngine } from '../lib/warm';
 import { IconSend, IconStop } from './Icons';
 
 export interface ComposerHandle {
@@ -30,7 +31,8 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ on
   useImperativeHandle(ref, () => ({ focus: () => ta.current?.focus() }));
 
   const tail = tailQuery(value);
-  const suggestions = useMemo(() => (dismissed || tail.length < 2 ? [] : searchEntities(tail, 6)), [tail, dismissed]);
+  const search = useSearch(focused || value.length > 0);
+  const suggestions = useMemo(() => (dismissed || tail.length < 2 || !search ? [] : search.searchEntities(tail, 6)), [tail, dismissed, search]);
   const open = suggestions.length > 0 && focused;
 
   useEffect(() => setActive(0), [tail]);
@@ -93,7 +95,10 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ on
           value={value}
           placeholder="Pergunte sobre receitas, farms, drops…"
           aria-autocomplete="list"
-          onFocus={() => setFocused(true)}
+          onFocus={() => {
+            setFocused(true);
+            warmEngine();
+          }}
           onBlur={() => setFocused(false)}
           aria-controls={open ? 'composer-suggestions' : undefined}
           aria-activedescendant={open ? `sug-${active}` : undefined}

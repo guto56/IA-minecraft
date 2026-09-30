@@ -17,6 +17,7 @@
   --xp: #7cd13b;
   --gold: #e8b93a;
   --redstone: #d8433a;
+  --redstone-ink: #f06a60;
   --diamond: #5ed3d1;
   --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -12px rgb(0 0 0 / 0.6);
   --selection: rgb(63 191 107 / 0.32);
@@ -30,12 +31,13 @@
   --border: #dcd8cf;
   --text: #1c1d21;
   --text-muted: #5f5d56;
-  --emerald: #23874a;
+  --emerald: #1d7a41;
   --emerald-ink: #ffffff;
   --xp: #4e8f20;
-  --gold: #9a7210;
+  --gold: #8a650c;
   --redstone: #b8322a;
-  --diamond: #1f8583;
+  --redstone-ink: #b8322a;
+  --diamond: #1a7775;
   --shadow: 0 1px 2px rgb(40 34 20 / 0.08), 0 10px 28px -14px rgb(40 34 20 / 0.28);
   --selection: rgb(35 135 74 / 0.22);
   color-scheme: light;
@@ -53,6 +55,7 @@
   --color-xp: var(--xp);
   --color-gold: var(--gold);
   --color-redstone: var(--redstone);
+  --color-redstone-ink: var(--redstone-ink);
   --color-diamond: var(--diamond);
   --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', monospace;

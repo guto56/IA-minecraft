@@ -16,7 +16,7 @@ const qty = (min: number, max: number) => (min === max ? `${min}` : `${min}–${
 const fmtY = (y: number) => (y < 0 ? `−${Math.abs(y)}` : `${y}`);
 
 function Badge({ children, tone = 'muted' }: { children: React.ReactNode; tone?: 'muted' | 'gold' | 'diamond' | 'emerald' | 'redstone' }) {
-  const color = { muted: 'text-muted border-line', gold: 'text-gold border-gold/40', diamond: 'text-diamond border-diamond/40', emerald: 'text-emerald border-emerald/40', redstone: 'text-redstone border-redstone/40' }[tone];
+  const color = { muted: 'text-muted border-line', gold: 'text-gold border-gold/40', diamond: 'text-diamond border-diamond/40', emerald: 'text-emerald border-emerald/40', redstone: 'text-redstone-ink border-redstone/40' }[tone];
   return <span className={`inline-flex items-center rounded-md border px-1.5 py-px text-[11.5px] leading-5 whitespace-nowrap ${color}`}>{children}</span>;
 }
 

@@ -387,10 +387,9 @@ export function farmAnswer(entity: Entity | null): Answer {
     return farmList(text);
   }
   const text = [
-    `${b(farm.nome)} · dificuldade ${b(`${farm.dificuldade}/5`)}.`,
-    `Rende: ${farm.rende.texto}.`,
-    farm.requisitos.length ? `Precisa de: ${farm.requisitos.join('; ')}.` : '',
-  ].filter(Boolean);
+    `${b(farm.nome)} · dificuldade ${b(`${farm.dificuldade}/5`)}. Rende ${farm.rende.texto}.`,
+    `Materiais, passo a passo e vídeo de tutorial da 26.x no card.`,
+  ];
   return { type: 'farm', farm, text, source: farm.fonte[0] };
 }
 

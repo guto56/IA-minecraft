@@ -5,7 +5,7 @@ import { useChat } from '../store/chat';
 import { ItemIcon } from './ItemIcon';
 import { RichText, wordCount } from './RichText';
 import { AnswerCard, thinkingBudget } from './AnswerView';
-import { IconChevron } from './Icons';
+import { IconCheck, IconChevron, IconShare } from './Icons';
 
 type Phase = 'understanding' | 'identified' | 'searching' | 'building' | 'streaming' | 'done';
 const ORDER: Phase[] = ['understanding', 'identified', 'searching', 'building', 'streaming', 'done'];
@@ -105,7 +105,7 @@ export function BotMessage({ msg }: { msg: Msg }) {
             if (wordsLeft !== undefined) wordsLeft = Math.max(0, wordsLeft - n);
             return (
               <div key={i} className="grid gap-3">
-                {showCard ? <Lines lines={a.text} words={phase === 'streaming' ? take : undefined} /> : null}
+                {showCard && phase !== 'building' ? <Lines lines={a.text} words={phase === 'streaming' ? take : undefined} /> : null}
                 <AnimatePresence>
                   {showCard ? (
                     <motion.div
@@ -117,13 +117,38 @@ export function BotMessage({ msg }: { msg: Msg }) {
                     </motion.div>
                   ) : null}
                 </AnimatePresence>
-                {phase === 'done' ? <p className="text-[12px] text-muted">{sourceLine(a.source)}</p> : null}
+                {phase === 'done' ? (
+                  <div className="flex items-center gap-3 text-[12px] text-muted">
+                    <p>{sourceLine(a.source)}</p>
+                    {i === msg.result.answers.length - 1 ? <ShareButton question={msg.question} /> : null}
+                  </div>
+                ) : null}
               </div>
             );
           })}
         </div>
       </div>
     </article>
+  );
+}
+
+function ShareButton({ question }: { question: string }) {
+  const [done, setDone] = useState(false);
+  const share = async () => {
+    const url = `${window.location.origin}/?q=${encodeURIComponent(question)}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setDone(true);
+      setTimeout(() => setDone(false), 1600);
+    } catch {
+      window.prompt('Copie o link:', url);
+    }
+  };
+  return (
+    <button type="button" onClick={share} className="ml-auto inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 hover:bg-surface-2 hover:text-fg" aria-label="Copiar link desta pergunta">
+      {done ? <IconCheck width={14} height={14} className="text-emerald" /> : <IconShare width={14} height={14} />}
+      {done ? 'Link copiado' : 'Compartilhar'}
+    </button>
   );
 }
 
@@ -143,6 +168,14 @@ function sourceLine(source: string) {
   );
 }
 
+function buildingLabel(msg: Msg) {
+  const t = msg.result.answers[0].type;
+  if (t === 'recipe' || t === 'smelt' || t === 'potion' || t === 'uses') return 'Montando a grade…';
+  if (t === 'farm') return 'Separando os materiais…';
+  if (t === 'location') return 'Medindo as alturas…';
+  return 'Montando a resposta…';
+}
+
 function Progress({ phase, msg }: { phase: Phase; msg: Msg }) {
   const t = msg.result.traces[0];
   const pct = phase === 'understanding' ? 0 : phase === 'identified' ? 0.25 : phase === 'searching' ? 0.7 : 1;
@@ -156,7 +189,7 @@ function Progress({ phase, msg }: { phase: Phase; msg: Msg }) {
             <span className="pixel-dot" />
           </span>
         ) : null}
-        <span>{phase === 'identified' ? 'Identificado:' : STEP_LABEL[phase as keyof typeof STEP_LABEL]}</span>
+        <span>{phase === 'identified' ? 'Identificado:' : phase === 'building' ? buildingLabel(msg) : STEP_LABEL[phase as keyof typeof STEP_LABEL]}</span>
         {phase !== 'understanding' && t ? <TraceChip trace={t} /> : null}
       </div>
       {phase === 'searching' || phase === 'building' ? (

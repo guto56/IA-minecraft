@@ -23,21 +23,8 @@ export function searchEntities(query: string, limit = 8, kinds?: Entity['kind'][
     seen.add(k);
     out.push(d.e);
   }
-  return out.sort((a, b) => Number(!canonical(b.label).startsWith(q)) - Number(!canonical(a.label).startsWith(q)) || KIND_ORDER[a.kind] - KIND_ORDER[b.kind]).slice(0, limit);
+  return out.sort((a, b) => Number(!canonical(a.label).startsWith(q)) - Number(!canonical(b.label).startsWith(q)) || KIND_ORDER[a.kind] - KIND_ORDER[b.kind]).slice(0, limit);
 }
-
-export const KIND_LABEL: Record<Entity['kind'], string> = {
-  item: 'item',
-  mob: 'mob',
-  farm: 'farm',
-  potion: 'poção',
-  enchantment: 'encantamento',
-  structure: 'estrutura',
-  biome: 'bioma',
-  profession: 'aldeão',
-  tip: 'dica',
-  novidade: 'novidade',
-};
 
 /** Pergunta padrão ao escolher uma entidade na busca. */
 export function defaultQuestion(e: Entity): string {

@@ -125,9 +125,11 @@ async function main() {
   if (!process.argv.includes('--no-icons')) {
     log('ícones', 'renderizando');
     fs.rmSync(ICON_OUT, { recursive: true, force: true });
-    const report = renderIcons(jar, [...itemIds], ICON_OUT);
+    // Ícones da tela inicial e da barra lateral (logo, exemplos).
+    const UI = ['crafting_table', 'piston', 'iron_ingot', 'diamond', 'gunpowder', 'golden_carrot', 'poplar_sapling', 'emerald'];
+    const report = await renderIcons(jar, [...itemIds], ICON_OUT, [32, 64], UI);
     log('ícones', `${report.rendered} gerados ${JSON.stringify(report.kinds)}; sem ícone: ${report.missing.length}`);
-    writeJson(path.join(DATA_OUT, 'icons.json'), { columns: report.columns, sizes: [32, 64], index: report.index, iso: report.iso, missing: report.missing });
+    writeJson(path.join(DATA_OUT, 'icons.json'), { columns: report.columns, sizes: [32, 64], index: report.index, iso: report.iso, ui: report.ui, missing: report.missing });
     writeAppIcons(path.join(ICON_OUT, 'atlas-64.png'), report.index['crafting_table'], report.columns, path.dirname(ICON_OUT));
   }
   extractGui(jar, path.join(path.dirname(ICON_OUT), 'gui'));

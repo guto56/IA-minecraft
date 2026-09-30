@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { ask, type Context, type EngineResult } from '../engine';
+import type { Context, EngineResult } from '../engine';
 
 export interface UserMessage {
   id: string;
@@ -43,7 +43,7 @@ interface ChatState {
   favorites: Favorite[];
   /** Mensagem cuja animação está rodando (o botão Parar a encerra). */
   animatingId: string | null;
-  send: (text: string) => void;
+  send: (text: string) => Promise<void>;
   newConversation: () => void;
   select: (id: string) => void;
   remove: (id: string) => void;
@@ -65,9 +65,11 @@ export const useChat = create<ChatState>()(
       activeId: null,
       favorites: [],
       animatingId: null,
-      send: (text) => {
+      send: async (text) => {
         const q = text.trim();
         if (!q) return;
+        // O motor e os dados do jogo carregam só na primeira pergunta.
+        const { ask } = await import('../engine');
         const state = get();
         let conv = state.conversations.find((c) => c.id === state.activeId);
         const now = Date.now();

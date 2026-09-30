@@ -1,13 +1,16 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
 import { AskContext } from './components/AskContext';
-import { BotMessage } from './components/BotMessage';
 import { Composer, type ComposerHandle } from './components/Composer';
 import { ItemIcon } from './components/ItemIcon';
 import { ItemSearch } from './components/ItemSearch';
 import { Sidebar } from './components/Sidebar';
 import { IconPlus, IconSidebar } from './components/Icons';
 import { useIsMobile } from './hooks/useMedia';
+
+// A conversa (cards + dados do jogo) carrega sob demanda: a tela inicial abre na hora.
+const Messages = lazy(() => import('./components/Messages'));
 import { useActiveConversation, useChat } from './store/chat';
+import { warmEngine } from './lib/warm';
 
 const EXAMPLES: { q: string; icon: string }[] = [
   { q: 'Como faz um pistão?', icon: 'piston' },
@@ -26,7 +29,6 @@ export default function App() {
   const newConversation = useChat((s) => s.newConversation);
   const conv = useActiveConversation();
   const composer = useRef<ComposerHandle>(null);
-  const bottom = useRef<HTMLDivElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
 
   const ask = useCallback(
@@ -69,9 +71,14 @@ export default function App() {
   }, []);
 
   const count = conv?.messages.length ?? 0;
+  // Nova pergunta: rola até ela, para a resposta começar no topo da tela.
   useEffect(() => {
     if (!count) return;
-    requestAnimationFrame(() => bottom.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }));
+    requestAnimationFrame(() => {
+      const last = scroller.current?.querySelectorAll('[data-user-message]');
+      const el = last?.[last.length - 1] as HTMLElement | undefined;
+      if (el) el.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    });
   }, [count]);
 
   useEffect(() => setSidebar(!mobile), [mobile]);
@@ -107,6 +114,8 @@ export default function App() {
                     <li key={e.q}>
                       <button
                         type="button"
+                        onPointerEnter={warmEngine}
+                        onFocus={warmEngine}
                         onClick={() => ask(e.q)}
                         className="inline-flex items-center gap-2 rounded-xl border border-line bg-surface px-3 py-2 text-[14px] text-fg transition-[transform,border-color] duration-150 ease-out hover:-translate-y-px hover:border-muted"
                       >
@@ -124,18 +133,9 @@ export default function App() {
           ) : (
             <>
               <div ref={scroller} className="min-h-0 flex-1 overflow-y-auto">
-                <div className="mx-auto grid w-full max-w-[760px] gap-8 px-4 pt-4 pb-10">
-                  {conv!.messages.map((m) =>
-                    m.role === 'user' ? (
-                      <div key={m.id} className="flex justify-end">
-                        <p className="max-w-[80%] rounded-2xl rounded-br-md bg-surface-2 px-4 py-2 text-[15px] whitespace-pre-wrap text-fg">{m.text}</p>
-                      </div>
-                    ) : (
-                      <BotMessage key={m.id} msg={m} />
-                    ),
-                  )}
-                  <div ref={bottom} />
-                </div>
+                <Suspense fallback={<div className="mx-auto max-w-[760px] px-4 pt-6 text-[14px] text-muted">Carregando os dados da 26.3…</div>}>
+                  <Messages messages={conv!.messages} />
+                </Suspense>
               </div>
               <div className="shrink-0 px-4 pt-2 pb-[max(12px,env(safe-area-inset-bottom))]">
                 <div className="mx-auto w-full max-w-[760px]">
