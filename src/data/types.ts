@@ -49,6 +49,8 @@ export interface Drop {
   playerKill?: boolean;
   cookedOnFire?: boolean;
   special?: string;
+  anyOf?: number;
+  anyOfTag?: string;
 }
 
 export interface LootTable {

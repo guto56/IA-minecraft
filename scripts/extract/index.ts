@@ -11,7 +11,7 @@ import { extractTrades } from './trades.ts';
 import { extractEnchantments } from './enchantments.ts';
 import { extractWorld } from './world.ts';
 import { renderIcons } from './icons.ts';
-import { extractGui } from './gui.ts';
+import { extractGui, writeAppIcons } from './gui.ts';
 
 async function main() {
   const dl = await downloadVersion();
@@ -128,6 +128,7 @@ async function main() {
     const report = renderIcons(jar, [...itemIds], ICON_OUT);
     log('ícones', `${report.rendered} gerados ${JSON.stringify(report.kinds)}; sem ícone: ${report.missing.length}`);
     writeJson(path.join(DATA_OUT, 'icons.json'), { columns: report.columns, sizes: [32, 64], index: report.index, iso: report.iso, missing: report.missing });
+    writeAppIcons(path.join(ICON_OUT, 'atlas-64.png'), report.index['crafting_table'], report.columns, path.dirname(ICON_OUT));
   }
   extractGui(jar, path.join(path.dirname(ICON_OUT), 'gui'));
   log('ok', `dados de ${config.minecraftVersion} em src/data/`);

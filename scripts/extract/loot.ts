@@ -16,6 +16,9 @@ export interface Drop {
   cookedOnFire?: boolean;
   /** Só dropa sob condição específica (ex.: morto por esqueleto). */
   special?: string;
+  /** Sorteia 1 item entre N de uma tag (ex.: um disco qualquer). `item` é o primeiro. */
+  anyOf?: number;
+  anyOfTag?: string;
 }
 
 export interface LootTable {
@@ -179,10 +182,15 @@ export function extractLoot(jar: Jar, itemTags: TagMap, itemIds: Set<string>): R
     if (t === 'empty') return;
     let names: string[] = [];
     if (t === 'item') names = [stripNs(e.name)];
+    let anyOf: { n: number; tag: string } | undefined;
     if (t === 'tag') {
-      names = itemTags[stripNs(String(e.name ?? e.items).replace('#', ''))] ?? [];
-      // expand=true: sorteia UM item da tag.
-      if (e.expand && names.length) f = { ...f, chance: f.chance / names.length };
+      const tag = stripNs(String(e.name ?? e.items).replace('#', ''));
+      names = (itemTags[tag] ?? []).filter((n) => itemIds.has(n));
+      // expand=true: sorteia UM item da tag; vira uma linha só ("um disco qualquer").
+      if (e.expand && names.length > 1) {
+        anyOf = { n: names.length, tag };
+        names = [names[0]];
+      }
     }
     let min = 1;
     let max = 1;
@@ -221,6 +229,10 @@ export function extractLoot(jar: Jar, itemTags: TagMap, itemIds: Set<string>): R
       if (f.playerKill) d.playerKill = true;
       if (cooked) d.cookedOnFire = true;
       if (f.special) d.special = f.special;
+      if (anyOf) {
+        d.anyOf = anyOf.n;
+        d.anyOfTag = anyOf.tag;
+      }
       out.push(d);
     }
   };

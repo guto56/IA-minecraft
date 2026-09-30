@@ -113,11 +113,42 @@ function resolveTexture(model: ResolvedModel, ref: string): string | undefined {
 /* Definição de item (assets/minecraft/items/*.json)                    */
 /* ------------------------------------------------------------------ */
 
+/** Transformação de uma parte de modelo composto (T * L * S * R, em blocos). */
+interface PartTransform {
+  translation: [number, number, number];
+  left: [number, number, number, number];
+  right: [number, number, number, number];
+  scale: [number, number, number];
+}
+
+const IDENTITY: PartTransform = { translation: [0, 0, 0], left: [0, 0, 0, 1], right: [0, 0, 0, 1], scale: [1, 1, 1] };
+
+function quatRotate(q: [number, number, number, number], v: [number, number, number]): [number, number, number] {
+  const [x, y, z, w] = q;
+  const [vx, vy, vz] = v;
+  // v' = v + 2w(q×v) + 2q×(q×v)
+  const cx = y * vz - z * vy;
+  const cy = z * vx - x * vz;
+  const cz = x * vy - y * vx;
+  const ccx = y * cz - z * cy;
+  const ccy = z * cx - x * cz;
+  const ccz = x * cy - y * cx;
+  return [vx + 2 * (w * cx + ccx), vy + 2 * (w * cy + ccy), vz + 2 * (w * cz + ccz)];
+}
+
+function applyPart(t: PartTransform, p: [number, number, number]): [number, number, number] {
+  let v: [number, number, number] = [p[0] / 16, p[1] / 16, p[2] / 16];
+  v = quatRotate(t.right, v);
+  v = [v[0] * t.scale[0], v[1] * t.scale[1], v[2] * t.scale[2]];
+  v = quatRotate(t.left, v);
+  return [(v[0] + t.translation[0]) * 16, (v[1] + t.translation[1]) * 16, (v[2] + t.translation[2]) * 16];
+}
+
 interface Picked {
   model?: string;
   tints: Tint[];
   special?: any;
-  parts?: { model: string; tints: Tint[]; translation: [number, number, number] }[];
+  parts?: { model: string; tints: Tint[]; transform: PartTransform }[];
 }
 
 function pick(node: any): Picked {
@@ -130,8 +161,14 @@ function pick(node: any): Picked {
     case 'composite': {
       const parts = node.models.map((m: any) => {
         const p = pick(m);
-        const tr = m.transformation?.translation ?? [0, 0, 0];
-        return { model: p.model!, tints: p.tints, translation: tr };
+        const t = m.transformation ?? {};
+        const transform: PartTransform = {
+          translation: t.translation ?? IDENTITY.translation,
+          left: t.left_rotation ?? IDENTITY.left,
+          right: t.right_rotation ?? IDENTITY.right,
+          scale: t.scale ?? IDENTITY.scale,
+        };
+        return { model: p.model!, tints: p.tints, transform };
       });
       return { tints: [], parts };
     }
@@ -282,7 +319,7 @@ const SHADE: Record<Dir, number> = { up: 1, down: 0.5, north: 0.8, south: 0.8, e
 interface DrawItem {
   model: ResolvedModel;
   tints: Tint[];
-  translation: V3;
+  transform: PartTransform;
 }
 
 function renderElements(canvas: Canvas, items: DrawItem[], textures: TextureStore, tints: Tints, gui: NonNullable<ResolvedModel['gui']>) {
@@ -315,7 +352,7 @@ function renderElements(canvas: Canvas, items: DrawItem[], textures: TextureStor
           const rot = el.rotation;
           corners = corners.map((c) => rotateAxis(c, rot.axis, rot.angle, rot.origin as V3)) as typeof corners;
         }
-        corners = corners.map((c) => [c[0] + it.translation[0] * 16, c[1] + it.translation[1] * 16, c[2] + it.translation[2] * 16]) as typeof corners;
+        corners = corners.map((c) => applyPart(it.transform, c)) as typeof corners;
         const world = corners.map(transform);
         const scr = world.map(toScreen);
         // Normal no espaço de visão (câmera olha para -z): descarta faces de costas.
@@ -563,7 +600,7 @@ export function renderIcons(jar: Jar, itemIds: string[], outDir: string, sizes =
         const first = loadModel(jar, picked.parts[0].model);
         renderElements(
           canvas,
-          picked.parts.map((p) => ({ model: loadModel(jar, p.model), tints: p.tints, translation: p.translation })),
+          picked.parts.map((p) => ({ model: loadModel(jar, p.model), tints: p.tints, transform: p.transform })),
           textures,
           tints,
           first.gui ?? BLOCK_GUI,
@@ -572,7 +609,7 @@ export function renderIcons(jar: Jar, itemIds: string[], outDir: string, sizes =
       } else if (picked.special) {
         const sm = specialModel(picked.special, textures);
         if (sm) {
-          renderElements(canvas, [{ model: sm.model, tints: [], translation: [0, 0, 0] }], textures, tints, sm.model.gui!);
+          renderElements(canvas, [{ model: sm.model, tints: [], transform: IDENTITY }], textures, tints, sm.model.gui!);
           kind = 'special3d';
         } else if (flatSpecial(canvas, picked.special, textures)) kind = 'special2d';
         else {
@@ -585,7 +622,7 @@ export function renderIcons(jar: Jar, itemIds: string[], outDir: string, sizes =
               gui: BLOCK_GUI,
               elements: [{ from: [0, 0, 0], to: [16, 16, 16], faces: Object.fromEntries((['up', 'north', 'east', 'south', 'west', 'down'] as Dir[]).map((d) => [d, { texture: '#all' }])) }],
             };
-            renderElements(canvas, [{ model: cube, tints: [], translation: [0, 0, 0] }], textures, tints, BLOCK_GUI);
+            renderElements(canvas, [{ model: cube, tints: [], transform: IDENTITY }], textures, tints, BLOCK_GUI);
             kind = 'special-particle';
           }
         }
@@ -595,7 +632,7 @@ export function renderIcons(jar: Jar, itemIds: string[], outDir: string, sizes =
           renderGenerated(canvas, model, picked.tints, textures, tints);
           kind = 'flat';
         } else if (model.elements) {
-          renderElements(canvas, [{ model, tints: picked.tints, translation: [0, 0, 0] }], textures, tints, model.gui ?? BLOCK_GUI);
+          renderElements(canvas, [{ model, tints: picked.tints, transform: IDENTITY }], textures, tints, model.gui ?? BLOCK_GUI);
           kind = 'block3d';
         }
       }

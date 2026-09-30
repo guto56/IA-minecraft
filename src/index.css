@@ -1,0 +1,272 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------- */
+/* Tokens                                                            */
+/* ---------------------------------------------------------------- */
+
+:root,
+[data-theme='dark'] {
+  --bg: #141517;
+  --surface: #1c1d21;
+  --surface-2: #25272c;
+  --border: #2f3238;
+  --text: #e8e6e1;
+  --text-muted: #9a9890;
+  --emerald: #3fbf6b;
+  --emerald-ink: #0e2a18;
+  --xp: #7cd13b;
+  --gold: #e8b93a;
+  --redstone: #d8433a;
+  --diamond: #5ed3d1;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -12px rgb(0 0 0 / 0.6);
+  --selection: rgb(63 191 107 / 0.32);
+  color-scheme: dark;
+}
+
+[data-theme='light'] {
+  --bg: #f4f2ee;
+  --surface: #ffffff;
+  --surface-2: #ebe8e2;
+  --border: #dcd8cf;
+  --text: #1c1d21;
+  --text-muted: #5f5d56;
+  --emerald: #23874a;
+  --emerald-ink: #ffffff;
+  --xp: #4e8f20;
+  --gold: #9a7210;
+  --redstone: #b8322a;
+  --diamond: #1f8583;
+  --shadow: 0 1px 2px rgb(40 34 20 / 0.08), 0 10px 28px -14px rgb(40 34 20 / 0.28);
+  --selection: rgb(35 135 74 / 0.22);
+  color-scheme: light;
+}
+
+@theme {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--border);
+  --color-fg: var(--text);
+  --color-muted: var(--text-muted);
+  --color-emerald: var(--emerald);
+  --color-emerald-ink: var(--emerald-ink);
+  --color-xp: var(--xp);
+  --color-gold: var(--gold);
+  --color-redstone: var(--redstone);
+  --color-diamond: var(--diamond);
+  --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', monospace;
+  --font-pixel: 'Pixelify Sans', 'Geist', sans-serif;
+  --shadow-card: var(--shadow);
+}
+
+/* ---------------------------------------------------------------- */
+/* Base                                                              */
+/* ---------------------------------------------------------------- */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--selection);
+}
+
+:focus-visible {
+  outline: 2px solid var(--emerald);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+  border: 3px solid var(--bg);
+}
+
+textarea {
+  caret-color: var(--emerald);
+}
+
+a {
+  color: var(--emerald);
+  text-underline-offset: 3px;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------- */
+/* Minecraft: ícones, slots e tooltip                                */
+/* ---------------------------------------------------------------- */
+
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Painel cinza do inventário */
+.mc-panel {
+  background: #c6c6c6;
+  border: 2px solid;
+  border-color: #ffffff #555555 #555555 #ffffff;
+  box-shadow:
+    0 0 0 2px #000000,
+    var(--shadow);
+  border-radius: 3px;
+}
+
+/* Slot com chanfro: topo/esquerda escuros, base/direita claros */
+.mc-slot {
+  --slot: 36px;
+  width: var(--slot);
+  height: var(--slot);
+  background: #8b8b8b;
+  border: 2px solid;
+  border-color: #373737 #ffffff #ffffff #373737;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+.mc-slot.is-result {
+  --slot: 52px;
+}
+.mc-slot.is-interactive {
+  cursor: pointer;
+}
+.mc-slot.is-interactive:hover::after,
+.mc-slot.is-interactive:focus-visible::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgb(255 255 255 / 0.2);
+  pointer-events: none;
+}
+.mc-slot.is-interactive:focus-visible {
+  outline: 2px solid var(--emerald);
+  outline-offset: 1px;
+  border-radius: 0;
+}
+
+@media (max-width: 640px) {
+  .mc-slot {
+    --slot: 30px;
+  }
+  .mc-slot.is-result {
+    --slot: 44px;
+  }
+}
+
+.mc-count {
+  position: absolute;
+  right: 1px;
+  bottom: -2px;
+  font-family: var(--font-pixel);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1;
+  color: #ffffff;
+  text-shadow: 1px 1px 0 #3f3f3f;
+  pointer-events: none;
+}
+
+.mc-tooltip {
+  background: rgb(16 0 16 / 0.94);
+  border: 2px solid #28006b;
+  outline: 2px solid rgb(16 0 16 / 0.94);
+  box-shadow: inset 0 0 0 1px #5000c8;
+  color: #ffffff;
+  font-family: var(--font-pixel);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.25;
+  padding: 4px 7px 5px;
+  text-shadow: 1px 1px 0 #3f3f3f;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.mc-tooltip .sub {
+  color: #a8a8a8;
+  font-size: 12px;
+}
+
+/* Barra de XP segmentada */
+.xp-bar {
+  height: 6px;
+  width: 180px;
+  background: #1a1a1a;
+  border: 1px solid #000;
+  position: relative;
+  overflow: hidden;
+}
+.xp-bar > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: linear-gradient(#b7ff5c, #7cd13b 55%, #4f8f1d);
+}
+.xp-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, transparent 0 17px, #000 17px 18px);
+}
+
+/* Três pixels pulsando */
+@keyframes pixel-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+.pixel-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--emerald);
+  animation: pixel-pulse 0.9s ease-in-out infinite;
+}
+.pixel-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.pixel-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pixel-dot {
+    animation: none;
+    opacity: 0.8;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -74,7 +74,7 @@ export type Answer =
   | { type: 'drops'; title: string; icon?: string; drops: Drop[]; text: string[]; source: string }
   | { type: 'dropped_by'; item: string; sources: DropSource[]; text: string[]; source: string }
   | { type: 'farm'; farm: Farm; text: string[]; source: string }
-  | { type: 'info'; title: string; icon?: string; badge?: string; stats: { label: string; value: string }[]; text: string[]; source: string }
+  | { type: 'info'; title: string; icon?: string; badge?: string; stats: { label: string; value: string }[]; items?: string[]; text: string[]; source: string }
   | { type: 'potion'; potion: string; steps: BrewStep[]; variants: { label: string; reagent: string; result: string }[]; text: string[]; source: string }
   | { type: 'trades'; title: string; icon?: string; rows: { profession: string; level: string; trade: Trade; sells: boolean }[]; text: string[]; source: string }
   | { type: 'uses'; item: string; recipes: Recipe[]; total: number; text: string[]; source: string }
@@ -101,6 +101,7 @@ const FEMININE = new Set(['crafting', 'smelting', 'campfire', 'smithing']);
 export const fromStation = (s: string) => `${FEMININE.has(s) ? 'da' : 'do'} ${b(stationLabel(s))}`;
 
 const b = (s: string) => `**${s}**`;
+const fmtY = (y: number) => (y < 0 ? `−${Math.abs(y)}` : `${y}`);
 
 /* ------------------------------------------------------------------ */
 
@@ -199,6 +200,18 @@ function dedupeStations(list: Recipe[]): Recipe[] {
 
 /* ------------------------------------------------------------------ */
 
+const worldMinOf = (d: string) => (d === 'overworld' ? -64 : 0);
+const worldMaxOf = (d: string) => (d === 'overworld' ? 320 : 127);
+function dedupeRanges<T extends { min: number; max: number; kind: string; biomes: string[] }>(list: T[]): T[] {
+  const seen = new Set<string>();
+  return list.filter((r) => {
+    const k = `${r.min}:${r.max}:${r.kind}:${r.biomes.join()}`;
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+}
+
 function locationForOre(item: string): Extract<Answer, { type: 'location' }> {
   const ore = oreByItem.get(item)!;
   const cur = curatedOres[ore.id];
@@ -208,7 +221,7 @@ function locationForOre(item: string): Extract<Answer, { type: 'location' }> {
     icon: ore.id,
     yIdeal: cur?.y_ideal ?? ore.placements[0].peak?.[0] ?? Math.round((ore.placements[0].min + ore.placements[0].max) / 2),
     yExtra: cur?.y_extra ?? [],
-    ranges: ore.placements.map((p) => ({ min: p.min, max: p.max, peak: p.peak, kind: p.distribution, biomes: p.biomes })),
+    ranges: dedupeRanges(ore.placements.map((p) => ({ min: Math.max(p.min, worldMinOf(p.dimension)), max: Math.min(p.max, worldMaxOf(p.dimension)), peak: p.peak, kind: p.distribution, biomes: p.biomes }))),
     dimension,
     dica: cur?.dica ?? '',
   };
@@ -218,8 +231,8 @@ function locationForOre(item: string): Extract<Answer, { type: 'location' }> {
   const worldMax = dimension === 'overworld' ? 320 : 127;
   const special = ore.placements.filter((p) => p.biomes[0] !== '*');
   const text = [
-    `Melhor altura para ${b(itemName(ore.id))}: ${b(`Y ${loc.yIdeal}`)}${loc.yExtra.length ? ` (ou ${loc.yExtra.map((y) => `Y ${y}`).join(', ')})` : ''}.`,
-    `Gera entre ${b(`Y ${Math.max(min, worldMin)}`)} e ${b(`Y ${Math.min(max, worldMax)}`)}${dimension === 'nether' ? ' no Nether' : ''}.`,
+    `Melhor altura para ${b(itemName(ore.id))}: ${b(`Y ${fmtY(loc.yIdeal)}`)}${loc.yExtra.length ? ` (ou ${loc.yExtra.map((y) => `Y ${fmtY(y)}`).join(', ')})` : ''}.`,
+    `Gera entre ${b(`Y ${fmtY(Math.max(min, worldMin))}`)} e ${b(`Y ${fmtY(Math.min(max, worldMax))}`)}${dimension === 'nether' ? ' no Nether' : ''}.`,
   ];
   if (special.length && special.every((p) => p.biomes.length <= 12)) {
     const names = [...new Set(special.flatMap((p) => p.biomes.map((x) => biomes[x]?.name ?? x)))];
@@ -404,9 +417,8 @@ export function mobAnswer(id: string): Answer {
   }
   const hearts = cm.vida / 2;
   const stats = [
-    { label: 'Vida', value: `${cm.vida} (${String(hearts).replace('.', ',')} ♥)` },
+    { label: 'Vida', value: `${cm.vida} (${String(hearts).replace('.', ',')} corações)` },
     { label: 'Dano (normal)', value: cm.dano },
-    { label: 'Tipo', value: cm.comportamento },
   ];
   const text = [`${b(name)}: ${cm.descricao}`, `${b('Onde:')} ${cm.onde}`, `${b('Dica:')} ${cm.como_matar}`];
   return { type: 'info', title: name, icon, badge: cm.comportamento, stats, text, source: cm.fonte };
@@ -620,13 +632,13 @@ export function tipAnswer(id: string | null): Answer {
       source: 'curadoria com fontes (minecraft.wiki)',
     };
   }
-  return { type: 'info', title: t.titulo, icon: t.itens[0], stats: [], text: t.texto, source: t.fonte };
+  return { type: 'info', title: t.titulo, icon: t.itens[0], stats: [], items: t.itens, text: t.texto, source: t.fonte };
 }
 
 export function novidadeAnswer(id: string | null): Answer {
   const n = novidades.find((x) => x.id === (id ?? VERSION)) ?? novidades[0];
   const text = [`${b(`${n.versao} · ${n.nome}`)} (${n.data.split('-').reverse().join('/')}):`, ...n.destaques.slice(0, 5)];
-  return { type: 'info', title: `${n.versao} · ${n.nome}`, icon: n.itens[0], stats: [], text, source: n.fonte };
+  return { type: 'info', title: `${n.versao} · ${n.nome}`, icon: n.itens[0], stats: [], items: n.itens, text, source: n.fonte };
 }
 
 /* ------------------------------------------------------------------ */
