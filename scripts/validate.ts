@@ -72,6 +72,7 @@ if (fs.existsSync(curatedDir)) {
       if (!e.fonte || !(Array.isArray(e.fonte) ? e.fonte.length : String(e.fonte).startsWith('http'))) errors.push(`${where}: sem fonte`);
       for (const m of e.materiais ?? []) need(m.item, where);
       for (const it of e.itens ?? []) need(it, where);
+      for (const it of e.produz ?? []) need(it, where);
       if (e.item) need(e.item, where);
       if (e.mob && !mobs[e.mob]) errors.push(`${where}: mob inexistente ${e.mob}`);
       for (const b of e.biomas ?? []) if (!biomes[b]) errors.push(`${where}: bioma inexistente ${b}`);

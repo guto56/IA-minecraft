@@ -15,6 +15,9 @@ export interface Item {
   fuel?: number;
   /** true se o item é um bloco (item_name vem de block.minecraft.*). */
   block: boolean;
+  /** Complemento que diferencia itens de mesmo nome (disco, molde, figura de estandarte). */
+  detail?: string;
+  detailEn?: string;
   /** Presente (true) quando o pt_br.json não tem tradução e o nome veio do en_us. */
   noPt?: boolean;
 }
@@ -61,6 +64,18 @@ export function extractItems(jar: Jar, generated: string, lang: Lang): Record<st
       block: key.startsWith('block.'),
     };
     if (!lang.pt[key]) item.noPt = true;
+    const trim = /^(.+)_armor_trim_smithing_template$/.exec(id)?.[1];
+    const detailKey = lang.en[`${key}.desc`]
+      ? `${key}.desc`
+      : trim
+        ? `trim_pattern.minecraft.${trim}`
+        : id === 'netherite_upgrade_smithing_template'
+          ? 'upgrade.minecraft.netherite_upgrade'
+          : undefined;
+    if (detailKey && lang.en[detailKey]) {
+      item.detail = lang.pt[detailKey] ?? lang.en[detailKey];
+      item.detailEn = lang.en[detailKey];
+    }
     if (c['minecraft:max_damage']) item.durability = c['minecraft:max_damage'];
     if (c['minecraft:food']) item.food = { nutrition: c['minecraft:food'].nutrition, saturation: c['minecraft:food'].saturation };
     if (c['minecraft:cooking_fuel']) {

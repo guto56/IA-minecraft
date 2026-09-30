@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import recipes from '../recipes.json';
+import recipesJson from '../recipes.json';
+import type { Recipe } from '../types';
 
-type R = (typeof recipes)[number];
+const recipes = recipesJson as Recipe[];
+type R = Recipe;
 
 /** Converte a receita extraída em linhas de texto com o 1º item de cada slot. */
 function shape(r: R): string[] {

@@ -1,0 +1,317 @@
+{
+  "_sobre": "Gírias, abreviações e nomes alternativos. Cada par é [regex sobre o texto normalizado (sem acento, minúsculo), substituição]. Aplicados em ordem.",
+  "trocas": [
+    [
+      "\\b(dima|dimas|diam|diamonds?)\\b",
+      "diamante"
+    ],
+    [
+      "\\b(pica|pika|picareta?s?|pickaxe)\\b",
+      "picareta"
+    ],
+    [
+      "\\bespadinha\\b",
+      "espada"
+    ],
+    [
+      "\\b(olho do ender|olho de end|olho do end|ender eye|eye of ender|olhos do ender)\\b",
+      "olho de ender"
+    ],
+    [
+      "\\b(perola do ender|perola do end|ender pearl|perola de end)\\b",
+      "perola de ender"
+    ],
+    [
+      "\\b(bau do ender|bau do end|ender chest)\\b",
+      "bau de ender"
+    ],
+    [
+      "\\b(etiqueta de nome|etiqueta com nome|name tag|nametag|plaquinha de nome)\\b",
+      "etiqueta"
+    ],
+    [
+      "\\b(isqueiro|flint and steel|acendedor)\\b",
+      "pederneira"
+    ],
+    [
+      "\\b(pistao pegajoso|pistao grudento|sticky piston|pistao de slime)\\b",
+      "pistao grudento"
+    ],
+    [
+      "\\bbancada(?! de)\\b",
+      "bancada de trabalho"
+    ],
+    [
+      "\\b(mesa de craft|mesa de trabalho|craft table|crafting table|mesa de criacao)\\b",
+      "bancada de trabalho"
+    ],
+    [
+      "\\b(mesa de encantamento|mesa de encantar|enchanting table|mesa de encanto)\\b",
+      "mesa de encantamentos"
+    ],
+    [
+      "\\b(suporte de pocao|suporte de pocoes|alambique|brewing stand)\\b",
+      "suporte de pocoes"
+    ],
+    [
+      "\\b(netherite)\\b",
+      "netherita"
+    ],
+    [
+      "\\b(warden|guardiao do deep dark)\\b",
+      "defensor"
+    ],
+    [
+      "\\b(phantom|phantoms|fantasma|fantasmas)\\b",
+      "espectro"
+    ],
+    [
+      "\\b(allay)\\b",
+      "sereno"
+    ],
+    [
+      "\\b(dragao|ender dragon|dragao do end|dragao do ender)\\b",
+      "dragao de ender"
+    ],
+    [
+      "\\b(zombie)\\b",
+      "zumbi"
+    ],
+    [
+      "\\b(esqueleto do wither|wither skeleton)\\b",
+      "esqueleto wither"
+    ],
+    [
+      "\\b(golem|iron golem)\\b(?! de)",
+      "golem de ferro"
+    ],
+    [
+      "\\b(villager|villagers|aldeao|aldeoes|aldiao|aldeaos|npc|npcs)\\b",
+      "aldeao"
+    ],
+    [
+      "\\b(zombie pigman|pigman|porco zumbi|zombified piglin|piglin zumbi)\\b",
+      "piglin zumbificado"
+    ],
+    [
+      "\\b(tabua|tabuas|madeira processada|planks)\\b(?! de)",
+      "tabuas de carvalho"
+    ],
+    [
+      "\\b(graveto|gravetos|palito|palitos|stick|sticks)\\b",
+      "graveto"
+    ],
+    [
+      "\\b(pedregulho|cobblestone|cobble|pedra lascada)\\b",
+      "pedregulho"
+    ],
+    [
+      "\\b(glowstone|pedra luminosa|pedra de luz)\\b(?! em po)",
+      "pedra luminosa"
+    ],
+    [
+      "\\b(lapis|lapislazuli|lapis lazuli)\\b",
+      "lapis lazuli"
+    ],
+    [
+      "\\b(quartzo|quartz)\\b(?! do)",
+      "quartzo do nether"
+    ],
+    [
+      "\\b(elytra|asa|asas)\\b",
+      "elitros"
+    ],
+    [
+      "\\b(totem)\\b(?! da)",
+      "totem da imortalidade"
+    ],
+    [
+      "\\b(tnt|dinamite)\\b",
+      "tnt"
+    ],
+    [
+      "\\b(lingote de ferro|ferro)\\b",
+      "lingote de ferro"
+    ],
+    [
+      "\\b(lingote de ouro|barra de ouro|ouro)\\b",
+      "lingote de ouro"
+    ],
+    [
+      "\\b(lingote de cobre|cobre)\\b",
+      "lingote de cobre"
+    ],
+    [
+      "\\b(lingote de netherita)\\b",
+      "lingote de netherita"
+    ],
+    [
+      "\\blanterna\\b(?! (d|marinha))",
+      "lampiao"
+    ],
+    [
+      "\\bfarol\\b",
+      "sinalizador"
+    ],
+    [
+      "\\b(carne de vaca|carne crua|carne)\\b(?! (podre|de|cozida|assada))",
+      "bife cru"
+    ],
+    [
+      "\\b(carne de porco|costeleta)\\b(?! de)",
+      "costeleta de porco crua"
+    ],
+    [
+      "(?<!de )\\bametista\\b(?! de)",
+      "fragmento de ametista"
+    ],
+    [
+      "(?<!de )\\bnetherita\\b(?! (de|bruta))",
+      "lingote de netherita"
+    ],
+    [
+      "\\b(slime ball|bola de slime|gosma)\\b",
+      "bola de slime"
+    ],
+    [
+      "\\bfrango\\b(?! assado)",
+      "frango cru"
+    ],
+    [
+      "\\bpolvora\\b",
+      "polvora"
+    ],
+    [
+      "\\b(esmeraldas?)\\b",
+      "esmeralda"
+    ],
+    [
+      "\\b(dispensador|dispenser|lancador)\\b",
+      "ejetor"
+    ],
+    [
+      "\\b(dropper|soltador)\\b",
+      "liberador"
+    ],
+    [
+      "\\b(crafter|autocrafter|bancada automatica)\\b",
+      "bancada automatica"
+    ],
+    [
+      "\\b(jukebox|vitrola|toca discos)\\b",
+      "toca discos"
+    ],
+    [
+      "\\b(bundle|saco|sacola|bolsa)\\b",
+      "trouxa"
+    ],
+    [
+      "\\b(corrente)\\b(?! de)",
+      "corrente de ferro"
+    ],
+    [
+      "\\b(de|da) la\\b",
+      "$1 la branca"
+    ],
+    [
+      "\\b(caveira|cranio) (do|de) (esqueleto )?wither\\b",
+      "cranio de esqueleto wither"
+    ],
+    [
+      "\\b(vara de brisa|breeze rod)\\b",
+      "vara de vortice"
+    ],
+    [
+      "\\b(breeze|brisa)\\b",
+      "vortice"
+    ],
+    [
+      "\\b(carga de vento|wind charge)\\b",
+      "projetil de vento"
+    ],
+    [
+      "\\b(sniffer)\\b",
+      "farejador"
+    ],
+    [
+      "\\b(husk)\\b",
+      "cascoso"
+    ],
+    [
+      "\\b(pillager|saqueadores)\\b",
+      "saqueador"
+    ],
+    [
+      "\\b(evoker|evocador)\\b",
+      "invocador"
+    ],
+    [
+      "\\b(vindicator)\\b",
+      "vindicador"
+    ],
+    [
+      "\\b(ravager)\\b",
+      "devastador"
+    ],
+    [
+      "\\b(stray)\\b",
+      "errante"
+    ],
+    [
+      "\\b(guardian)\\b",
+      "guardiao"
+    ],
+    [
+      "\\b(elder guardian|guardiao anciao|guardiao mestre)\\b",
+      "guardiao mestre"
+    ],
+    [
+      "\\b(strider)\\b",
+      "marchador"
+    ],
+    [
+      "\\b(creaking)\\b",
+      "rangente"
+    ],
+    [
+      "\\b(silverfish)\\b",
+      "traca"
+    ],
+    [
+      "\\bde lingote de (ferro|ouro|cobre)\\b",
+      "de $1"
+    ],
+    [
+      "\\blingote de (ferro|ouro|cobre) bruto\\b",
+      "$1 bruto"
+    ],
+    [
+      "\\b(maca dourada encantada|maca de notch|notch apple|god apple)\\b",
+      "maca dourada encantada"
+    ],
+    [
+      "\\b(xp|exp|experiencia|experience)\\b",
+      "xp"
+    ],
+    [
+      "\\b(cogumelo prateleira|shelf mushroom)\\b",
+      "poliporo"
+    ],
+    [
+      "\\b(alamo|poplar)\\b",
+      "alamo"
+    ],
+    [
+      "\\b(nether wart|fungo do nether|verruga do nether|verruga)\\b",
+      "fungo do nether"
+    ],
+    [
+      "\\b(creeper|creepers|crepper|creper|criper)\\b",
+      "creeper"
+    ],
+    [
+      "\\b(enderman|endermen|ender man)\\b",
+      "enderman"
+    ]
+  ]
+}

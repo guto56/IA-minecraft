@@ -72,6 +72,9 @@
   "fonte": [
    "https://minecraft.wiki/w/Tutorial:Sugar_cane_farming",
    "https://www.youtube.com/watch?v=017MTGfWlbw"
+  ],
+  "produz": [
+   "sugar_cane"
   ]
  },
  {
@@ -137,6 +140,9 @@
   "fonte": [
    "https://minecraft.wiki/w/Tutorial:Bamboo_farming",
    "https://www.youtube.com/watch?v=nomAf223zJ0"
+  ],
+  "produz": [
+   "bamboo"
   ]
  },
  {
@@ -200,6 +206,9 @@
   "fonte": [
    "https://minecraft.wiki/w/Tutorial:Cactus_farming",
    "https://www.youtube.com/watch?v=K98IQy3lxPo"
+  ],
+  "produz": [
+   "cactus"
   ]
  },
  {
@@ -275,6 +284,11 @@
   "fonte": [
    "https://minecraft.wiki/w/Tutorial:Pumpkin_and_melon_farming",
    "https://www.youtube.com/watch?v=MqNOlEB-pZg"
+  ],
+  "produz": [
+   "pumpkin",
+   "melon_slice",
+   "melon"
   ]
  },
  {
@@ -359,6 +373,10 @@
   "fonte": [
    "https://minecraft.wiki/w/Tutorial:Crop_farming",
    "https://www.youtube.com/watch?v=JlgOM7nMLnc"
+  ],
+  "produz": [
+   "carrot",
+   "potato"
   ]
  },
  {
@@ -434,7 +452,8 @@
    "https://minecraft.wiki/w/Tutorial:Villager_farming",
    "https://www.youtube.com/watch?v=H47HqwcExc4",
    "https://www.youtube.com/watch?v=NVGxaz6S-_s"
-  ]
+  ],
+  "produz": []
  },
  {
   "id": "ferro",
@@ -514,6 +533,10 @@
   "fonte": [
    "https://minecraft.wiki/w/Tutorial:Iron_golem_farming",
    "https://www.youtube.com/watch?v=DOF-yOSeMjs"
+  ],
+  "produz": [
+   "iron_ingot",
+   "poppy"
   ]
  },
  {
@@ -580,6 +603,15 @@
   "fonte": [
    "https://minecraft.wiki/w/Tutorial:Mob_farm",
    "https://www.youtube.com/watch?v=HzrzyXDRa_4"
+  ],
+  "produz": [
+   "rotten_flesh",
+   "bone",
+   "arrow",
+   "string",
+   "spider_eye",
+   "gunpowder",
+   "experience_bottle"
   ]
  },
  {
@@ -645,6 +677,11 @@
   "fonte": [
    "https://minecraft.wiki/w/Tutorial:Animal_farming",
    "https://www.youtube.com/watch?v=7Rm58lgRQ9U"
+  ],
+  "produz": [
+   "leather",
+   "beef",
+   "cooked_beef"
   ]
  },
  {
@@ -723,6 +760,12 @@
   "fonte": [
    "https://minecraft.wiki/w/Tutorial:Egg_farming",
    "https://www.youtube.com/watch?v=ZUhGoxX3h4M"
+  ],
+  "produz": [
+   "cooked_chicken",
+   "feather",
+   "egg",
+   "chicken"
   ]
  },
  {
@@ -788,6 +831,9 @@
   "fonte": [
    "https://minecraft.wiki/w/Tutorial:Creeper_farming",
    "https://www.youtube.com/watch?v=krCGtUPiu7U"
+  ],
+  "produz": [
+   "gunpowder"
   ]
  },
  {
@@ -853,6 +899,10 @@
   "fonte": [
    "https://minecraft.wiki/w/Tutorial:Trading",
    "https://www.youtube.com/watch?v=w5-ptrMW7Z4"
+  ],
+  "produz": [
+   "emerald",
+   "enchanted_book"
   ]
  },
  {
@@ -934,6 +984,11 @@
   "fonte": [
    "https://minecraft.wiki/w/Tutorial:Zombified_piglin_farming",
    "https://www.youtube.com/watch?v=7ywsMK-WpvI"
+  ],
+  "produz": [
+   "gold_ingot",
+   "gold_nugget",
+   "rotten_flesh"
   ]
  },
  {
@@ -999,6 +1054,9 @@
   "fonte": [
    "https://minecraft.wiki/w/Tutorial:Blaze_farming",
    "https://www.youtube.com/watch?v=3XWTG6frKtY"
+  ],
+  "produz": [
+   "blaze_rod"
   ]
  }
 ]
