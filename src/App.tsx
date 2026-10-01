@@ -4,7 +4,9 @@ import { Composer, type ComposerHandle } from './components/Composer';
 import { ItemIcon } from './components/ItemIcon';
 import { ItemSearch } from './components/ItemSearch';
 import { Sidebar } from './components/Sidebar';
-import { IconPlus, IconSidebar } from './components/Icons';
+import { IconArrowDown, IconPlus, IconSidebar } from './components/Icons';
+import { AnimatePresence, motion } from 'motion/react';
+import { useAutoScroll } from './hooks/useAutoScroll';
 import { useIsMobile } from './hooks/useMedia';
 
 // A conversa (cards + dados do jogo) carrega sob demanda: a tela inicial abre na hora.
@@ -30,7 +32,6 @@ export default function App() {
   const newConversation = useChat((s) => s.newConversation);
   const conv = useActiveConversation();
   const composer = useRef<ComposerHandle>(null);
-  const scroller = useRef<HTMLDivElement>(null);
 
   const ask = useCallback(
     (q: string) => {
@@ -72,15 +73,11 @@ export default function App() {
   }, []);
 
   const count = conv?.messages.length ?? 0;
-  // Nova pergunta: rola até ela, para a resposta começar no topo da tela.
+  const { scrollerRef, contentRef, showButton, follow } = useAutoScroll();
+  // Nova pergunta ou troca de conversa: volta a acompanhar a resposta até o fim.
   useEffect(() => {
-    if (!count) return;
-    requestAnimationFrame(() => {
-      const last = scroller.current?.querySelectorAll('[data-user-message]');
-      const el = last?.[last.length - 1] as HTMLElement | undefined;
-      if (el) el.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
-    });
-  }, [count]);
+    if (count) follow();
+  }, [count, conv?.id, follow]);
 
   useEffect(() => setSidebar(!mobile), [mobile]);
 
@@ -133,12 +130,32 @@ export default function App() {
             </div>
           ) : (
             <>
-              <div ref={scroller} className="min-h-0 flex-1 overflow-y-auto">
-                <Suspense fallback={<div className="mx-auto max-w-[760px] px-4 pt-6 text-[14px] text-muted">Carregando os dados da {VERSION}…</div>}>
-                  <Messages messages={conv!.messages} />
-                </Suspense>
+              <div ref={scrollerRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+                <div ref={contentRef}>
+                  <Suspense fallback={<div className="mx-auto max-w-[760px] px-4 pt-6 text-[14px] text-muted">Carregando os dados da {VERSION}…</div>}>
+                    <Messages messages={conv!.messages} />
+                  </Suspense>
+                </div>
               </div>
-              <div className="shrink-0 px-4 pt-2 pb-[max(12px,env(safe-area-inset-bottom))]">
+              <div className="relative shrink-0 px-4 pt-2 pb-[max(12px,env(safe-area-inset-bottom))]">
+                <AnimatePresence>
+                  {showButton ? (
+                    <motion.button
+                      key="to-bottom"
+                      type="button"
+                      onClick={follow}
+                      aria-label="Ir para o fim da resposta"
+                      title="Ir para o fim"
+                      initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.9 }}
+                      transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                      className="absolute -top-12 left-1/2 z-10 -ml-[18px] grid h-9 w-9 place-items-center rounded-full border border-line bg-surface text-fg shadow-card hover:bg-surface-2"
+                    >
+                      <IconArrowDown width={18} height={18} />
+                    </motion.button>
+                  ) : null}
+                </AnimatePresence>
                 <div className="mx-auto w-full max-w-[760px]">
                   <Composer ref={composer} onSend={ask} />
                   <p className="mt-1.5 text-center text-[11.5px] text-muted">Respostas vêm dos dados do jogo. Se eu não entender, eu aviso.</p>

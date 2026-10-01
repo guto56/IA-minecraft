@@ -106,4 +106,28 @@ test.describe('com animação', () => {
     await expect(answer.getByRole('button', { name: 'Como cheguei nisso' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Enviar' })).toBeVisible();
   });
+
+  test('a rolagem acompanha a resposta, para ao subir e volta pela setinha', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'roda do mouse');
+    await page.setViewportSize({ width: 1100, height: 600 });
+    await page.goto('/');
+    const input = page.getByLabel('Pergunte sobre Minecraft Java 26.3');
+    const gap = () => page.evaluate(() => {
+      const s = document.querySelector('main .overflow-y-auto')!;
+      return s.scrollHeight - s.clientHeight - s.scrollTop;
+    });
+    for (const q of ['farm de ferro', 'trocas do bibliotecario']) {
+      await input.fill(q);
+      await page.keyboard.press('Enter');
+      await expect(page.getByRole('button', { name: 'Enviar' })).toBeVisible({ timeout: 10_000 });
+    }
+    await expect.poll(gap).toBeLessThan(4);
+    await page.mouse.move(550, 250);
+    await page.mouse.wheel(0, -500);
+    const toBottom = page.getByRole('button', { name: 'Ir para o fim da resposta' });
+    await expect(toBottom).toBeVisible();
+    await toBottom.click();
+    await expect.poll(gap).toBeLessThan(4);
+    await expect(toBottom).toBeHidden();
+  });
 });
