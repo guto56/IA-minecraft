@@ -1,4 +1,5 @@
 import type { Message } from '../store/chat';
+import { AiMessage } from './AiMessage';
 import { BotMessage } from './BotMessage';
 import '../lib/kb';
 
@@ -12,7 +13,7 @@ export default function Messages({ messages }: { messages: Message[] }) {
             <p className="max-w-[80%] rounded-2xl rounded-br-md bg-surface-2 px-4 py-2 text-[15px] whitespace-pre-wrap text-fg">{m.text}</p>
           </div>
         ) : (
-          <BotMessage key={m.id} msg={m} />
+          m.ai && !m.ai.fallback ? <AiMessage key={m.id} msg={m} /> : <BotMessage key={m.id} msg={m} />
         ),
       )}
     </div>

@@ -98,6 +98,9 @@ export function BotMessage({ msg }: { msg: Msg }) {
         <ItemIcon id="crafting_table" size={32} label="CraftBot" />
       </div>
       <div className="min-w-0 flex-1">
+        {msg.ai?.fallback ? (
+          <p className="mb-2 text-[12.5px] text-gold">IA indisponível agora ({msg.ai.error}). Respondi com o motor local, usando os mesmos dados do jogo.</p>
+        ) : null}
         {phase !== 'done' && idx < ORDER.indexOf('streaming') ? <Progress phase={phase} msg={msg} /> : <Reasoning msg={msg} />}
         <div className="grid gap-5">
           {msg.result.answers.map((a, i) => {
@@ -120,7 +123,9 @@ export function BotMessage({ msg }: { msg: Msg }) {
                 </AnimatePresence>
                 {phase === 'done' ? (
                   <div className="flex items-center gap-3 text-[12px] text-muted">
-                    <p>{sourceLine(a.source)}</p>
+                    <p>
+                      <SourceLine source={a.source} />
+                    </p>
                     {i === msg.result.answers.length - 1 ? <ShareButton question={msg.question} /> : null}
                   </div>
                 ) : null}
@@ -133,7 +138,7 @@ export function BotMessage({ msg }: { msg: Msg }) {
   );
 }
 
-function ShareButton({ question }: { question: string }) {
+export function ShareButton({ question }: { question: string }) {
   const [done, setDone] = useState(false);
   const share = async () => {
     const url = `${window.location.origin}/?q=${encodeURIComponent(question)}`;
@@ -153,7 +158,8 @@ function ShareButton({ question }: { question: string }) {
   );
 }
 
-function sourceLine(source: string) {
+/** Linha de fonte em cinza (com link quando a fonte é uma URL). */
+export function SourceLine({ source }: { source: string }) {
   const m = /(https?:\/\/\S+)/.exec(source);
   if (!m) return source;
   const url = m[1];

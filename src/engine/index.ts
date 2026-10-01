@@ -1,5 +1,5 @@
 /**
- * Motor de entendimento (sem IA): normaliza, detecta intenção por regras com peso,
+ * Motor de entendimento por regras (usado pelas ferramentas da IA e no modo offline): normaliza, detecta intenção por regras com peso,
  * extrai a entidade por nome exato ou busca fuzzy e monta a resposta com os dados do jogo.
  */
 import { farmsByProduct, items, loot, lootByItem, oreByItem, recipesByResult } from '../lib/kb';

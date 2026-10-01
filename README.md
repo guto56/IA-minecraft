@@ -2,7 +2,19 @@
 
 Assistente estilo chat para **Minecraft Java Edition 26.3** ("Wilderness Bound"). Pergunte em português (com gíria, sem acento ou em inglês) e receba receitas, farms, alturas de minério, drops, poções, encantamentos, trocas de aldeões e novidades.
 
-**Não tem IA.** O entendimento é um motor de regras + busca fuzzy sobre dados extraídos dos arquivos oficiais do jogo. Quando não entende, ele diz que não entendeu e sugere perguntas. Nunca inventa resposta.
+**IA presa aos dados reais.** As respostas são escritas por uma IA (via OpenRouter) que só pode usar o que as ferramentas devolvem: os dados extraídos dos arquivos oficiais do jogo e a curadoria com fontes. Ela entende o contexto da conversa ("como faço uma farm de ferro?" → "e de melancia?"), e quando os dados não têm a resposta ela diz que não sabe. Sem internet ou sem IA configurada, o app responde com o motor de regras local (mesmos dados).
+
+### Como a IA funciona
+
+1. O navegador manda a conversa para `/api/chat` (função da Vercel em `api/chat.ts`), que adiciona a chave, o prompt do sistema e as ferramentas (`src/ai/prompt.ts`) e repassa para a OpenRouter em stream.
+2. A IA chama as ferramentas `consultar_jogo` e `buscar_nomes`, que rodam no navegador sobre `src/data/` (`src/ai/tools.ts`, usando o motor de `src/engine/`).
+3. O resultado das ferramentas vira card na tela e volta para a IA, que escreve a resposta curta (`src/ai/agent.ts`).
+
+### Configurar a chave
+
+- **Vercel:** em *Project → Settings → Environment Variables*, crie `OPENROUTER_API_KEY` (e, se quiser trocar o modelo, `OPENROUTER_MODEL`; padrão `google/gemini-2.5-flash`).
+- **Local:** crie `.env.local` com `OPENROUTER_API_KEY=...` (o arquivo é ignorado pelo git). `npm run dev` e `npm run preview` já servem o `/api/chat`.
+- A chave nunca vai para o código do site: fica só no servidor.
 
 ## Como rodar
 
@@ -21,7 +33,7 @@ Os dados já extraídos estão em `src/data/` e os ícones em `public/icons/`, e
 |---|---|
 | `npm run extract` | Baixa client.jar, server.jar e `pt_br.json` da versão configurada, roda o data generator e gera `src/data/*.json` + atlas de ícones |
 | `npm run validate` | Confere se toda receita/drop/troca usa IDs que existem, se todo item tem ícone e nome pt_br, e se a curadoria tem fonte |
-| `npm test` | Vitest: 20+ receitas conhecidas e 145 perguntas do motor + 20 fora do assunto |
+| `npm test` | Vitest: receitas conhecidas, 145 perguntas do motor + 20 fora do assunto, ferramentas e laço da IA (com IA simulada), proxy `/api/chat` |
 | `npm run test:e2e` | Playwright: 20 perguntas no navegador (desktop e mobile), contexto, histórico, atalhos, acessibilidade |
 | `npm run build` | Build estático em `dist/` (PWA, funciona offline) |
 
@@ -46,6 +58,8 @@ scripts/validate.ts    validação dos dados e da curadoria
 scripts/curate/        ferramenta de rascunho da curadoria (wiki → .cache)
 src/data/              JSON gerado + curated/ (farms, mobs, poções, dicas…)
 src/engine/            motor: normalização, sinônimos, intenções, entidades, respostas
+src/ai/                prompt, ferramentas e laço da IA
+api/                   função da Vercel /api/chat (proxy da OpenRouter)
 src/components/        chat, composer, sidebar, cards
 e2e/                   testes Playwright
 ```

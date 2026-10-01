@@ -3,8 +3,9 @@
 Assistente estilo chat para **Minecraft Java Edition 26.3** ("Wilderness Bound"). Uso pessoal, sem login.
 
 ## Regras centrais
-- **Zero IA/LLM no produto.** Nenhuma chamada de API de modelo. Entendimento = motor de regras + busca fuzzy (`src/engine/`).
-- Se o motor não entende: responde "não entendi" + 3 sugestões. **Nunca inventa resposta.**
+- **IA presa aos dados reais.** A IA (OpenRouter, via `api/chat.ts`) só responde com o que as ferramentas devolvem (`src/ai/tools.ts` → motor `src/engine/` → `src/data/`). Nunca usa conhecimento próprio para fatos do jogo.
+- Se os dados não têm a resposta: a IA diz que não sabe. **Nunca inventa.** Sem IA disponível, o motor local responde ("não entendi" + 3 sugestões quando não entende).
+- A chave da OpenRouter fica só no servidor (`OPENROUTER_API_KEY` na Vercel / `.env.local`). Nunca no código ou no git.
 - **Fonte da verdade são os arquivos do jogo.** Nunca escrever receita/drop/número de cabeça.
   - Dados do jar: `npm run extract` gera `src/data/*.json` e `public/icons/atlas-*.png`.
   - Curadoria (o que não está no jar): `src/data/curated/*.json`, cada entrada com `fonte` (URL).

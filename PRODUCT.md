@@ -10,8 +10,8 @@ Assistente estilo chat (ChatGPT/Claude) especializado em **Minecraft Java Editio
 - Uso típico: segunda tela ao lado do jogo, desktop ou celular *(inferido)*.
 
 ## Diferencial
-- **Sem IA/LLM.** Motor de regras + busca fuzzy sobre dados extraídos dos arquivos oficiais do jogo.
-- Nunca inventa: se não entende, diz que não entendeu e sugere perguntas.
+- **IA presa aos dados reais.** Uma IA escreve as respostas e entende o contexto da conversa, mas só usa o que as ferramentas devolvem (dados extraídos dos arquivos oficiais do jogo + curadoria com fontes).
+- Nunca inventa: se os dados não têm a resposta, diz que não sabe. Offline, o motor de regras local responde.
 - Toda resposta cita a fonte (`Java 26.3 · fonte: arquivos do jogo` ou a URL da curadoria).
 
 ## Restrições

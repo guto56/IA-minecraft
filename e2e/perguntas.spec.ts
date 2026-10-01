@@ -95,18 +95,6 @@ test('histórico fica salvo depois de recarregar', async ({ page }) => {
 test.describe('com animação', () => {
   test.use({ reducedMotion: 'no-preference' });
 
-  test('mostra as etapas e o botão Parar pula para o resultado', async ({ page }) => {
-    await page.goto('/');
-    await page.getByLabel('Pergunte sobre Minecraft Java 26.3').fill('como faz pistao');
-    await page.keyboard.press('Enter');
-    await expect(page.locator('[role="status"]').first()).toBeAttached({ timeout: 10_000 });
-    await page.getByRole('button', { name: 'Parar' }).click();
-    const answer = page.locator('article').last();
-    await expect(answer).toContainText('Slots que alternam aceitam qualquer item daquele tipo.');
-    await expect(answer.getByRole('button', { name: 'Como cheguei nisso' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Enviar' })).toBeVisible();
-  });
-
   test('a rolagem acompanha a resposta, para ao subir e volta pela setinha', async ({ page, isMobile }) => {
     test.skip(isMobile, 'roda do mouse');
     await page.setViewportSize({ width: 1100, height: 600 });

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Context, EngineResult } from '../engine';
+import type { Answer, Context, EngineResult } from '../engine';
+import type { ChatMessage } from '../ai/agent';
 
 export interface UserMessage {
   id: string;
@@ -9,11 +10,32 @@ export interface UserMessage {
   at: number;
 }
 
+export interface AiStep {
+  name: string;
+  /** Pergunta que a IA mandou para a ferramenta. */
+  query: string;
+  /** O que o motor achou ("receita · Pistão"). */
+  label: string;
+  found: boolean;
+}
+
+export interface AiState {
+  status: 'thinking' | 'writing' | 'done' | 'stopped' | 'error';
+  text: string;
+  steps: AiStep[];
+  model?: string;
+  error?: string;
+  /** A IA estava indisponível e a resposta veio do motor local. */
+  fallback?: boolean;
+}
+
 export interface BotMessage {
   id: string;
   role: 'bot';
   question: string;
   result: EngineResult;
+  /** Presente quando a resposta foi escrita pela IA (com base nas ferramentas). */
+  ai?: AiState;
   at: number;
   /** true só enquanto a animação desta resposta não terminou (não é salvo). */
   animate?: boolean;
@@ -51,6 +73,36 @@ interface ChatState {
   toggleFavorite: (f: Favorite) => void;
 }
 
+/** Requisições da IA em andamento (o botão Parar cancela). */
+const controllers = new Map<string, AbortController>();
+
+/** Histórico enxuto para a IA entender o contexto ("e de melancia?"). */
+function toHistory(messages: Message[]): ChatMessage[] {
+  const out: ChatMessage[] = [];
+  for (const m of messages.slice(-16)) {
+    if (m.role === 'user') out.push({ role: 'user', content: m.text });
+    else {
+      const text = m.ai?.text || m.result.answers.flatMap((a) => a.text).join('\n').replace(/\*\*/g, '');
+      const consulted = m.ai?.steps.filter((s) => s.found).map((s) => s.label);
+      out.push({ role: 'assistant', content: `${text}${consulted?.length ? `\n(consultado: ${consulted.join('; ')})` : ''}`.slice(0, 2000) });
+    }
+  }
+  return out;
+}
+
+/** Cards da resposta: sem repetir o mesmo resultado e sem "não entendi" (a IA explica). */
+function mergeCards(current: Answer[], incoming: Answer[]): Answer[] {
+  const key = (a: Answer) => `${a.type}:${a.text[0] ?? ''}`;
+  const seen = new Set(current.map(key));
+  const out = [...current];
+  for (const a of incoming) {
+    if (a.type === 'not_understood' || seen.has(key(a))) continue;
+    seen.add(key(a));
+    out.push(a);
+  }
+  return out;
+}
+
 const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 
 function titleFrom(text: string) {
@@ -68,28 +120,72 @@ export const useChat = create<ChatState>()(
       send: async (text) => {
         const q = text.trim();
         if (!q) return;
-        // O motor e os dados do jogo carregam só na primeira pergunta.
-        const { ask } = await import('../engine');
         const state = get();
         let conv = state.conversations.find((c) => c.id === state.activeId);
         const now = Date.now();
-        if (!conv) {
-          conv = { id: uid(), title: titleFrom(q), createdAt: now, updatedAt: now, messages: [], context: {} };
-        }
-        const result = ask(q, conv.context);
+        if (!conv) conv = { id: uid(), title: titleFrom(q), createdAt: now, updatedAt: now, messages: [], context: {} };
+        const history = toHistory(conv.messages);
         const userMsg: UserMessage = { id: uid(), role: 'user', text: q, at: now };
-        const botMsg: BotMessage = { id: uid(), role: 'bot', question: q, result, at: now, animate: true };
-        const updated: Conversation = {
-          ...conv,
-          updatedAt: now,
-          messages: [...conv.messages, userMsg, botMsg],
-          context: result.context,
+        const botMsg: BotMessage = {
+          id: uid(),
+          role: 'bot',
+          question: q,
+          result: { answers: [], traces: [], context: conv.context },
+          ai: { status: 'thinking', text: '', steps: [] },
+          at: now,
+          animate: true,
         };
-        set({
-          conversations: [updated, ...state.conversations.filter((c) => c.id !== updated.id)],
-          activeId: updated.id,
-          animatingId: botMsg.id,
-        });
+        const convId = conv.id;
+        const updated: Conversation = { ...conv, updatedAt: now, messages: [...conv.messages, userMsg, botMsg] };
+        set({ conversations: [updated, ...state.conversations.filter((c) => c.id !== convId)], activeId: convId, animatingId: botMsg.id });
+
+        const patch = (fn: (m: BotMessage) => BotMessage) =>
+          set((s) => ({
+            conversations: s.conversations.map((c) =>
+              c.id !== convId ? c : { ...c, messages: c.messages.map((m) => (m.id === botMsg.id && m.role === 'bot' ? fn(m) : m)) },
+            ),
+          }));
+
+        const controller = new AbortController();
+        controllers.set(botMsg.id, controller);
+        try {
+          const { runAgent } = await import('../ai/agent');
+          const result = await runAgent(
+            history,
+            q,
+            (e) => {
+              if (e.type === 'text') patch((m) => ({ ...m, ai: { ...m.ai!, status: 'writing', text: m.ai!.text + e.delta } }));
+              if (e.type === 'reset') patch((m) => ({ ...m, ai: { ...m.ai!, text: '' } }));
+              if (e.type === 'model') patch((m) => ({ ...m, ai: { ...m.ai!, model: e.model } }));
+              if (e.type === 'tool') {
+                const found = e.run.answers.some((a) => a.type !== 'not_understood');
+                patch((m) => ({
+                  ...m,
+                  result: { ...m.result, answers: mergeCards(m.result.answers, e.run.answers) },
+                  ai: { ...m.ai!, steps: [...m.ai!.steps, { name: e.run.name, query: String(e.run.args.pergunta ?? e.run.args.texto ?? ''), label: e.run.label, found }] },
+                }));
+              }
+            },
+            controller.signal,
+          );
+          patch((m) => ({ ...m, ai: { ...m.ai!, status: 'done', text: result.text || m.ai!.text, model: result.model ?? m.ai!.model } }));
+        } catch (err) {
+          const e = err as Error & { unavailable?: boolean };
+          if (e.name === 'AbortError') {
+            patch((m) => ({ ...m, ai: { ...m.ai!, status: 'stopped' } }));
+          } else if (e.unavailable) {
+            // IA fora do ar ou sem internet: responde com o motor local (mesmos dados, sem IA).
+            const { ask } = await import('../engine');
+            const local = ask(q, get().conversations.find((c) => c.id === convId)?.context ?? {});
+            patch((m) => ({ ...m, result: local, ai: { status: 'done', text: '', steps: [], fallback: true, error: e.message } }));
+            set((s) => ({ conversations: s.conversations.map((c) => (c.id === convId ? { ...c, context: local.context } : c)) }));
+          } else {
+            patch((m) => ({ ...m, ai: { ...m.ai!, status: 'error', error: e.message } }));
+          }
+        } finally {
+          controllers.delete(botMsg.id);
+          set((s) => ({ animatingId: s.animatingId === botMsg.id ? null : s.animatingId }));
+        }
       },
       newConversation: () => set({ activeId: null, animatingId: null }),
       select: (id) => set({ activeId: id, animatingId: null }),
@@ -98,14 +194,16 @@ export const useChat = create<ChatState>()(
           conversations: s.conversations.filter((c) => c.id !== id),
           activeId: s.activeId === id ? null : s.activeId,
         })),
-      finishAnimation: (messageId) =>
+      finishAnimation: (messageId) => {
+        controllers.get(messageId)?.abort();
         set((s) => ({
           animatingId: s.animatingId === messageId ? null : s.animatingId,
           conversations: s.conversations.map((c) => ({
             ...c,
             messages: c.messages.map((m) => (m.id === messageId && m.role === 'bot' ? { ...m, animate: false } : m)),
           })),
-        })),
+        }));
+      },
       toggleFavorite: (f) =>
         set((s) => ({
           favorites: s.favorites.some((x) => x.key === f.key) ? s.favorites.filter((x) => x.key !== f.key) : [f, ...s.favorites].slice(0, 30),
@@ -115,7 +213,12 @@ export const useChat = create<ChatState>()(
       name: 'craftbot-chat',
       version: 1,
       partialize: (s) => ({
-        conversations: s.conversations.slice(0, 60).map((c) => ({ ...c, messages: c.messages.map((m) => (m.role === 'bot' ? { ...m, animate: false } : m)) })),
+        conversations: s.conversations.slice(0, 60).map((c) => ({
+          ...c,
+          messages: c.messages.map((m) =>
+            m.role === 'bot' ? { ...m, animate: false, ai: m.ai && (m.ai.status === 'thinking' || m.ai.status === 'writing') ? { ...m.ai, status: 'stopped' as const } : m.ai } : m,
+          ),
+        })),
         activeId: s.activeId,
         favorites: s.favorites,
       }),

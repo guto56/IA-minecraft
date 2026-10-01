@@ -124,7 +124,7 @@ export default function App() {
                   ))}
                 </ul>
                 <p className="mt-8 text-center text-[12.5px] text-muted">
-                  Sem IA: respostas montadas com os arquivos do Minecraft Java {VERSION}. Atalhos: <kbd className="font-mono">/</kbd> escrever · <kbd className="font-mono">Ctrl K</kbd> buscar item
+                  Respostas escritas por IA usando só os dados dos arquivos do Minecraft Java {VERSION}. Atalhos: <kbd className="font-mono">/</kbd> escrever · <kbd className="font-mono">Ctrl K</kbd> buscar item
                 </p>
               </div>
             </div>
@@ -158,7 +158,7 @@ export default function App() {
                 </AnimatePresence>
                 <div className="mx-auto w-full max-w-[760px]">
                   <Composer ref={composer} onSend={ask} />
-                  <p className="mt-1.5 text-center text-[11.5px] text-muted">Respostas vêm dos dados do jogo. Se eu não entender, eu aviso.</p>
+                  <p className="mt-1.5 text-center text-[11.5px] text-muted">A IA só usa os dados do jogo. Se não tiver a informação, ela diz que não sabe.</p>
                 </div>
               </div>
             </>

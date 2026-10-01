@@ -5,3 +5,7 @@ dist
 test-results
 playwright-report
 .DS_Store
+.env
+.env.local
+.env.*.local
+.vercel

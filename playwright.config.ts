@@ -15,6 +15,8 @@ export default defineConfig({
     command: 'npm run build && npx vite preview --port 4173 --strictPort',
     url: 'http://localhost:4173',
     reuseExistingServer: true,
+    // Sem chave: os testes usam a IA simulada (page.route) ou o motor local.
+    env: { OPENROUTER_API_KEY: '' },
     timeout: 120_000,
   },
   projects: [
