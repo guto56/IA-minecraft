@@ -8,9 +8,19 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import config from './craftbot.config.json';
+import vercel from './vercel.json';
+
+/** Mesmos cabeçalhos de segurança da Vercel no `vite preview` (os testes E2E pegam CSP quebrada). */
+const previewHeaders = Object.fromEntries(
+  vercel.headers[0].headers
+    .filter((h) => h.key !== 'Strict-Transport-Security')
+    .map((h) => [h.key, h.key === 'Content-Security-Policy' ? h.value.replace(/;\s*upgrade-insecure-requests/, '') : h.value]),
+);
 
 // Versão exposta ao index.html (%VITE_MC_VERSION%).
 process.env.VITE_MC_VERSION = config.minecraftVersion;
+
+const HOP_HEADERS = new Set(['host', 'connection', 'content-length', 'transfer-encoding', 'keep-alive']);
 
 /** /api/chat, /api/web e /api/wiki também no `npm run dev` e no `vite preview` (lê a chave do .env.local). */
 function apiChat(mode: string): Plugin {
@@ -18,9 +28,10 @@ function apiChat(mode: string): Plugin {
   const route = (handle: (r: Request) => Promise<Response>): Connect.NextHandleFunction => async (req, res: ServerResponse) => {
     const chunks: Buffer[] = [];
     for await (const c of req) chunks.push(c as Buffer);
-    const request = new Request(`http://localhost${req.url}`, {
+    const request = new Request(`http://${req.headers.host ?? 'localhost'}${req.originalUrl ?? req.url}`, {
       method: req.method,
-      headers: { 'content-type': req.headers['content-type'] ?? 'application/json' },
+      // Repassa os cabeçalhos (Origin, Sec-Fetch-Site, Host) para as proteções do servidor.
+      headers: Object.entries(req.headers).flatMap(([k, v]) => (typeof v === 'string' && !HOP_HEADERS.has(k) ? [[k, v] as [string, string]] : [])),
       body: req.method === 'POST' ? Buffer.concat(chunks) : undefined,
     });
     const response = await handle(request);
@@ -89,6 +100,7 @@ export default defineConfig(({ mode }) => ({
       },
     }),
   ],
+  preview: { headers: previewHeaders },
   test: {
     environment: 'node',
     include: ['src/**/*.test.ts', 'scripts/**/*.test.ts'],

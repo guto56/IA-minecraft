@@ -21,3 +21,18 @@ test('ícones têm texto alternativo e botões têm nome', async ({ page }) => {
   const imgs = await page.$$eval('[role="img"]', (els) => els.filter((e) => !e.getAttribute('aria-label')).length);
   expect(imgs).toBe(0);
 });
+
+test('a política de segurança (CSP) não bloqueia nada do próprio site', async ({ page }) => {
+  const violations: string[] = [];
+  page.on('console', (m) => {
+    if (/Content Security Policy|Refused to/i.test(m.text())) violations.push(m.text());
+  });
+  const res = await page.goto('/');
+  expect(res!.headers()['content-security-policy']).toContain("frame-ancestors 'none'");
+  await page.getByLabel('Pergunte sobre Minecraft Java 26.3').fill('como faz pistao');
+  await page.keyboard.press('Enter');
+  await expect(page.locator('article').last()).toContainText('Pistão');
+  await page.keyboard.press('Control+k');
+  await page.waitForTimeout(400);
+  expect(violations).toEqual([]);
+});

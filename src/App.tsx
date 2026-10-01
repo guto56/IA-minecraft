@@ -50,7 +50,8 @@ export default function App() {
 
   // Link compartilhado: ?q=pergunta abre já respondida.
   useEffect(() => {
-    const q = new URLSearchParams(window.location.search).get('q');
+    // Link compartilhado: pergunta curta, sem caracteres de controle.
+    const q = new URLSearchParams(window.location.search).get('q')?.replace(/[\u0000-\u001F\u007F]/g, ' ').trim().slice(0, 200);
     if (q) {
       newConversation();
       send(q);

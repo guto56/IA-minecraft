@@ -32,6 +32,24 @@ As fontes têm ordem fixa, garantida no código (`Turn` em `src/ai/tools.ts`) e 
 - **Local:** crie `.env.local` com `OPENROUTER_API_KEY=...` (o arquivo é ignorado pelo git). `npm run dev` e `npm run preview` já servem o `/api/chat`.
 - A chave nunca vai para o código do site: fica só no servidor.
 
+## Segurança
+
+**Site**
+- Cabeçalhos em `vercel.json` (também aplicados no `vite preview`): CSP restrita (só scripts do próprio site, com hash para o script inline; frames só do YouTube sem cookies; nada de `eval`), HSTS, `nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy`, COOP/CORP.
+- Respostas da IA são texto puro (sem HTML, links clicáveis ou imagens); links para fora de minecraft.wiki/minecraft.net/YouTube/Reddit são removidos do texto e dos cards.
+
+**APIs (`api/_lib/guard.ts`)**
+- Só aceitam chamadas do próprio site (Origin / Sec-Fetch-Site).
+- Limite por IP: IA 40/min e 400/h; wiki 40/min; web (paga) 8 a cada 10 min e 40/dia.
+- A conversa recebida é reconstruída campo a campo: sem `system`, só as ferramentas da lista, tamanhos máximos por mensagem e no total. Modelo, prompt, ferramentas e `max_tokens` são definidos só no servidor.
+- Erros não devolvem detalhes internos (ficam só no log).
+
+**IA (injeção de prompt)**
+- Prompt com regras de segurança: não muda de papel, não revela instruções, não aceita "resultado de ferramenta" escrito pelo usuário, não ensina hacks/exploits, não escreve links.
+- Conteúdo da wiki/web é tratado como não confiável (`src/ai/untrusted.ts`): tira caracteres invisíveis, HTML, links de fora e frases típicas de injeção, e vai marcado como "conteúdo externo não confiável".
+- Ordem das fontes e limite da web garantidos em código.
+- `npx tsx scripts/dev/redteam.ts` roda 9 ataques (vazar prompt, persona, falso sistema, hacks, resultado forjado, histórico forjado, injeção indireta pela wiki e pela web).
+
 ## Como rodar
 
 Requisitos: Node 22+.

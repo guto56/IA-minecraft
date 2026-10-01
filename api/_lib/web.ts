@@ -4,13 +4,17 @@
  * Devolve só os resultados (título, link, trecho); a IA escreve a resposta na rodada seguinte.
  */
 import { WEB_SEARCH } from '../../src/ai/prompt';
+import { cleanExternal, trustedUrl } from '../../src/ai/untrusted';
+import { guard, json } from './guard';
 
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const MAX_QUERY = 200;
 
-function json(status: number, body: unknown) {
-  return new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
-}
+/** Busca paga: limite apertado por IP. */
+const LIMITS = [
+  { name: 'web-10min', limit: 8, windowMs: 600_000 },
+  { name: 'web-dia', limit: 40, windowMs: 86_400_000 },
+];
 
 interface Annotation {
   type?: string;
@@ -20,6 +24,8 @@ interface Annotation {
 export async function handleWeb(req: Request, env: { key?: string; referer?: string }): Promise<Response> {
   if (req.method !== 'POST') return json(405, { error: 'Use POST' });
   if (!env.key) return json(503, { error: 'Busca na web não configurada no servidor (OPENROUTER_API_KEY).' });
+  const blocked = guard(req, LIMITS);
+  if (blocked) return blocked;
   let body: { q?: unknown };
   try {
     body = await req.json();
@@ -49,18 +55,18 @@ export async function handleWeb(req: Request, env: { key?: string; referer?: str
       }),
     });
   } catch {
-    return json(502, { error: 'Não consegui falar com a OpenRouter.' });
+    return json(502, { error: 'Não consegui pesquisar agora.' });
   }
   if (!upstream.ok) {
-    const detail = await upstream.text().catch(() => '');
-    return json(502, { error: `OpenRouter respondeu ${upstream.status}`, detail: detail.slice(0, 500) });
+    console.error('openrouter web', upstream.status, (await upstream.text().catch(() => '')).slice(0, 500));
+    return json(502, { error: 'A pesquisa na web falhou agora.' });
   }
   const data = (await upstream.json().catch(() => ({}))) as { choices?: { message?: { annotations?: Annotation[] } }[] };
   const seen = new Set<string>();
   const results = (data.choices?.[0]?.message?.annotations ?? [])
     .map((a) => a.url_citation)
-    .filter((c): c is { url: string; title?: string; content?: string } => !!c?.url && /^https:\/\//.test(c.url))
+    .filter((c): c is { url: string; title?: string; content?: string } => !!c?.url && trustedUrl(c.url))
     .filter((c) => !seen.has(c.url) && !!seen.add(c.url))
-    .map((c) => ({ title: (c.title ?? c.url).slice(0, 200), url: c.url, content: (c.content ?? '').slice(0, 4000) }));
+    .map((c) => ({ title: cleanExternal(c.title ?? c.url, 200), url: c.url, content: cleanExternal(c.content ?? '', 4000) }));
   return json(200, { results });
 }

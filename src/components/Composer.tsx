@@ -102,6 +102,7 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ on
           id="composer"
           ref={ta}
           rows={1}
+          maxLength={1000}
           value={value}
           placeholder="Pergunte sobre receitas, farms, drops…"
           aria-autocomplete="list"

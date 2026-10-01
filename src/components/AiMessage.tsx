@@ -4,6 +4,7 @@ import type { BotMessage as Msg } from '../store/chat';
 import { useAsk } from './AskContext';
 import { useChat } from '../store/chat';
 import { useSmoothText } from '../hooks/useSmoothText';
+import { cleanAiText } from '../ai/untrusted';
 import { VERSION } from '../config';
 import { AnswerCard } from './AnswerView';
 import { ItemIcon } from './ItemIcon';
@@ -19,8 +20,10 @@ export function AiMessage({ msg }: { msg: Msg }) {
   const ask = useAsk();
   const reduce = useReducedMotion();
   const working = ai.status === 'thinking' || ai.status === 'writing';
-  const shown = useSmoothText(ai.text, !!msg.animate && !reduce);
-  const caughtUp = shown.length >= ai.text.length;
+  const raw = useSmoothText(ai.text, !!msg.animate && !reduce);
+  // Links para fora dos sites confiáveis saem do texto (proteção contra injeção vinda da web).
+  const shown = cleanAiText(raw);
+  const caughtUp = raw.length >= ai.text.length;
 
   // Terminou de chegar e de aparecer: encerra a "animação" (libera o botão Enviar).
   useEffect(() => {

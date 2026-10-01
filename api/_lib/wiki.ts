@@ -3,6 +3,9 @@
  * recebe o desafio anti-bot da wiki, o servidor se identifica com um User-Agent próprio.
  * Devolve o texto puro das páginas mais relevantes (artigos e tutoriais).
  */
+import { cleanExternal } from '../../src/ai/untrusted';
+import { guard, json } from './guard';
+
 const WIKI_API = 'https://minecraft.wiki/api.php';
 const WIKI_PAGE = 'https://minecraft.wiki/w/';
 /** Artigos (0) e tutoriais (10010). */
@@ -10,14 +13,8 @@ const NAMESPACES = '0|10010';
 const PAGES = 2;
 const PAGE_CHARS = 4500;
 const MAX_QUERY = 120;
+const LIMITS = [{ name: 'wiki-min', limit: 40, windowMs: 60_000 }];
 const USER_AGENT = 'CraftBot/1.0 (https://craftbot-seven.vercel.app; assistente pessoal de Minecraft)';
-
-function json(status: number, body: unknown, cache = false) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'content-type': 'application/json', ...(cache ? { 'cache-control': 'public, s-maxage=86400' } : {}) },
-  });
-}
 
 async function wikiApi(params: Record<string, string>) {
   const url = new URL(WIKI_API);
@@ -28,22 +25,26 @@ async function wikiApi(params: Record<string, string>) {
 }
 
 export async function handleWiki(req: Request): Promise<Response> {
+  if (req.method !== 'GET') return json(405, { error: 'Use GET' });
+  const blocked = guard(req, LIMITS);
+  if (blocked) return blocked;
   const q = (new URL(req.url).searchParams.get('q') ?? '').trim().slice(0, MAX_QUERY);
   if (!q) return json(400, { error: 'Sem busca' });
   try {
     const found = await wikiApi({ action: 'query', list: 'search', srsearch: q, srnamespace: NAMESPACES, srlimit: String(PAGES) });
     const titles: string[] = (found.query?.search ?? []).map((r: { title: string }) => r.title);
-    if (!titles.length) return json(200, { pages: [] }, true);
+    if (!titles.length) return json(200, { pages: [] });
     // O texto inteiro só vem de uma página por chamada (limite da extensão TextExtracts).
     const pages = await Promise.all(
       titles.map(async (title) => {
         const ex = await wikiApi({ action: 'query', prop: 'extracts', explaintext: '1', redirects: '1', titles: title });
         const text: string = ex.query?.pages?.[0]?.extract ?? '';
-        return { title, url: WIKI_PAGE + encodeURIComponent(title.replace(/ /g, '_')), text: text.replace(/\n{3,}/g, '\n\n').slice(0, PAGE_CHARS) };
+        return { title, url: WIKI_PAGE + encodeURIComponent(title.replace(/ /g, '_')), text: cleanExternal(text, PAGE_CHARS) };
       }),
     );
-    return json(200, { pages: pages.filter((p) => p.text) }, true);
+    return json(200, { pages: pages.filter((p) => p.text) });
   } catch (e) {
-    return json(502, { error: (e as Error).message });
+    console.error('wiki', (e as Error).message);
+    return json(502, { error: 'A Minecraft Wiki não respondeu agora.' });
   }
 }

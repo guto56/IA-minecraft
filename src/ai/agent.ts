@@ -103,7 +103,8 @@ export async function runAgent(history: ChatMessage[], question: string, onEvent
     }
     if (!res.ok) {
       const body = await res.json().catch(() => ({}) as { error?: string });
-      throw new AgentError(body.error ?? `Servidor respondeu ${res.status}`, res.status >= 500 || res.status === 404);
+      // Fora do ar, bloqueado ou no limite: o motor local (grátis) responde no lugar.
+      throw new AgentError(body.error ?? `Servidor respondeu ${res.status}`, res.status >= 500 || [403, 404, 429].includes(res.status));
     }
     // Na rodada final o texto vai direto para a tela; nas de ferramenta ele quase sempre vem vazio.
     const { content, calls } = await readStream(

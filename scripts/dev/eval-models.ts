@@ -36,7 +36,7 @@ const CASES: Case[] = [
 async function runCase(model: string, c: Case) {
   globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
-    if (url === '/api/chat') return handleChat(new Request('http://local/api/chat', init), { key, model });
+    if (url === '/api/chat') return handleChat(new Request('http://local/api/chat', { ...init, headers: { ...(init?.headers as Record<string, string>), origin: 'http://local' } }), { key, model });
     return realFetch(input, init);
   }) as typeof fetch;
   const history: ChatMessage[] = [];

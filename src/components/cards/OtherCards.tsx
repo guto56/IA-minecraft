@@ -10,6 +10,7 @@ import { ItemIcon } from '../ItemIcon';
 import { Slot } from '../Slot';
 import { IconChevron, IconExternal, IconPlay, IconStar } from '../Icons';
 import { Collapse } from '../Collapse';
+import { trustedUrl } from '../../ai/untrusted';
 import { CardShell, IconButton } from './CardShell';
 
 const pct = (c: number) => (c >= 1 ? '100%' : c >= 0.1 ? `${Math.round(c * 100)}%` : `${String(Math.round(c * 1000) / 10).replace('.', ',')}%`);
@@ -38,9 +39,12 @@ function Chip({ label, icon, onClick, hint }: { label: string; icon?: string; on
 /* ------------------------------ Farm ------------------------------ */
 
 function LiteYouTube({ url, title }: { url: string; title: string }) {
-  const id = new URL(url).searchParams.get('v') ?? '';
+  // Só IDs válidos do YouTube viram embed.
+  const v = new URL(url).searchParams.get('v') ?? '';
+  const id = /^[\w-]{6,20}$/.test(v) ? v : '';
   const [play, setPlay] = useState(false);
   const [thumbOk, setThumbOk] = useState(true);
+  if (!id) return null;
   if (play) {
     return (
       <iframe
@@ -516,9 +520,9 @@ export function WebCard({ a }: { a: Extract<Answer, { type: 'web' }> }) {
           <Badge tone="gold">Fora dos arquivos do jogo</Badge>
           <span>Pode descrever outra versão ou o Bedrock.</span>
         </p>
-        {a.video ? <LiteYouTube url={a.video.url} title={a.video.title} /> : null}
+        {a.video && trustedUrl(a.video.url) ? <LiteYouTube url={a.video.url} title={a.video.title} /> : null}
         <ul className="grid gap-1">
-          {a.results.map((r) => (
+          {a.results.filter((r) => trustedUrl(r.url)).map((r) => (
             <li key={r.url}>
               <a
                 href={r.url}
