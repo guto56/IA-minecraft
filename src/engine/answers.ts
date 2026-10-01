@@ -82,11 +82,15 @@ export type Answer =
   | { type: 'clarify'; text: string[]; options: ClarifyOption[]; source: string }
   | { type: 'not_understood'; text: string[]; suggestions: string[]; source: string }
   /** Pesquisa fora dos dados do jogo (Minecraft Wiki ou web). */
-  | { type: 'web'; origin: 'wiki' | 'web'; query: string; results: WebResult[]; video?: WebResult; text: string[]; source: string };
+  | { type: 'web'; origin: 'wiki' | 'web'; query: string; results: WebResult[]; videos?: WebVideo[]; /** Formato antigo (histórico salvo). */ video?: WebResult; text: string[]; source: string };
 
 export interface WebResult {
   title: string;
   url: string;
+}
+
+export interface WebVideo extends WebResult {
+  description?: string;
 }
 
 const LEVEL_NAMES: Record<string, string> = { '1': 'Novato', '2': 'Aprendiz', '3': 'Profissional', '4': 'Especialista', '5': 'Mestre' };

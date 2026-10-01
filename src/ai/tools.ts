@@ -192,6 +192,23 @@ export interface Turn {
   web: number;
 }
 
+const MAX_VIDEOS = 4;
+
+/** Primeiras frases do trecho, para a descrição do card de vídeo. */
+function summary(text: string, title = '', max = 180): string {
+  let t = text
+    .replace(/^#+\s.*$/gm, ' ')
+    .replace(/\[\.\.\.\]|\.\.\.|…/g, ' ')
+    .replace(/https?:\/\/\S+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  // A descrição do YouTube costuma repetir o título no começo.
+  if (title && t.toLowerCase().startsWith(title.toLowerCase())) t = t.slice(title.length).replace(/^[\s|:–-]+/, '');
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max);
+  return `${cut.slice(0, Math.max(cut.lastIndexOf(' '), max - 20))}…`;
+}
+
 export const newTurn = (): Turn => ({ game: false, wiki: false, web: 0 });
 export const MAX_WEB_PER_TURN = 1;
 
@@ -276,13 +293,17 @@ export async function runTool(name: string, rawArgs: string, turn: Turn = newTur
         .filter((h) => trustedUrl(h.url))
         .map((h) => ({ title: cleanExternal(h.title, 200), url: h.url, content: cleanExternal(h.content, 2500) }));
       if (!hits.length) return { name, args, label, answers: [], found: false, output: JSON.stringify({ fonte: 'web', nao_encontrado: true }) };
-      const videoHit = hits.find((h) => youtubeWatchUrl(h.url));
+      // Vídeos viram cards próprios (capa pequena, título, descrição); o resto fica na lista de links.
+      const videos = hits
+        .filter((h) => youtubeWatchUrl(h.url))
+        .slice(0, MAX_VIDEOS)
+        .map((h) => ({ title: h.title, url: youtubeWatchUrl(h.url)!, description: summary(h.content, h.title) }));
       const answer: Answer = {
         type: 'web',
         origin: 'web',
         query: busca,
-        results: hits.map((h) => ({ title: h.title, url: h.url })),
-        video: videoHit ? { title: videoHit.title, url: youtubeWatchUrl(videoHit.url)! } : undefined,
+        results: hits.filter((h) => !youtubeWatchUrl(h.url)).map((h) => ({ title: h.title, url: h.url })),
+        videos: videos.filter((v, i) => videos.findIndex((x) => x.url === v.url) === i),
         text: [],
         source: hits[0].url,
       };

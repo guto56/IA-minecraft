@@ -106,3 +106,44 @@ test('sem a resposta nos dados do jogo, a IA pesquisa na wiki e mostra a fonte',
   // A web (paga) não é chamada quando a wiki já respondeu.
   expect(web).toBe(0);
 });
+
+test('vídeos aparecem como cards compactos (vários) e o player só abre ao clicar', async ({ page }) => {
+  const call = (name: string, args: object) => sse([{ model: 'teste/ia', choices: [{ delta: { tool_calls: [{ index: 0, id: name, function: { name, arguments: JSON.stringify(args) } }] } }] }]);
+  await page.route('**/api/wiki?*', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: '{"pages":[]}' }));
+  await page.route('**/api/web', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        results: [
+          { title: 'LAVA FARM Tutorial', url: 'https://www.youtube.com/watch?v=dAxFI1u1kkc', content: 'Join me as I build a lava farm with dripstone.' },
+          { title: 'Easy Lava Farm', url: 'https://www.youtube.com/shorts/jT45KGUVkDo', content: 'Automatic lava farm.' },
+          { title: 'Lava farming', url: 'https://minecraft.wiki/w/Tutorial:Lava_farming', content: 'Pointed dripstone.' },
+        ],
+      }),
+    }),
+  );
+  await page.route('**/api/chat', (route) => {
+    const { messages } = route.request().postDataJSON() as { messages: { role: string; tool_call_id?: string }[] };
+    const last = messages[messages.length - 1];
+    if (last.role === 'user') return route.fulfill({ status: 200, contentType: 'text/event-stream', body: call('consultar_jogo', { pergunta: 'farm de lava' }) });
+    if (last.tool_call_id === 'consultar_jogo') return route.fulfill({ status: 200, contentType: 'text/event-stream', body: call('pesquisar_wiki', { busca: 'lava farm' }) });
+    if (last.tool_call_id === 'pesquisar_wiki') return route.fulfill({ status: 200, contentType: 'text/event-stream', body: call('pesquisar_web', { busca: 'lava farm video' }) });
+    return route.fulfill({ status: 200, contentType: 'text/event-stream', body: words('Pesquisei na web: achei **2 vídeos** de farm de lava.') });
+  });
+  await page.goto('/');
+  await page.getByLabel('Pergunte sobre Minecraft Java 26.3').fill('vídeo de farm de lava');
+  await page.keyboard.press('Enter');
+  const answer = page.locator('article').last();
+  await expect(answer).toContainText('achei 2 vídeos');
+  const play = answer.getByRole('button', { name: /^Assistir:/ });
+  await expect(play).toHaveCount(2);
+  await expect(answer).toContainText('Join me as I build a lava farm');
+  // Capa pequena, não a tela toda.
+  expect((await play.first().boundingBox())!.width).toBeLessThan(160);
+  await expect(answer.locator('iframe')).toHaveCount(0);
+  // O link da wiki continua na lista; o vídeo não se repete nela.
+  await expect(answer.getByRole('link', { name: /Lava farming/ })).toBeVisible();
+  await play.nth(1).click();
+  await expect(answer.locator('iframe')).toHaveAttribute('src', /youtube-nocookie\.com\/embed\/jT45KGUVkDo/);
+});

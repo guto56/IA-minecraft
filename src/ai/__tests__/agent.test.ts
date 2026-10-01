@@ -65,7 +65,7 @@ describe('pesquisa fora dos dados (só quando precisa)', () => {
     turn.wiki = true;
     const r = await runTool('pesquisar_web', JSON.stringify({ busca: 'lava farm web' }), turn);
     expect(r.found).toBe(true);
-    expect(r.answers[0]).toMatchObject({ type: 'web', origin: 'web', video: { url: 'https://www.youtube.com/watch?v=abcdef123' } });
+    expect(r.answers[0]).toMatchObject({ type: 'web', origin: 'web', results: [], videos: [{ url: 'https://www.youtube.com/watch?v=abcdef123', title: 'LAVA FARM', description: 'dripstone' }] });
     expect(JSON.parse((await runTool('pesquisar_web', JSON.stringify({ busca: 'outra' }), turn)).output).erro).toMatch(/Já pesquisei/);
     expect(fetch).toHaveBeenCalledTimes(1);
   });

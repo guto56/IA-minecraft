@@ -8,7 +8,8 @@ import { useChat } from '../../store/chat';
 import { useAsk } from '../AskContext';
 import { ItemIcon } from '../ItemIcon';
 import { Slot } from '../Slot';
-import { IconChevron, IconExternal, IconPlay, IconStar } from '../Icons';
+import { IconChevron, IconExternal, IconStar } from '../Icons';
+import { VideoList } from './VideoCard';
 import { Collapse } from '../Collapse';
 import { trustedUrl } from '../../ai/untrusted';
 import { CardShell, IconButton } from './CardShell';
@@ -37,45 +38,6 @@ function Chip({ label, icon, onClick, hint }: { label: string; icon?: string; on
 }
 
 /* ------------------------------ Farm ------------------------------ */
-
-function LiteYouTube({ url, title }: { url: string; title: string }) {
-  // Só IDs válidos do YouTube viram embed.
-  const v = new URL(url).searchParams.get('v') ?? '';
-  const id = /^[\w-]{6,20}$/.test(v) ? v : '';
-  const [play, setPlay] = useState(false);
-  const [thumbOk, setThumbOk] = useState(true);
-  if (!id) return null;
-  if (play) {
-    return (
-      <iframe
-        className="aspect-video w-full rounded-lg border border-line"
-        src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1`}
-        title={title}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-      />
-    );
-  }
-  return (
-    <button type="button" onClick={() => setPlay(true)} className="group relative block aspect-video w-full overflow-hidden rounded-lg border border-line bg-surface-2" aria-label={`Assistir: ${title}`}>
-      {thumbOk ? (
-        <img
-          src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`}
-          alt=""
-          loading="lazy"
-          onError={() => setThumbOk(false)}
-          className="h-full w-full object-cover opacity-90 transition-opacity duration-200 group-hover:opacity-100"
-        />
-      ) : null}
-      <span className="absolute inset-0 grid place-items-center">
-        <span className="grid h-12 w-16 place-items-center rounded-xl bg-[#d8433a] text-white shadow-[0_6px_20px_-6px_rgb(0_0_0/0.6)] transition-transform duration-200 ease-out group-hover:scale-105">
-          <IconPlay width={22} height={22} />
-        </span>
-      </span>
-      <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-3 pt-8 pb-2 text-left text-[12.5px] text-white">{title}</span>
-    </button>
-  );
-}
 
 function Difficulty({ n }: { n: number }) {
   return (
@@ -166,7 +128,7 @@ export function FarmCard({ farm }: { farm: Farm }) {
             })}
           </div>
         ) : null}
-        <LiteYouTube url={farm.video} title={farm.video_titulo} />
+        <VideoList title="Tutorial em vídeo" videos={[{ title: farm.video_titulo, url: farm.video, description: `Passo a passo da ${farm.nome.toLowerCase()} em vídeo.` }]} />
       </div>
     </CardShell>
   );
@@ -513,30 +475,33 @@ const hostOf = (url: string) => new URL(url).hostname.replace(/^(www|m)\./, '');
 
 export function WebCard({ a }: { a: Extract<Answer, { type: 'web' }> }) {
   const wiki = a.origin === 'wiki';
+  const links = a.results.filter((r) => trustedUrl(r.url));
   return (
     <CardShell title={wiki ? 'Pesquisado na Minecraft Wiki' : 'Pesquisado na web'} subtitle={`“${a.query}”`} icon={wiki ? 'book' : 'compass'}>
-      <div className="grid gap-3">
+      <div className="grid min-w-0 grid-cols-1 gap-3">
         <p className="flex flex-wrap items-center gap-2 text-[13px] text-muted">
           <Badge tone="gold">Fora dos arquivos do jogo</Badge>
           <span>Pode descrever outra versão ou o Bedrock.</span>
         </p>
-        {a.video && trustedUrl(a.video.url) ? <LiteYouTube url={a.video.url} title={a.video.title} /> : null}
-        <ul className="grid gap-1">
-          {a.results.filter((r) => trustedUrl(r.url)).map((r) => (
-            <li key={r.url}>
-              <a
-                href={r.url}
-                target="_blank"
-                rel="noreferrer"
-                className="group flex items-center gap-3 rounded-lg px-2 py-1.5 text-[13.5px] transition-colors duration-150 hover:bg-surface-2"
-              >
-                <span className="w-[108px] shrink-0 truncate font-mono text-[11.5px] text-muted">{hostOf(r.url)}</span>
-                <span className="min-w-0 flex-1 truncate text-fg">{r.title}</span>
-                <IconExternal width={14} height={14} className="shrink-0 text-muted transition-colors group-hover:text-fg" />
-              </a>
-            </li>
-          ))}
-        </ul>
+        <VideoList videos={a.videos ?? (a.video ? [a.video] : [])} />
+        {links.length ? (
+          <ul className="grid min-w-0 gap-1">
+            {links.map((r) => (
+              <li key={r.url}>
+                <a
+                  href={r.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group flex items-center gap-3 rounded-lg px-2 py-1.5 text-[13.5px] transition-colors duration-150 hover:bg-surface-2"
+                >
+                  <span className="w-[84px] shrink-0 truncate font-mono text-[11.5px] text-muted sm:w-[108px]">{hostOf(r.url)}</span>
+                  <span className="min-w-0 flex-1 truncate text-fg">{r.title}</span>
+                  <IconExternal width={14} height={14} className="shrink-0 text-muted transition-colors group-hover:text-fg" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
     </CardShell>
   );
