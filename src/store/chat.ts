@@ -242,7 +242,13 @@ export const useTheme = create<ThemeState>()((set, get) => ({
   theme: (typeof document !== 'undefined' && document.documentElement.dataset.theme === 'light' ? 'light' : 'dark') as Theme,
   toggle: () => {
     const next: Theme = get().theme === 'dark' ? 'light' : 'dark';
-    document.documentElement.dataset.theme = next;
+    const apply = () => {
+      document.documentElement.dataset.theme = next;
+    };
+    const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
+    // Crossfade suave entre Deepslate e Calcita (quando o navegador suporta).
+    if (doc.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) doc.startViewTransition(apply);
+    else apply();
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'dark' ? '#141517' : '#f4f2ee');
     try {
       localStorage.setItem('craftbot-theme', next);

@@ -67,10 +67,13 @@ export function useAutoScroll() {
   useEffect(() => {
     if (!content || !scroller) return;
     const ro = new ResizeObserver(() => {
+      // Altura visível do chat: o último turno usa para a pergunta poder subir até o topo.
+      scroller.style.setProperty('--chat-h', `${scroller.clientHeight}px`);
       if (following.current) run();
       else setShowButton(distance(scroller) > SHOW_BUTTON);
     });
     ro.observe(content);
+    ro.observe(scroller);
     return () => ro.disconnect();
   }, [content, scroller, run]);
 

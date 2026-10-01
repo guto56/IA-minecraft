@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { motion } from 'motion/react';
 import type { Recipe } from '../../data/types';
 import { itemName, items } from '../../lib/kb';
 import { directMaterials, materialIcon, materialLabel, rawMaterials } from '../../lib/materials';
@@ -93,6 +94,8 @@ export function RecipeGrid({ r, animate, onPick }: { r: Recipe; animate?: boolea
 export function RecipeCard({ item, recipes, quantity, animate }: Props) {
   const [idx, setIdx] = useState(0);
   const [raw, setRaw] = useState(false);
+  /** Usuário trocou de aba: a nova receita entra animada. */
+  const [switched, setSwitched] = useState(false);
   const [copied, setCopied] = useState<'ok' | 'fail' | null>(null);
   const exportRef = useRef<HTMLDivElement>(null);
   const ask = useAsk();
@@ -142,7 +145,9 @@ export function RecipeCard({ item, recipes, quantity, animate }: Props) {
     >
       <div ref={exportRef} className="flex flex-col items-start gap-3 bg-surface">
         <div className="mc-panel inline-flex max-w-full p-3 sm:p-4">
-          <RecipeGrid r={r} animate={animate} onPick={pick} />
+          <motion.div key={idx} initial={idx === 0 && !switched ? false : { opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}>
+            <RecipeGrid r={r} animate={animate || switched} onPick={pick} />
+          </motion.div>
         </div>
         {recipes.length > 1 ? (
           <div className="flex flex-wrap items-center gap-1.5" data-export-ignore="true" role="tablist" aria-label="Outras receitas">
@@ -151,7 +156,10 @@ export function RecipeCard({ item, recipes, quantity, animate }: Props) {
                 key={x.id}
                 role="tab"
                 aria-selected={k === idx}
-                onClick={() => setIdx(k)}
+                onClick={() => {
+                  setIdx(k);
+                  setSwitched(true);
+                }}
                 className={`rounded-md border px-2 py-1 text-[12px] transition-colors duration-150 ease-out ${k === idx ? 'border-emerald text-fg' : 'border-line text-muted hover:border-muted hover:text-fg'}`}
               >
                 {k + 1}. {stationLabel(x.station)}
@@ -178,11 +186,11 @@ export function RecipeCard({ item, recipes, quantity, animate }: Props) {
             </div>
             <ul className="flex flex-wrap gap-x-4 gap-y-2">
               {lines.map((l) => (
-                <li key={l.key} className="flex items-center gap-2 text-[14px]">
+                <motion.li key={l.key} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="flex items-center gap-2 text-[14px]">
                   <ItemIcon id={materialIcon(l.key)} size={24} label="" />
                   <span className="tabular font-mono text-[13px] text-fg">{l.qty}×</span>
                   <span className="text-muted">{materialLabel(l.key)}</span>
-                </li>
+                </motion.li>
               ))}
             </ul>
           </div>

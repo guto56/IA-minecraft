@@ -2,7 +2,7 @@
  * Proxy para a OpenRouter: adiciona a chave (só no servidor), o prompt do sistema e as
  * ferramentas, e devolve o stream SSE. O cliente nunca vê a chave nem troca as instruções.
  */
-import { DEFAULT_MODEL, SYSTEM_PROMPT, TOOLS } from '../../src/ai/prompt';
+import { DEFAULT_MODEL, FALLBACK_MODEL, SYSTEM_PROMPT, TOOLS } from '../../src/ai/prompt';
 
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const MAX_MESSAGES = 40;
@@ -56,7 +56,7 @@ export async function handleChat(req: Request, env: { key?: string; model?: stri
       'x-title': 'CraftBot',
     },
     body: JSON.stringify({
-      model: env.model || DEFAULT_MODEL,
+      models: [...new Set([env.model || DEFAULT_MODEL, FALLBACK_MODEL])],
       messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
       tools: TOOLS,
       tool_choice: 'auto',

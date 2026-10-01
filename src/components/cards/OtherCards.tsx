@@ -9,6 +9,7 @@ import { useAsk } from '../AskContext';
 import { ItemIcon } from '../ItemIcon';
 import { Slot } from '../Slot';
 import { IconChevron, IconPlay, IconStar } from '../Icons';
+import { Collapse } from '../Collapse';
 import { CardShell, IconButton } from './CardShell';
 
 const pct = (c: number) => (c >= 1 ? '100%' : c >= 0.1 ? `${Math.round(c * 100)}%` : `${String(Math.round(c * 1000) / 10).replace('.', ',')}%`);
@@ -128,7 +129,7 @@ export function FarmCard({ farm }: { farm: Farm }) {
             <IconChevron className={`transition-transform duration-150 ${open ? 'rotate-90' : ''}`} width={14} height={14} />
             Passo a passo ({farm.passos.length})
           </button>
-          {open ? (
+          <Collapse open={open}>
             <ol className="grid gap-1.5 text-[14px]">
               {farm.passos.map((p, i) => (
                 <li key={i} className="flex gap-3">
@@ -137,7 +138,7 @@ export function FarmCard({ farm }: { farm: Farm }) {
                 </li>
               ))}
             </ol>
-          ) : null}
+          </Collapse>
         </div>
         {farm.erros_comuns.length ? (
           <div>

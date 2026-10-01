@@ -273,3 +273,68 @@ a {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---------------------------------------------------------------- */
+/* Transições                                                         */
+/* ---------------------------------------------------------------- */
+
+@keyframes cb-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes cb-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+@keyframes cb-pop-out {
+  to {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+@keyframes cb-tip-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 4px);
+  }
+}
+
+.cb-dialog[open] {
+  animation: cb-pop-in 0.22s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.cb-dialog[open]::backdrop {
+  animation: cb-fade-in 0.22s ease-out;
+}
+.cb-dialog.is-closing {
+  animation: cb-pop-out 0.16s ease-in forwards;
+}
+.cb-dialog.is-closing::backdrop {
+  animation: cb-fade-in 0.16s ease-in reverse forwards;
+}
+
+.mc-tooltip {
+  animation: cb-tip-in 0.12s ease-out;
+}
+
+/* Troca de tema: o navegador faz um crossfade da página inteira. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.35s;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cb-dialog[open],
+  .cb-dialog[open]::backdrop,
+  .cb-dialog.is-closing,
+  .mc-tooltip {
+    animation: none;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}

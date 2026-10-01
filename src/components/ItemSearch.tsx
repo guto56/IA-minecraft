@@ -27,7 +27,17 @@ export function ItemSearch({ open, onClose, onAsk }: Props) {
       setQ('');
       requestAnimationFrame(() => input.current?.focus());
     }
-    if (!open && d.open) d.close();
+    if (!open && d.open) {
+      // Fecha com animação: espera a saída antes do close() nativo.
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) return d.close();
+      d.classList.add('is-closing');
+      const t = window.setTimeout(() => {
+        d.classList.remove('is-closing');
+        d.close();
+      }, 160);
+      return () => clearTimeout(t);
+    }
   }, [open]);
   useEffect(() => setActive(0), [q]);
 
@@ -42,9 +52,13 @@ export function ItemSearch({ open, onClose, onAsk }: Props) {
     <dialog
       ref={ref}
       onClose={onClose}
+      onCancel={(e) => {
+        e.preventDefault();
+        onClose();
+      }}
       onClick={(e) => e.target === ref.current && onClose()}
       aria-label="Buscar item"
-      className="m-auto mt-[12vh] w-[min(560px,calc(100vw-24px))] rounded-2xl border border-line bg-surface p-0 text-fg shadow-card backdrop:bg-black/50"
+      className="cb-dialog m-auto mt-[12vh] w-[min(560px,calc(100vw-24px))] rounded-2xl border border-line bg-surface p-0 text-fg shadow-card backdrop:bg-black/50"
     >
       <div className="flex items-center gap-3 border-b border-line px-4 py-3">
         <IconSearch className="text-muted" />

@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { KIND_LABEL, useSearch } from '../lib/useSearch';
 import { useChat } from '../store/chat';
+import { AnimatePresence, motion } from 'motion/react';
 import { ItemIcon } from './ItemIcon';
 import { warmEngine } from '../lib/warm';
 import { IconSend, IconStop } from './Icons';
@@ -63,8 +64,15 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ on
 
   return (
     <div className="relative">
-      {open ? (
-        <ul role="listbox" id="composer-suggestions" aria-label="Sugestões de itens" className="absolute inset-x-0 bottom-full z-20 mb-2 overflow-hidden rounded-xl border border-line bg-surface py-1 shadow-card">
+      <AnimatePresence>
+        {open ? (
+        <motion.ul
+          key="sugestoes"
+          initial={{ opacity: 0, y: 6, scale: 0.99 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 4, transition: { duration: 0.12 } }}
+          transition={{ duration: 0.18, ease: [0.32, 0.72, 0, 1] }}
+          role="listbox" id="composer-suggestions" aria-label="Sugestões de itens" className="absolute inset-x-0 bottom-full z-20 mb-2 overflow-hidden rounded-xl border border-line bg-surface py-1 shadow-card">
           {suggestions.map((e, i) => (
             <li
               key={`${e.kind}:${e.id}`}
@@ -83,8 +91,9 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ on
               <span className="text-[12px] text-muted">{KIND_LABEL[e.kind]}</span>
             </li>
           ))}
-        </ul>
-      ) : null}
+        </motion.ul>
+        ) : null}
+      </AnimatePresence>
       <div className={`flex items-end gap-2 rounded-2xl border border-line bg-surface-2 p-2 pl-4 transition-colors duration-150 focus-within:border-emerald/60 ${big ? 'min-h-[64px]' : ''}`}>
         <label htmlFor="composer" className="sr-only">
           Pergunte sobre Minecraft Java {VERSION}

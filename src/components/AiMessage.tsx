@@ -9,6 +9,7 @@ import { AnswerCard } from './AnswerView';
 import { ItemIcon } from './ItemIcon';
 import { Markdown } from './Markdown';
 import { IconChevron } from './Icons';
+import { Collapse } from './Collapse';
 import { ShareButton, SourceLine } from './BotMessage';
 
 /** Resposta escrita pela IA a partir das ferramentas (dados do jar e curadoria). */
@@ -118,7 +119,7 @@ function Steps({ msg }: { msg: Msg }) {
         <IconChevron width={14} height={14} className={`transition-transform duration-150 ${open ? 'rotate-90' : ''}`} />
         Como cheguei nisso
       </button>
-      {open ? (
+      <Collapse open={open}>
         <ol className="mt-2 grid gap-1.5 rounded-lg border border-line bg-surface px-3 py-2.5 text-[13px]">
           {ai.steps.map((s, i) => (
             <li key={i} className="grid grid-cols-[18px_1fr] gap-x-2">
@@ -131,7 +132,7 @@ function Steps({ msg }: { msg: Msg }) {
           {!ai.steps.length ? <li className="text-muted">Respondi sem consultar os dados (pergunta fora do jogo ou de conversa).</li> : null}
           {ai.model ? <li className="pt-1 text-[12px] text-muted">Modelo: {ai.model}</li> : null}
         </ol>
-      ) : null}
+      </Collapse>
     </div>
   );
 }

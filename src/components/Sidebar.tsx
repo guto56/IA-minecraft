@@ -1,5 +1,6 @@
 import meta from '../data/meta.json';
 import { useChat, useTheme } from '../store/chat';
+import { motion } from 'motion/react';
 import { ItemIcon } from './ItemIcon';
 import { IconMoon, IconPlus, IconSearch, IconSidebar, IconSun, IconTrash } from './Icons';
 
@@ -34,7 +35,7 @@ export function Sidebar({ open, onClose, onAsk, onSearch, mobile }: Props) {
   return (
     <aside
       aria-label="Conversas"
-      className={`flex h-full w-[260px] shrink-0 flex-col border-r border-line bg-surface ${mobile ? `fixed inset-y-0 left-0 z-40 shadow-card transition-transform duration-200 ease-out ${open ? 'translate-x-0' : '-translate-x-full'}` : ''}`}
+      className={`flex h-full w-[260px] shrink-0 flex-col border-r border-line bg-surface ${mobile ? `fixed inset-y-0 left-0 z-40 shadow-card transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${open ? 'translate-x-0' : '-translate-x-full'}` : ''}`}
       inert={mobile && !open ? true : undefined}
     >
       <div className="flex items-center justify-between px-3 pt-3 pb-2">
@@ -78,7 +79,15 @@ export function Sidebar({ open, onClose, onAsk, onSearch, mobile }: Props) {
             <h2 className="px-2.5 pb-1 text-[12px] font-medium text-muted">{label}</h2>
             <ul>
               {list.map((c) => (
-                <li key={c.id} className="group relative">
+                <motion.li
+                  key={c.id}
+                  layout="position"
+                  initial={Date.now() - c.createdAt < 2000 ? { opacity: 0, x: -10 } : false}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
+                  className="group relative"
+                >
                   <button
                     type="button"
                     onClick={() => { select(c.id); after(); }}
@@ -95,7 +104,7 @@ export function Sidebar({ open, onClose, onAsk, onSearch, mobile }: Props) {
                   >
                     <IconTrash width={16} height={16} />
                   </button>
-                </li>
+                </motion.li>
               ))}
             </ul>
           </section>

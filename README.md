@@ -12,7 +12,7 @@ Assistente estilo chat para **Minecraft Java Edition 26.3** ("Wilderness Bound")
 
 ### Configurar a chave
 
-- **Vercel:** em *Project → Settings → Environment Variables*, crie `OPENROUTER_API_KEY` (e, se quiser trocar o modelo, `OPENROUTER_MODEL`; padrão `google/gemini-2.5-flash`).
+- **Vercel:** em *Project → Settings → Environment Variables*, crie `OPENROUTER_API_KEY` (e, se quiser trocar o modelo, `OPENROUTER_MODEL`; padrão `deepseek/deepseek-v4.1-flash`, com `google/gemini-2.5-flash` como reserva; compare modelos com `npx tsx scripts/dev/eval-models.ts <modelo...>`).
 - **Local:** crie `.env.local` com `OPENROUTER_API_KEY=...` (o arquivo é ignorado pelo git). `npm run dev` e `npm run preview` já servem o `/api/chat`.
 - A chave nunca vai para o código do site: fica só no servidor.
 

@@ -6,6 +6,7 @@ import { ItemIcon } from './ItemIcon';
 import { RichText, wordCount } from './RichText';
 import { AnswerCard, thinkingBudget } from './AnswerView';
 import { IconCheck, IconChevron, IconShare } from './Icons';
+import { Collapse } from './Collapse';
 import { VERSION } from '../config';
 
 type Phase = 'understanding' | 'identified' | 'searching' | 'building' | 'streaming' | 'done';
@@ -233,7 +234,7 @@ function Reasoning({ msg }: { msg: Msg }) {
         <IconChevron width={14} height={14} className={`transition-transform duration-150 ${open ? 'rotate-90' : ''}`} />
         Como cheguei nisso
       </button>
-      {open ? (
+      <Collapse open={open}>
         <dl className="mt-2 grid gap-1.5 rounded-lg border border-line bg-surface px-3 py-2.5 text-[13px]">
           {traces.map((t, i) => (
             <div key={i} className="grid grid-cols-[92px_1fr] gap-x-3 gap-y-1">
@@ -254,7 +255,7 @@ function Reasoning({ msg }: { msg: Msg }) {
             </div>
           ))}
         </dl>
-      ) : null}
+      </Collapse>
     </div>
   );
 }

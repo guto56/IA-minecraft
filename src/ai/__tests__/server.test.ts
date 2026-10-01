@@ -13,7 +13,7 @@ describe('/api/chat', () => {
   });
 
   it('usa o prompt do servidor, as ferramentas e a chave, e ignora "system" vindo do cliente', async () => {
-    let sent: { headers: Record<string, string>; body: { model: string; messages: { role: string; content: string }[]; tools: unknown[] } } | undefined;
+    let sent: { headers: Record<string, string>; body: { models: string[]; messages: { role: string; content: string }[]; tools: unknown[] } } | undefined;
     vi.spyOn(globalThis, 'fetch').mockImplementation(async (_url, init) => {
       sent = { headers: init!.headers as Record<string, string>, body: JSON.parse(String(init!.body)) };
       return new Response('data: [DONE]\n\n', { status: 200 });
@@ -24,7 +24,7 @@ describe('/api/chat', () => {
     );
     expect(r.status).toBe(200);
     expect(sent!.headers.authorization).toBe('Bearer segredo');
-    expect(sent!.body.model).toBe('modelo/x');
+    expect(sent!.body.models[0]).toBe('modelo/x');
     expect(sent!.body.messages[0]).toEqual({ role: 'system', content: SYSTEM_PROMPT });
     expect(sent!.body.messages.filter((m) => m.role === 'system')).toHaveLength(1);
     expect(sent!.body.tools.length).toBe(2);

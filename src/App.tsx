@@ -11,6 +11,9 @@ import { useIsMobile } from './hooks/useMedia';
 
 // A conversa (cards + dados do jogo) carrega sob demanda: a tela inicial abre na hora.
 const Messages = lazy(() => import('./components/Messages'));
+
+/** Curva única das transições de layout (saída rápida, chegada suave). */
+const EASE = [0.32, 0.72, 0, 1] as const;
 import { useActiveConversation, useChat } from './store/chat';
 import { warmEngine } from './lib/warm';
 import { VERSION } from './config';
@@ -86,17 +89,57 @@ export default function App() {
   return (
     <AskContext.Provider value={ask}>
       <div className="flex h-full">
-        {sidebar || mobile ? <Sidebar open={sidebar} mobile={mobile} onClose={() => setSidebar(false)} onAsk={ask} onSearch={() => setSearch(true)} /> : null}
-        {mobile && sidebar ? <div className="fixed inset-0 z-30 bg-black/50" onClick={() => setSidebar(false)} aria-hidden="true" /> : null}
+        {mobile ? (
+          <Sidebar open={sidebar} mobile onClose={() => setSidebar(false)} onAsk={ask} onSearch={() => setSearch(true)} />
+        ) : (
+          // Desktop: a barra encolhe/expande a largura (o chat acompanha), sem sumir de uma vez.
+          <motion.div
+            className="h-full shrink-0 overflow-hidden"
+            initial={false}
+            animate={{ width: sidebar ? 260 : 0 }}
+            transition={{ duration: 0.32, ease: EASE }}
+            inert={!sidebar ? true : undefined}
+            aria-hidden={!sidebar ? true : undefined}
+          >
+            <motion.div className="h-full w-[260px]" initial={false} animate={{ opacity: sidebar ? 1 : 0, x: sidebar ? 0 : -24 }} transition={{ duration: 0.28, ease: EASE }}>
+              <Sidebar open={sidebar} mobile={false} onClose={() => setSidebar(false)} onAsk={ask} onSearch={() => setSearch(true)} />
+            </motion.div>
+          </motion.div>
+        )}
+        <AnimatePresence>
+          {mobile && sidebar ? (
+            <motion.div
+              key="scrim"
+              className="fixed inset-0 z-30 bg-black/50"
+              onClick={() => setSidebar(false)}
+              aria-hidden="true"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25, ease: EASE }}
+            />
+          ) : null}
+        </AnimatePresence>
 
         <main className="relative flex min-w-0 flex-1 flex-col">
-          <header className={`flex h-12 shrink-0 items-center gap-1 px-2 ${sidebar && !mobile ? 'sm:hidden' : ''}`}>
-            {!sidebar || mobile ? (
-              <button type="button" onClick={() => setSidebar(true)} aria-label="Abrir barra lateral" className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-surface-2 hover:text-fg">
-                <IconSidebar />
-              </button>
-            ) : null}
-            {mobile || !sidebar ? <span className="font-pixel text-[17px] font-semibold text-fg">CraftBot</span> : null}
+          <header className="flex h-12 shrink-0 items-center gap-1 px-2">
+            <AnimatePresence initial={false}>
+              {!sidebar || mobile ? (
+                <motion.div
+                  key="open-sidebar"
+                  className="flex items-center gap-1"
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -8 }}
+                  transition={{ duration: 0.22, ease: EASE, delay: mobile ? 0 : 0.08 }}
+                >
+                  <button type="button" onClick={() => setSidebar(true)} aria-label="Abrir barra lateral" className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-surface-2 hover:text-fg">
+                    <IconSidebar />
+                  </button>
+                  <span className="font-pixel text-[17px] font-semibold text-fg">CraftBot</span>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
             <button type="button" onClick={newConversation} aria-label="Nova conversa" className="ml-auto grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-surface-2 hover:text-fg">
               <IconPlus />
             </button>
@@ -106,7 +149,9 @@ export default function App() {
             <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto px-4 pb-[12vh]">
               <div className="w-full max-w-[680px]">
                 <h1 className="mb-6 text-center text-[30px] leading-tight font-semibold tracking-[-0.02em] text-fg sm:text-[34px]">O que vamos craftar?</h1>
-                <Composer ref={composer} onSend={ask} big />
+                <motion.div layoutId="composer" transition={{ duration: 0.42, ease: EASE }}>
+                  <Composer ref={composer} onSend={ask} big />
+                </motion.div>
                 <ul className="mt-4 flex flex-wrap justify-center gap-2" aria-label="Exemplos de perguntas">
                   {EXAMPLES.map((e) => (
                     <li key={e.q}>
@@ -130,13 +175,20 @@ export default function App() {
             </div>
           ) : (
             <>
-              <div ref={scrollerRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+              <motion.div
+                ref={scrollerRef}
+                key={conv!.id}
+                className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.25, ease: EASE }}
+              >
                 <div ref={contentRef}>
                   <Suspense fallback={<div className="mx-auto max-w-[760px] px-4 pt-6 text-[14px] text-muted">Carregando os dados da {VERSION}…</div>}>
                     <Messages messages={conv!.messages} />
                   </Suspense>
                 </div>
-              </div>
+              </motion.div>
               <div className="relative shrink-0 px-4 pt-2 pb-[max(12px,env(safe-area-inset-bottom))]">
                 <AnimatePresence>
                   {showButton ? (
@@ -157,7 +209,9 @@ export default function App() {
                   ) : null}
                 </AnimatePresence>
                 <div className="mx-auto w-full max-w-[760px]">
-                  <Composer ref={composer} onSend={ask} />
+                  <motion.div layoutId="composer" transition={{ duration: 0.42, ease: EASE }}>
+                    <Composer ref={composer} onSend={ask} />
+                  </motion.div>
                   <p className="mt-1.5 text-center text-[11.5px] text-muted">A IA só usa os dados do jogo. Se não tiver a informação, ela diz que não sabe.</p>
                 </div>
               </div>
