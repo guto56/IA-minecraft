@@ -4,7 +4,8 @@ import { Composer, type ComposerHandle } from './components/Composer';
 import { ItemIcon } from './components/ItemIcon';
 import { ItemSearch } from './components/ItemSearch';
 import { Sidebar } from './components/Sidebar';
-import { IconArrowDown, IconPlus, IconSidebar } from './components/Icons';
+import { IconArrowDown, IconImage, IconPlus, IconSidebar } from './components/Icons';
+import { firstImage } from './lib/image';
 import { AnimatePresence, motion } from 'motion/react';
 import { useAutoScroll } from './hooks/useAutoScroll';
 import { useIsMobile } from './hooks/useMedia';
@@ -37,8 +38,8 @@ export default function App() {
   const composer = useRef<ComposerHandle>(null);
 
   const ask = useCallback(
-    (q: string) => {
-      send(q);
+    (q: string, image?: string) => {
+      send(q, image);
       const url = new URL(window.location.href);
       if (url.searchParams.has('q')) {
         url.searchParams.delete('q');
@@ -85,6 +86,34 @@ export default function App() {
 
   useEffect(() => setSidebar(!mobile), [mobile]);
 
+  // Arrastar uma imagem para qualquer lugar da conversa anexa no campo de pergunta.
+  const [dragging, setDragging] = useState(false);
+  const dragDepth = useRef(0);
+  const hasFiles = (e: React.DragEvent) => Array.from(e.dataTransfer.types).includes('Files');
+  const dropHandlers = {
+    onDragEnter: (e: React.DragEvent) => {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      dragDepth.current++;
+      setDragging(true);
+    },
+    onDragOver: (e: React.DragEvent) => {
+      if (hasFiles(e)) e.preventDefault();
+    },
+    onDragLeave: () => {
+      dragDepth.current = Math.max(0, dragDepth.current - 1);
+      if (!dragDepth.current) setDragging(false);
+    },
+    onDrop: (e: React.DragEvent) => {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      dragDepth.current = 0;
+      setDragging(false);
+      const f = firstImage(e.dataTransfer.files);
+      if (f) composer.current?.attach(f);
+    },
+  };
+
   const empty = !conv || conv.messages.length === 0;
 
   return (
@@ -122,7 +151,27 @@ export default function App() {
           ) : null}
         </AnimatePresence>
 
-        <main className="relative flex min-w-0 flex-1 flex-col">
+        <main className="relative flex min-w-0 flex-1 flex-col" {...dropHandlers}>
+          <AnimatePresence>
+            {dragging ? (
+              <motion.div
+                key="drop"
+                className="pointer-events-none absolute inset-3 z-40 grid place-items-center rounded-2xl border-2 border-dashed border-emerald/70 bg-bg/80 backdrop-blur-sm"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.18, ease: EASE }}
+              >
+                <div className="grid justify-items-center gap-2 text-center">
+                  <span className="grid h-12 w-12 place-items-center rounded-xl bg-emerald/15 text-emerald">
+                    <IconImage width={24} height={24} />
+                  </span>
+                  <p className="text-[15px] font-medium text-fg">Solte a imagem aqui</p>
+                  <p className="text-[13px] text-muted">Print do jogo, construção, farm, item…</p>
+                </div>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
           <header className="flex h-12 shrink-0 items-center gap-1 px-2">
             <AnimatePresence initial={false}>
               {!sidebar || mobile ? (

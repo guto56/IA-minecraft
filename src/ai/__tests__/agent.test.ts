@@ -100,7 +100,7 @@ describe('laço do agente', () => {
     expect(calls[0].messages[2]).toEqual({ role: 'user', content: 'e de melancia?' });
     // A segunda chamada leva o resultado real da ferramenta.
     const tool = calls[1].messages.find((m) => m.role === 'tool')!;
-    expect(JSON.parse(tool.content).resultados[0].tipo).toBe('farm');
+    expect(JSON.parse(String(tool.content)).resultados[0].tipo).toBe('farm');
     expect(r.text).toBe('A **farm de melancia** usa observadores e pistões.');
     expect(r.answers.some((a) => a.type === 'farm')).toBe(true);
     expect(r.model).toBe('teste/modelo');

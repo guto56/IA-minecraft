@@ -1,12 +1,14 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 import type { Answer, Context, EngineResult } from '../engine';
-import type { ChatMessage } from '../ai/agent';
+import { userContent, type ChatMessage } from '../ai/agent';
 
 export interface UserMessage {
   id: string;
   role: 'user';
   text: string;
+  /** Imagem anexada (JPEG reduzido, data URL). */
+  image?: string;
   at: number;
 }
 
@@ -65,7 +67,7 @@ interface ChatState {
   favorites: Favorite[];
   /** Mensagem cuja animação está rodando (o botão Parar a encerra). */
   animatingId: string | null;
-  send: (text: string) => Promise<void>;
+  send: (text: string, image?: string) => Promise<void>;
   newConversation: () => void;
   select: (id: string) => void;
   remove: (id: string) => void;
@@ -77,10 +79,13 @@ interface ChatState {
 const controllers = new Map<string, AbortController>();
 
 /** Histórico enxuto para a IA entender o contexto ("e de melancia?"). */
-function toHistory(messages: Message[]): ChatMessage[] {
+function toHistory(messages: Message[], newImage: boolean): ChatMessage[] {
   const out: ChatMessage[] = [];
-  for (const m of messages.slice(-16)) {
-    if (m.role === 'user') out.push({ role: 'user', content: m.text });
+  const recent = messages.slice(-16);
+  // A IA continua vendo só a última imagem da conversa (e nenhuma se a pergunta nova traz outra).
+  const lastImageId = newImage ? undefined : [...recent].reverse().find((m) => m.role === 'user' && m.image)?.id;
+  for (const m of recent) {
+    if (m.role === 'user') out.push({ role: 'user', content: m.id === lastImageId ? userContent(m.text, m.image) : m.text || '(imagem enviada antes)' });
     else {
       const text = m.ai?.text || m.result.answers.flatMap((a) => a.text).join('\n').replace(/\*\*/g, '');
       const consulted = m.ai?.steps.filter((s) => s.found).map((s) => s.label);
@@ -103,6 +108,35 @@ function mergeCards(current: Answer[], incoming: Answer[]): Answer[] {
   return out;
 }
 
+/**
+ * localStorage que não quebra quando enche (imagens ocupam espaço):
+ * tira as imagens mais antigas até caber.
+ */
+const safeStorage = {
+  getItem: (k: string) => localStorage.getItem(k),
+  removeItem: (k: string) => localStorage.removeItem(k),
+  setItem: (k: string, v: string) => {
+    try {
+      localStorage.setItem(k, v);
+      return;
+    } catch {
+      /* cheio: libera espaço abaixo */
+    }
+    const data = JSON.parse(v) as { state: { conversations: Conversation[] } };
+    // Conversas vêm da mais recente para a mais antiga; mensagens da mais antiga para a mais recente.
+    const withImage = data.state.conversations.flatMap((c) => [...c.messages].reverse().filter((m): m is UserMessage => m.role === 'user' && !!m.image));
+    for (let keep = Math.min(withImage.length, 6); keep >= 0; keep--) {
+      for (const m of withImage.slice(keep)) delete m.image;
+      try {
+        localStorage.setItem(k, JSON.stringify(data));
+        return;
+      } catch {
+        /* ainda não coube */
+      }
+    }
+  },
+};
+
 const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 
 function titleFrom(text: string) {
@@ -117,15 +151,15 @@ export const useChat = create<ChatState>()(
       activeId: null,
       favorites: [],
       animatingId: null,
-      send: async (text) => {
+      send: async (text, image) => {
         const q = text.trim();
-        if (!q) return;
+        if (!q && !image) return;
         const state = get();
         let conv = state.conversations.find((c) => c.id === state.activeId);
         const now = Date.now();
-        if (!conv) conv = { id: uid(), title: titleFrom(q), createdAt: now, updatedAt: now, messages: [], context: {} };
-        const history = toHistory(conv.messages);
-        const userMsg: UserMessage = { id: uid(), role: 'user', text: q, at: now };
+        if (!conv) conv = { id: uid(), title: titleFrom(q || 'Imagem enviada'), createdAt: now, updatedAt: now, messages: [], context: {} };
+        const history = toHistory(conv.messages, !!image);
+        const userMsg: UserMessage = { id: uid(), role: 'user', text: q, ...(image ? { image } : {}), at: now };
         const botMsg: BotMessage = {
           id: uid(),
           role: 'bot',
@@ -171,12 +205,16 @@ export const useChat = create<ChatState>()(
               }
             },
             controller.signal,
+            image,
           );
           patch((m) => ({ ...m, ai: { ...m.ai!, status: 'done', text: result.text || m.ai!.text, model: result.model ?? m.ai!.model } }));
         } catch (err) {
           const e = err as Error & { unavailable?: boolean };
           if (e.name === 'AbortError') {
             patch((m) => ({ ...m, ai: { ...m.ai!, status: 'stopped' } }));
+          } else if (e.unavailable && image) {
+            // O motor local não lê imagens.
+            patch((m) => ({ ...m, ai: { ...m.ai!, status: 'error', error: 'para analisar imagens preciso da IA, que está indisponível agora' } }));
           } else if (e.unavailable) {
             // IA fora do ar ou sem internet: responde com o motor local (mesmos dados, sem IA).
             const { ask } = await import('../engine');
@@ -216,6 +254,7 @@ export const useChat = create<ChatState>()(
     {
       name: 'craftbot-chat',
       version: 1,
+      storage: createJSONStorage(() => safeStorage),
       partialize: (s) => ({
         conversations: s.conversations.slice(0, 60).map((c) => ({
           ...c,

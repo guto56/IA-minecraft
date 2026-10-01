@@ -5,9 +5,11 @@
 import type { Answer } from '../engine';
 import { newTurn, runTool, type ToolRun } from './tools';
 
+export type ContentPart = { type: 'text'; text: string } | { type: 'image_url'; image_url: { url: string } };
+
 export interface ChatMessage {
   role: 'user' | 'assistant' | 'tool';
-  content: string;
+  content: string | ContentPart[];
   tool_calls?: { id: string; type: 'function'; function: { name: string; arguments: string } }[];
   tool_call_id?: string;
 }
@@ -87,8 +89,26 @@ export interface AgentResult {
   model?: string;
 }
 
-export async function runAgent(history: ChatMessage[], question: string, onEvent: (e: AgentEvent) => void, signal?: AbortSignal): Promise<AgentResult> {
-  const messages: ChatMessage[] = [...history, { role: 'user', content: question }];
+/** Pedido padrão quando o usuário manda só a imagem. */
+export const IMAGE_ONLY_PROMPT = '(Imagem enviada sem texto.) Identifique o que aparece nesta imagem de Minecraft e explique.';
+
+/** Mensagem do usuário com imagem: texto + imagem (formato multimodal da OpenRouter). */
+export function userContent(text: string, image?: string): ChatMessage['content'] {
+  if (!image) return text;
+  return [
+    { type: 'text', text: text.trim() || IMAGE_ONLY_PROMPT },
+    { type: 'image_url', image_url: { url: image } },
+  ];
+}
+
+export async function runAgent(
+  history: ChatMessage[],
+  question: string,
+  onEvent: (e: AgentEvent) => void,
+  signal?: AbortSignal,
+  image?: string,
+): Promise<AgentResult> {
+  const messages: ChatMessage[] = [...history, { role: 'user', content: userContent(question, image) }];
   const runs: ToolRun[] = [];
   const turn = newTurn();
   let model: string | undefined;

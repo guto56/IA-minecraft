@@ -112,3 +112,10 @@ export const IconExternal = (p: SVGProps<SVGSVGElement>) => (
     <path d="M14 5h5v5M19 5l-8 8M17 14v5H5V7h5" />
   </svg>
 );
+export const IconImage = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}>
+    <rect x="3.5" y="4.5" width="17" height="15" rx="2.5" />
+    <circle cx="9" cy="10" r="1.6" />
+    <path d="m20.5 16-4.8-4.8L6 19.5" />
+  </svg>
+);

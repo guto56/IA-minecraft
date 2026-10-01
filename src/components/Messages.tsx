@@ -2,6 +2,7 @@ import { motion } from 'motion/react';
 import type { Message } from '../store/chat';
 import { AiMessage } from './AiMessage';
 import { BotMessage } from './BotMessage';
+import { ImageThumb } from './ImageViewer';
 import '../lib/kb';
 
 /** Distância vertical do container (pt-4 + pb-10) somada à margem do topo da pergunta. */
@@ -13,14 +14,15 @@ function renderMessage(m: Message) {
       <motion.div
         key={m.id}
         data-user-message
-        className="flex scroll-mt-4 justify-end"
+        className="flex scroll-mt-4 flex-col items-end gap-2"
         // Só a pergunta que acabou de ser enviada entra animada (o histórico aparece parado).
         initial={Date.now() - m.at < 1500 ? { opacity: 0, y: 12, scale: 0.98 } : false}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
         style={{ transformOrigin: 'bottom right' }}
       >
-        <p className="max-w-[80%] rounded-2xl rounded-br-md bg-surface-2 px-4 py-2 text-[15px] whitespace-pre-wrap text-fg">{m.text}</p>
+        {m.image ? <ImageThumb src={m.image} id={m.id} /> : null}
+        {m.text ? <p className="max-w-[80%] rounded-2xl rounded-br-md bg-surface-2 px-4 py-2 text-[15px] whitespace-pre-wrap text-fg">{m.text}</p> : null}
       </motion.div>
     );
   }

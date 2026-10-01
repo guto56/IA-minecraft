@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import type { BotMessage as Msg } from '../store/chat';
 import { useAsk } from './AskContext';
-import { useChat } from '../store/chat';
+import { useActiveConversation, useChat } from '../store/chat';
 import { useSmoothText } from '../hooks/useSmoothText';
 import { cleanAiText } from '../ai/untrusted';
 import { VERSION } from '../config';
@@ -18,6 +18,14 @@ export function AiMessage({ msg }: { msg: Msg }) {
   const ai = msg.ai!;
   const finish = useChat((s) => s.finishAnimation);
   const ask = useAsk();
+  const conv = useActiveConversation();
+  // "Tentar de novo" reenvia também a imagem da pergunta.
+  const retry = () => {
+    const msgs = conv?.messages ?? [];
+    const i = msgs.findIndex((m) => m.id === msg.id);
+    const prev = i > 0 ? msgs[i - 1] : undefined;
+    ask(msg.question, prev?.role === 'user' ? prev.image : undefined);
+  };
   const reduce = useReducedMotion();
   const working = ai.status === 'thinking' || ai.status === 'writing';
   const raw = useSmoothText(ai.text, !!msg.animate && !reduce);
@@ -76,7 +84,7 @@ export function AiMessage({ msg }: { msg: Msg }) {
           <div className="mt-1 grid gap-2">
             <p className="text-[14px] text-redstone-ink">Não consegui terminar a resposta: {ai.error}</p>
             <div>
-              <button type="button" onClick={() => ask(msg.question)} className="rounded-lg border border-line bg-surface-2 px-3 py-1.5 text-[13.5px] hover:border-muted">
+              <button type="button" onClick={retry} className="rounded-lg border border-line bg-surface-2 px-3 py-1.5 text-[13.5px] hover:border-muted">
                 Tentar de novo
               </button>
             </div>
@@ -112,7 +120,7 @@ export function AiMessage({ msg }: { msg: Msg }) {
               )}
               {' · '}texto por IA a partir desses dados
             </p>
-            <ShareButton question={msg.question} />
+            {msg.question ? <ShareButton question={msg.question} /> : null}
           </div>
         ) : null}
       </div>

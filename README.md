@@ -26,6 +26,13 @@ As fontes têm ordem fixa, garantida no código (`Turn` em `src/ai/tools.ts`) e 
 - Respostas pesquisadas aparecem com o card "Pesquisado na Minecraft Wiki/na web", os links, o vídeo (quando houver) e o aviso "fora dos arquivos do jogo".
 - Nomes de itens citados em inglês são trocados pelos nomes oficiais pt-BR do jar.
 
+### Imagens
+
+- Anexe pelo botão de imagem, colando (Ctrl+V) ou arrastando para a conversa. Uma imagem por mensagem; o texto é opcional.
+- A imagem é reduzida no navegador (máx. 1024 px, JPEG) antes de ir para a IA e fica no histórico local (se o armazenamento encher, as imagens mais antigas saem primeiro).
+- Sem texto, a IA identifica o que aparece e explica com os dados do jogo. Nas perguntas seguintes ela continua vendo a última imagem.
+- Imagens que não são de Minecraft são recusadas; texto dentro da imagem nunca vira instrução. O servidor só aceita JPEG/PNG/WebP em base64 (sem links externos ou SVG), até 2 por pedido.
+
 ### Configurar a chave
 
 - **Vercel:** em *Project → Settings → Environment Variables*, crie `OPENROUTER_API_KEY` (e, se quiser trocar o modelo, `OPENROUTER_MODEL`; padrão `deepseek/deepseek-v4.1-flash`, com `google/gemini-2.5-flash` como reserva; compare modelos com `npx tsx scripts/dev/eval-models.ts <modelo...>`).

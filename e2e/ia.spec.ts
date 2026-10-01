@@ -147,3 +147,45 @@ test('vídeos aparecem como cards compactos (vários) e o player só abre ao cli
   await play.nth(1).click();
   await expect(answer.locator('iframe')).toHaveAttribute('src', /youtube-nocookie\.com\/embed\/jT45KGUVkDo/);
 });
+
+test('envia imagem sem texto: miniatura no campo, imagem na bolha e a IA recebe a imagem', async ({ page }) => {
+  const bodies: { messages: { role: string; content: unknown }[] }[] = [];
+  await page.route('**/api/chat', (route) => {
+    bodies.push(route.request().postDataJSON());
+    return route.fulfill({ status: 200, contentType: 'text/event-stream', body: words('Isso é um **Bloco de Grama**.') });
+  });
+  await page.goto('/');
+  await page.locator('input[type=file]').setInputFiles('public/app-192.png');
+  const preview = page.getByRole('img', { name: 'Imagem anexada' });
+  await expect(preview).toBeVisible();
+  await expect(page.getByLabel('Pergunte sobre Minecraft Java 26.3')).toHaveAttribute('placeholder', /opcional/);
+  // Remover e anexar de novo.
+  await page.getByRole('button', { name: 'Remover imagem' }).click();
+  await expect(preview).toBeHidden();
+  await page.locator('input[type=file]').setInputFiles('public/app-192.png');
+  await expect(preview).toBeVisible();
+  await page.getByRole('button', { name: 'Enviar' }).click();
+
+  await expect(page.locator('article').last()).toContainText('Isso é um Bloco de Grama');
+  const sent = bodies[0].messages[bodies[0].messages.length - 1].content as { type: string; text?: string; image_url?: { url: string } }[];
+  expect(sent[0].text).toMatch(/Imagem enviada sem texto/);
+  expect(sent[1].image_url!.url).toMatch(/^data:image\/jpeg;base64,/);
+  // Bolha do usuário com a imagem; clicar abre em tela cheia.
+  await page.getByRole('button', { name: 'Ver imagem em tela cheia' }).click();
+  await expect(page.getByRole('dialog', { name: 'Imagem enviada' })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog', { name: 'Imagem enviada' })).toBeHidden();
+
+  // Pergunta seguinte: a IA continua vendo a última imagem.
+  await page.getByLabel('Pergunte sobre Minecraft Java 26.3').fill('e pra que serve?');
+  await page.keyboard.press('Enter');
+  await expect(page.locator('article')).toHaveCount(2);
+  await expect.poll(() => bodies.length).toBe(2);
+  const second = bodies[1].messages;
+  expect(JSON.stringify(second)).toContain('image_url');
+  expect(second[second.length - 1].content).toBe('e pra que serve?');
+
+  // Recarregar mantém a imagem no histórico.
+  await page.reload();
+  await expect(page.getByRole('button', { name: 'Ver imagem em tela cheia' })).toBeVisible();
+});

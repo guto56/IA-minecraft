@@ -4,15 +4,18 @@ import { useChat } from '../store/chat';
 import { AnimatePresence, motion } from 'motion/react';
 import { ItemIcon } from './ItemIcon';
 import { warmEngine } from '../lib/warm';
-import { IconSend, IconStop } from './Icons';
+import { IconClose, IconImage, IconSend, IconStop } from './Icons';
+import { firstImage, ImageError, prepareImage } from '../lib/image';
 import { VERSION } from '../config';
 
 export interface ComposerHandle {
   focus: () => void;
+  /** Anexa uma imagem (arrastar e soltar na tela). */
+  attach: (file: File) => void;
 }
 
 interface Props {
-  onSend: (text: string) => void;
+  onSend: (text: string, image?: string) => void;
   big?: boolean;
 }
 
@@ -27,10 +30,33 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ on
   const [active, setActive] = useState(0);
   const [dismissed, setDismissed] = useState(false);
   const [focused, setFocused] = useState(false);
+  const [image, setImage] = useState<string | null>(null);
+  const [imageError, setImageError] = useState('');
+  const [loadingImage, setLoadingImage] = useState(false);
   const ta = useRef<HTMLTextAreaElement>(null);
+  const fileInput = useRef<HTMLInputElement>(null);
   const animatingId = useChat((s) => s.animatingId);
   const finish = useChat((s) => s.finishAnimation);
-  useImperativeHandle(ref, () => ({ focus: () => ta.current?.focus() }));
+
+  const attach = async (file: File) => {
+    setImageError('');
+    setLoadingImage(true);
+    try {
+      setImage(await prepareImage(file));
+      requestAnimationFrame(() => ta.current?.focus());
+    } catch (e) {
+      setImageError(e instanceof ImageError ? e.message : 'Não consegui usar essa imagem.');
+    } finally {
+      setLoadingImage(false);
+    }
+  };
+  useImperativeHandle(ref, () => ({ focus: () => ta.current?.focus(), attach: (f) => void attach(f) }));
+
+  useEffect(() => {
+    if (!imageError) return;
+    const t = setTimeout(() => setImageError(''), 4000);
+    return () => clearTimeout(t);
+  }, [imageError]);
 
   const tail = tailQuery(value);
   const search = useSearch(focused || value.length > 0);
@@ -45,10 +71,12 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ on
     el.style.height = `${Math.min(el.scrollHeight, 200)}px`;
   }, [value]);
 
+  const canSend = !!value.trim() || !!image;
   const submit = (text = value) => {
-    if (!text.trim()) return;
-    onSend(text);
+    if (!text.trim() && !image) return;
+    onSend(text, image ?? undefined);
     setValue('');
+    setImage(null);
     setDismissed(false);
   };
 
@@ -94,7 +122,76 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ on
         </motion.ul>
         ) : null}
       </AnimatePresence>
-      <div className={`flex items-end gap-2 rounded-2xl border border-line bg-surface-2 p-2 pl-4 transition-colors duration-150 focus-within:border-emerald/60 ${big ? 'min-h-[64px]' : ''}`}>
+      <div
+        className={`rounded-2xl border border-line bg-surface-2 transition-colors duration-150 focus-within:border-emerald/60 ${big ? 'min-h-[64px]' : ''}`}
+      >
+        <AnimatePresence initial={false}>
+          {image || loadingImage ? (
+            <motion.div
+              key="anexo"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
+              className="overflow-hidden"
+            >
+              <div className="px-3 pt-3">
+                <motion.div
+                  initial={{ scale: 0.6, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ type: 'spring', stiffness: 420, damping: 26 }}
+                  className="relative inline-block"
+                >
+                  {image ? (
+                    <img src={image} alt="Imagem anexada" className="h-16 w-16 rounded-lg border border-line object-cover" />
+                  ) : (
+                    <span className="grid h-16 w-16 place-items-center rounded-lg border border-line bg-surface" aria-label="Preparando imagem">
+                      <span className="flex gap-1" aria-hidden="true">
+                        <span className="pixel-dot" />
+                        <span className="pixel-dot" />
+                        <span className="pixel-dot" />
+                      </span>
+                    </span>
+                  )}
+                  {image ? (
+                    <button
+                      type="button"
+                      onClick={() => setImage(null)}
+                      aria-label="Remover imagem"
+                      title="Remover imagem"
+                      className="absolute -top-1.5 -right-1.5 grid h-5 w-5 place-items-center rounded-full border border-line bg-surface text-muted shadow-card transition-colors hover:text-fg"
+                    >
+                      <IconClose width={12} height={12} />
+                    </button>
+                  ) : null}
+                </motion.div>
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+        <div className="flex items-end gap-1.5 p-2">
+        <input
+          ref={fileInput}
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif"
+          className="hidden"
+          aria-hidden="true"
+          tabIndex={-1}
+          onChange={(e) => {
+            const f = firstImage(e.target.files);
+            if (f) void attach(f);
+            e.target.value = '';
+          }}
+        />
+        <button
+          type="button"
+          onClick={() => fileInput.current?.click()}
+          aria-label="Anexar imagem"
+          title="Anexar imagem (ou cole / arraste)"
+          className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors duration-150 hover:bg-surface hover:text-fg"
+        >
+          <IconImage />
+        </button>
         <label htmlFor="composer" className="sr-only">
           Pergunte sobre Minecraft Java {VERSION}
         </label>
@@ -104,13 +201,20 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ on
           rows={1}
           maxLength={1000}
           value={value}
-          placeholder="Pergunte sobre receitas, farms, drops…"
+          placeholder={image ? 'Pergunte algo sobre a imagem (opcional)…' : 'Pergunte sobre receitas, farms, drops…'}
           aria-autocomplete="list"
           onFocus={() => {
             setFocused(true);
             warmEngine();
           }}
           onBlur={() => setFocused(false)}
+          onPaste={(e) => {
+            const f = firstImage(e.clipboardData?.items);
+            if (f) {
+              e.preventDefault();
+              void attach(f);
+            }
+          }}
           aria-controls={open ? 'composer-suggestions' : undefined}
           aria-activedescendant={open ? `sug-${active}` : undefined}
           onChange={(e) => {
@@ -137,7 +241,7 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ on
               submit();
             }
           }}
-          className="max-h-[200px] flex-1 resize-none self-center bg-transparent py-1.5 text-[15px] leading-6 text-fg outline-none placeholder:text-muted focus-visible:outline-none"
+          className="max-h-[200px] flex-1 resize-none self-center bg-transparent py-1.5 pl-1 text-[15px] leading-6 text-fg outline-none placeholder:text-muted focus-visible:outline-none"
         />
         {animatingId ? (
           <button type="button" onClick={() => finish(animatingId)} aria-label="Parar" title="Parar" className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-fg text-bg transition-transform duration-150 hover:scale-105">
@@ -147,7 +251,7 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ on
           <button
             type="button"
             onClick={() => submit()}
-            disabled={!value.trim()}
+            disabled={!canSend || loadingImage}
             aria-label="Enviar"
             title="Enviar (Enter)"
             className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-emerald text-emerald-ink transition-[opacity,transform] duration-150 enabled:hover:-translate-y-px disabled:opacity-35"
@@ -155,7 +259,22 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer({ on
             <IconSend />
           </button>
         )}
+        </div>
       </div>
+      <AnimatePresence>
+        {imageError ? (
+          <motion.p
+            key="erro"
+            role="alert"
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-x-0 top-full mt-1 text-center text-[12.5px] text-redstone-ink"
+          >
+            {imageError}
+          </motion.p>
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 });

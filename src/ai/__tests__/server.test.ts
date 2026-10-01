@@ -144,3 +144,43 @@ describe('segurança das APIs', () => {
     expect(await r.text()).not.toMatch(/sk-or|secreta|401/);
   });
 });
+
+describe('imagens', () => {
+  const img = 'data:image/jpeg;base64,' + 'A'.repeat(400);
+  it('aceita texto + uma imagem em data URL e descarta o resto', () => {
+    const [m] = sanitize([
+      {
+        role: 'user',
+        content: [
+          { type: 'text', text: 'o que é isso?' },
+          { type: 'image_url', image_url: { url: img } },
+          { type: 'image_url', image_url: { url: img } },
+          { type: 'image_url', image_url: { url: 'https://evil.com/x.png' } },
+          { type: 'file', file: { data: 'x' } },
+        ],
+      },
+    ]);
+    expect(m.content).toEqual([
+      { type: 'text', text: 'o que é isso?' },
+      { type: 'image_url', image_url: { url: img } },
+    ]);
+  });
+  it('imagem por link externo, SVG ou base64 inválido não passa (vira só texto)', () => {
+    for (const url of ['https://evil.com/x.png', 'data:image/svg+xml;base64,PHN2Zz4=', 'data:image/png;base64,<script>', 'javascript:alert(1)']) {
+      const [m] = sanitize([{ role: 'user', content: [{ type: 'text', text: 'oi' }, { type: 'image_url', image_url: { url } }] }]);
+      expect(m.content).toBe('oi');
+    }
+  });
+  it('manda a imagem para a IA e recusa conversa com imagens demais', async () => {
+    let body: { messages: { content: unknown }[] } | undefined;
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (_u, init) => {
+      body = JSON.parse(String(init!.body));
+      return new Response('data: [DONE]\n\n', { status: 200 });
+    });
+    const withImage = { role: 'user', content: [{ type: 'text', text: 'oi' }, { type: 'image_url', image_url: { url: img } }] };
+    expect((await handleChat(post({ messages: [withImage] }), { key: 'k' })).status).toBe(200);
+    expect(JSON.stringify(body!.messages[1].content)).toContain('image_url');
+    const many = [withImage, { role: 'assistant', content: 'a' }, withImage, { role: 'assistant', content: 'b' }, withImage];
+    expect((await handleChat(post({ messages: many }), { key: 'k' })).status).toBe(413);
+  });
+});
