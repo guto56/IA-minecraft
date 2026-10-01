@@ -76,11 +76,11 @@ export default function App() {
   }, []);
 
   const count = conv?.messages.length ?? 0;
-  const { scrollerRef, contentRef, showButton, follow } = useAutoScroll();
-  // Nova pergunta ou troca de conversa: volta a acompanhar a resposta até o fim.
+  const { scrollerRef, contentRef, showButton, follow, pin } = useAutoScroll();
+  // Nova pergunta ou troca de conversa: a última pergunta sobe para o topo e fica ali.
   useEffect(() => {
-    if (count) follow();
-  }, [count, conv?.id, follow]);
+    if (count) pin();
+  }, [count, conv?.id, pin]);
 
   useEffect(() => setSidebar(!mobile), [mobile]);
 
@@ -178,7 +178,7 @@ export default function App() {
               <motion.div
                 ref={scrollerRef}
                 key={conv!.id}
-                className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
+                className="min-h-0 flex-1 overflow-y-auto overscroll-contain [overflow-anchor:none]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.25, ease: EASE }}

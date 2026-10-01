@@ -5,9 +5,13 @@ const NEAR_BOTTOM = 48;
 /** A partir daqui aparece o botão de voltar para baixo. */
 const SHOW_BUTTON = 160;
 
+/** Folga acima da pergunta fixada no topo. */
+const PIN_GAP = 16;
+
 /**
  * Rolagem que acompanha a resposta enquanto ela é escrita.
- * - O conteúdo cresce: desliza suavemente até o fim (sem saltos).
+ * - Pergunta nova: desliza até a pergunta ficar no topo e para ali (a resposta cresce embaixo dela).
+ * - Setinha: acompanha a escrita até o fim, suavemente (sem saltos).
  * - O usuário sobe (roda do mouse, toque, teclado ou barra de rolagem): para de acompanhar.
  * - Voltar ao fim (rolando ou pelo botão) retoma o acompanhamento.
  */
@@ -16,12 +20,28 @@ export function useAutoScroll() {
   const [content, setContent] = useState<HTMLDivElement | null>(null);
   const [showButton, setShowButton] = useState(false);
   const following = useRef(true);
+  /** Segura a rolagem com a última pergunta no topo. */
+  const pinned = useRef(true);
   const frame = useRef(0);
   const lastSet = useRef<number | null>(null);
   const touchY = useRef<number | null>(null);
 
   const reduced = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const distance = (el: HTMLElement) => el.scrollHeight - el.clientHeight - el.scrollTop;
+
+  /** Até onde rolar: o fim, ou a posição que deixa a última pergunta no topo. */
+  const targetOf = useCallback(
+    (el: HTMLElement) => {
+      const bottom = el.scrollHeight - el.clientHeight;
+      if (!pinned.current || !content) return bottom;
+      const questions = content.querySelectorAll('[data-user-message]');
+      const q = questions[questions.length - 1];
+      if (!q) return bottom;
+      const top = q.getBoundingClientRect().top - el.getBoundingClientRect().top + el.scrollTop - PIN_GAP;
+      return Math.max(0, Math.min(bottom, top));
+    },
+    [content],
+  );
 
   // Laço de animação: aproxima o scroll do fim com suavização exponencial,
   // então acompanha o texto crescendo sem trancos e desacelera ao chegar.
@@ -35,20 +55,21 @@ export function useAutoScroll() {
         frame.current = 0;
         return;
       }
-      const target = scroller.scrollHeight - scroller.clientHeight;
+      const target = targetOf(scroller);
       const gap = target - scroller.scrollTop;
-      if (gap <= 0.5) {
+      if (Math.abs(gap) <= 0.5) {
         frame.current = 0;
+        setShowButton(distance(scroller) > SHOW_BUTTON);
         return;
       }
       const next = reduced() ? target : scroller.scrollTop + gap * (1 - Math.exp(-dt / 110));
       // Garante progresso mínimo para não "travar" no último pixel.
-      scroller.scrollTop = Math.min(target, Math.max(next, scroller.scrollTop + 1));
+      scroller.scrollTop = gap > 0 ? Math.min(target, Math.max(next, scroller.scrollTop + 1)) : Math.max(target, Math.min(next, scroller.scrollTop - 1));
       lastSet.current = scroller.scrollTop;
       frame.current = requestAnimationFrame(step);
     };
     frame.current = requestAnimationFrame(step);
-  }, [scroller]);
+  }, [scroller, targetOf]);
 
   const stop = useCallback(() => {
     following.current = false;
@@ -56,9 +77,17 @@ export function useAutoScroll() {
     frame.current = 0;
   }, []);
 
-  /** Volta a acompanhar a resposta (botão da setinha ou nova pergunta). */
+  /** Nova pergunta (ou troca de conversa): leva a última pergunta ao topo e segura ali. */
+  const pin = useCallback(() => {
+    following.current = true;
+    pinned.current = true;
+    run();
+  }, [run]);
+
+  /** Setinha: acompanha a resposta até o fim. */
   const follow = useCallback(() => {
     following.current = true;
+    pinned.current = false;
     setShowButton(false);
     run();
   }, [run]);
@@ -70,7 +99,7 @@ export function useAutoScroll() {
       // Altura visível do chat: o último turno usa para a pergunta poder subir até o topo.
       scroller.style.setProperty('--chat-h', `${scroller.clientHeight}px`);
       if (following.current) run();
-      else setShowButton(distance(scroller) > SHOW_BUTTON);
+      setShowButton((!following.current || pinned.current) && distance(scroller) > SHOW_BUTTON);
     });
     ro.observe(content);
     ro.observe(scroller);
@@ -97,11 +126,14 @@ export function useAutoScroll() {
     const onScroll = () => {
       const d = distance(scroller);
       const ours = lastSet.current !== null && Math.abs(scroller.scrollTop - lastSet.current) < 2;
-      // Arrastou a barra para cima (scroll que não fomos nós que fizemos).
+      // Rolou por conta própria (barra, roda para baixo): solta a pergunta fixada.
       if (!ours && following.current && d > NEAR_BOTTOM) stop();
-      // Desceu sozinho até o fim: retoma o automático.
-      if (!following.current && d <= NEAR_BOTTOM) following.current = true;
-      setShowButton(!following.current && d > SHOW_BUTTON);
+      // Desceu sozinho até o fim: retoma o automático, acompanhando até o fim.
+      if (!ours && d <= NEAR_BOTTOM) {
+        following.current = true;
+        pinned.current = false;
+      }
+      setShowButton((!following.current || pinned.current) && d > SHOW_BUTTON);
     };
     scroller.addEventListener('wheel', onWheel, { passive: true });
     scroller.addEventListener('touchstart', onTouchStart, { passive: true });
@@ -119,5 +151,5 @@ export function useAutoScroll() {
 
   useEffect(() => () => cancelAnimationFrame(frame.current), []);
 
-  return { scrollerRef: setScroller, contentRef: setContent, showButton, follow };
+  return { scrollerRef: setScroller, contentRef: setContent, showButton, follow, pin };
 }

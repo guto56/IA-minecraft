@@ -95,7 +95,7 @@ test('histórico fica salvo depois de recarregar', async ({ page }) => {
 test.describe('com animação', () => {
   test.use({ reducedMotion: 'no-preference' });
 
-  test('a rolagem acompanha a resposta, para ao subir e volta pela setinha', async ({ page, isMobile }) => {
+  test('a pergunta fica no topo, a rolagem para ao subir e a setinha acompanha até o fim', async ({ page, isMobile }) => {
     test.skip(isMobile, 'roda do mouse');
     await page.setViewportSize({ width: 1100, height: 600 });
     await page.goto('/');
@@ -104,15 +104,25 @@ test.describe('com animação', () => {
       const s = document.querySelector('main .overflow-y-auto')!;
       return s.scrollHeight - s.clientHeight - s.scrollTop;
     });
+    const questionTop = () => page.evaluate(() => {
+      const s = document.querySelector('main .overflow-y-auto')!;
+      const qs = document.querySelectorAll('[data-user-message]');
+      return qs[qs.length - 1].getBoundingClientRect().top - s.getBoundingClientRect().top;
+    });
     for (const q of ['farm de ferro', 'trocas do bibliotecario']) {
       await input.fill(q);
       await page.keyboard.press('Enter');
       await expect(page.getByRole('button', { name: 'Enviar' })).toBeVisible({ timeout: 10_000 });
     }
+    // Resposta maior que a tela: a última pergunta fica fixada no topo.
+    await expect.poll(questionTop).toBeGreaterThanOrEqual(0);
+    await expect.poll(questionTop).toBeLessThan(40);
+    const toBottom = page.getByRole('button', { name: 'Ir para o fim da resposta' });
+    await expect(toBottom).toBeVisible();
+    await toBottom.click();
     await expect.poll(gap).toBeLessThan(4);
     await page.mouse.move(550, 250);
     await page.mouse.wheel(0, -500);
-    const toBottom = page.getByRole('button', { name: 'Ir para o fim da resposta' });
     await expect(toBottom).toBeVisible();
     await toBottom.click();
     await expect.poll(gap).toBeLessThan(4);
