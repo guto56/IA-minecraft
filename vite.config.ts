@@ -2,6 +2,8 @@
 import { defineConfig, loadEnv, type Connect, type Plugin } from 'vite';
 import type { ServerResponse } from 'node:http';
 import { handleChat } from './api/_lib/chat';
+import { handleWeb } from './api/_lib/web';
+import { handleWiki } from './api/_lib/wiki';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -10,10 +12,10 @@ import config from './craftbot.config.json';
 // Versão exposta ao index.html (%VITE_MC_VERSION%).
 process.env.VITE_MC_VERSION = config.minecraftVersion;
 
-/** /api/chat também no `npm run dev` e no `vite preview` (lê a chave do .env.local). */
+/** /api/chat, /api/web e /api/wiki também no `npm run dev` e no `vite preview` (lê a chave do .env.local). */
 function apiChat(mode: string): Plugin {
   const env = loadEnv(mode, process.cwd(), '');
-  const handler: Connect.NextHandleFunction = async (req, res: ServerResponse) => {
+  const route = (handle: (r: Request) => Promise<Response>): Connect.NextHandleFunction => async (req, res: ServerResponse) => {
     const chunks: Buffer[] = [];
     for await (const c of req) chunks.push(c as Buffer);
     const request = new Request(`http://localhost${req.url}`, {
@@ -21,7 +23,7 @@ function apiChat(mode: string): Plugin {
       headers: { 'content-type': req.headers['content-type'] ?? 'application/json' },
       body: req.method === 'POST' ? Buffer.concat(chunks) : undefined,
     });
-    const response = await handleChat(request, { key: env.OPENROUTER_API_KEY, model: env.OPENROUTER_MODEL });
+    const response = await handle(request);
     res.statusCode = response.status;
     response.headers.forEach((v, k) => res.setHeader(k, v));
     if (!response.body) return res.end();
@@ -33,10 +35,21 @@ function apiChat(mode: string): Plugin {
     }
     res.end();
   };
+  const chat = route((r) => handleChat(r, { key: env.OPENROUTER_API_KEY, model: env.OPENROUTER_MODEL }));
+  const web = route((r) => handleWeb(r, { key: env.OPENROUTER_API_KEY }));
+  const wiki = route(handleWiki);
   return {
-    name: 'craftbot-api-chat',
-    configureServer: (server) => void server.middlewares.use('/api/chat', handler),
-    configurePreviewServer: (server) => void server.middlewares.use('/api/chat', handler),
+    name: 'craftbot-api',
+    configureServer: (server) => {
+      server.middlewares.use('/api/chat', chat);
+      server.middlewares.use('/api/web', web);
+      server.middlewares.use('/api/wiki', wiki);
+    },
+    configurePreviewServer: (server) => {
+      server.middlewares.use('/api/chat', chat);
+      server.middlewares.use('/api/web', web);
+      server.middlewares.use('/api/wiki', wiki);
+    },
   };
 }
 

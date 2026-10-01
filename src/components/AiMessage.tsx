@@ -28,7 +28,8 @@ export function AiMessage({ msg }: { msg: Msg }) {
   }, [msg.animate, working, caughtUp, finish, msg.id]);
 
   const cards = msg.result.answers;
-  const sources = [...new Set(cards.map((a) => a.source))];
+  const researched = cards.filter((a) => a.type === 'web');
+  const sources = [...new Set(cards.filter((a) => a.type !== 'web').map((a) => a.source))];
   const lastStep = ai.steps[ai.steps.length - 1];
 
   return (
@@ -51,7 +52,7 @@ export function AiMessage({ msg }: { msg: Msg }) {
                 </>
               ) : (
                 <>
-                  <span>Consultando os dados da {VERSION}:</span>
+                  <span>{STEP_TITLE[lastStep.name] ?? `Consultando os dados da ${VERSION}:`}</span>
                   <span className="inline-flex items-center gap-1.5 rounded-md border border-line bg-surface-2 px-2 py-0.5 text-[12.5px] text-fg">{lastStep.label}</span>
                 </>
               )}
@@ -97,7 +98,15 @@ export function AiMessage({ msg }: { msg: Msg }) {
         {!working ? (
           <div className="mt-3 flex items-center gap-3 text-[12px] text-muted">
             <p>
-              {sources.length ? <SourceLine source={sources[0]} /> : `Java ${VERSION} · fonte: arquivos do jogo`}
+              {researched.length && !sources.length ? (
+                <>
+                  Pesquisado em {[...new Set(researched.flatMap((a) => a.results.map((r) => new URL(r.url).hostname.replace(/^(www|m)\./, ''))))].slice(0, 3).join(', ')} · fora dos arquivos do jogo
+                </>
+              ) : sources.length ? (
+                <SourceLine source={sources[0]} />
+              ) : (
+                `Java ${VERSION} · fonte: arquivos do jogo`
+              )}
               {' · '}texto por IA a partir desses dados
             </p>
             <ShareButton question={msg.question} />
@@ -107,6 +116,17 @@ export function AiMessage({ msg }: { msg: Msg }) {
     </article>
   );
 }
+
+const STEP_TITLE: Record<string, string> = {
+  pesquisar_wiki: 'Não está nos dados do jogo. Pesquisando na Minecraft Wiki:',
+  pesquisar_web: 'Pesquisando na web:',
+};
+
+const STEP_VERB: Record<string, string> = {
+  buscar_nomes: 'Busquei nomes',
+  pesquisar_wiki: 'Pesquisei na Minecraft Wiki',
+  pesquisar_web: 'Pesquisei na web',
+};
 
 /** "Como cheguei nisso": o que a IA consultou. */
 function Steps({ msg }: { msg: Msg }) {
@@ -125,7 +145,7 @@ function Steps({ msg }: { msg: Msg }) {
             <li key={i} className="grid grid-cols-[18px_1fr] gap-x-2">
               <span className="tabular font-mono text-emerald">{i + 1}</span>
               <span>
-                <span className="text-muted">{s.name === 'buscar_nomes' ? 'Busquei nomes' : 'Consultei os dados'}:</span> “{s.query}” → <span className={s.found ? 'text-fg' : 'text-redstone-ink'}>{s.found ? s.label : 'nada encontrado'}</span>
+                <span className="text-muted">{STEP_VERB[s.name] ?? 'Consultei os dados do jogo'}:</span> “{s.query}” → <span className={s.found ? 'text-fg' : 'text-redstone-ink'}>{s.found ? s.label : 'nada encontrado'}</span>
               </span>
             </li>
           ))}

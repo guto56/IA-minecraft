@@ -61,7 +61,7 @@ export async function handleChat(req: Request, env: { key?: string; model?: stri
       tools: TOOLS,
       tool_choice: 'auto',
       temperature: 0.2,
-      max_tokens: 900,
+      max_tokens: 1600,
       stream: true,
     }),
     });

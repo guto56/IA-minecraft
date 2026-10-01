@@ -92,7 +92,7 @@ function toHistory(messages: Message[]): ChatMessage[] {
 
 /** Cards da resposta: sem repetir o mesmo resultado e sem "não entendi" (a IA explica). */
 function mergeCards(current: Answer[], incoming: Answer[]): Answer[] {
-  const key = (a: Answer) => `${a.type}:${a.text[0] ?? ''}`;
+  const key = (a: Answer) => (a.type === 'web' ? `web:${a.source}` : `${a.type}:${a.text[0] ?? ''}`);
   const seen = new Set(current.map(key));
   const out = [...current];
   for (const a of incoming) {
@@ -157,12 +157,16 @@ export const useChat = create<ChatState>()(
               if (e.type === 'text') patch((m) => ({ ...m, ai: { ...m.ai!, status: 'writing', text: m.ai!.text + e.delta } }));
               if (e.type === 'reset') patch((m) => ({ ...m, ai: { ...m.ai!, text: '' } }));
               if (e.type === 'model') patch((m) => ({ ...m, ai: { ...m.ai!, model: e.model } }));
-              if (e.type === 'tool') {
-                const found = e.run.answers.some((a) => a.type !== 'not_understood');
+              if (e.type === 'tool' && !e.run.refused) {
+                const found = e.run.found;
+                // A pesquisa achou algo: o que veio antes não respondia a pergunta e sai da tela
+                // (dados do jogo antes da wiki; wiki antes da web).
+                const origin = found ? e.run.answers.find((a) => a.type === 'web')?.origin : undefined;
+                const keep = (a: Answer) => (origin === 'wiki' ? a.type === 'web' : origin === 'web' ? a.type === 'web' && a.origin === 'web' : true);
                 patch((m) => ({
                   ...m,
-                  result: { ...m.result, answers: mergeCards(m.result.answers, e.run.answers) },
-                  ai: { ...m.ai!, steps: [...m.ai!.steps, { name: e.run.name, query: String(e.run.args.pergunta ?? e.run.args.texto ?? ''), label: e.run.label, found }] },
+                  result: { ...m.result, answers: mergeCards(m.result.answers.filter(keep), e.run.answers) },
+                  ai: { ...m.ai!, steps: [...m.ai!.steps, { name: e.run.name, query: String(e.run.args.pergunta ?? e.run.args.texto ?? e.run.args.busca ?? ''), label: e.run.label, found }] },
                 }));
               }
             },

@@ -12,6 +12,7 @@ import {
   PotionCard,
   TradesCard,
   UsesCard,
+  WebCard,
 } from './cards/OtherCards';
 
 /** Card visual de uma resposta. */
@@ -43,6 +44,8 @@ export function AnswerCard({ a, animate }: { a: Answer; animate?: boolean }) {
       return <ClarifyCard a={a} />;
     case 'not_understood':
       return <NotUnderstoodCard a={a} />;
+    case 'web':
+      return <WebCard a={a} />;
   }
 }
 

@@ -3,7 +3,7 @@
  * executa as ferramentas sobre os dados locais e repete até a IA escrever a resposta.
  */
 import type { Answer } from '../engine';
-import { runTool, type ToolRun } from './tools';
+import { newTurn, runTool, type ToolRun } from './tools';
 
 export interface ChatMessage {
   role: 'user' | 'assistant' | 'tool';
@@ -29,7 +29,7 @@ export class AgentError extends Error {
   }
 }
 
-const MAX_ROUNDS = 6;
+const MAX_ROUNDS = 8;
 const ENDPOINT = '/api/chat';
 
 interface Delta {
@@ -90,6 +90,7 @@ export interface AgentResult {
 export async function runAgent(history: ChatMessage[], question: string, onEvent: (e: AgentEvent) => void, signal?: AbortSignal): Promise<AgentResult> {
   const messages: ChatMessage[] = [...history, { role: 'user', content: question }];
   const runs: ToolRun[] = [];
+  const turn = newTurn();
   let model: string | undefined;
   let text = '';
   for (let round = 0; round < MAX_ROUNDS; round++) {
@@ -129,7 +130,7 @@ export async function runAgent(history: ChatMessage[], question: string, onEvent
       tool_calls: calls.map((c, i) => ({ id: c.id || `call_${round}_${i}`, type: 'function', function: { name: c.name, arguments: c.arguments } })),
     });
     for (const [i, c] of calls.entries()) {
-      const run = runTool(c.name, c.arguments);
+      const run = await runTool(c.name, c.arguments, turn, signal);
       runs.push(run);
       onEvent({ type: 'tool', run });
       messages.push({ role: 'tool', tool_call_id: c.id || `call_${round}_${i}`, content: run.output });

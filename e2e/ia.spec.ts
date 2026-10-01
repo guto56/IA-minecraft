@@ -73,3 +73,36 @@ test('mostra que está pensando e o botão Parar interrompe a IA', async ({ page
   await expect(page.locator('article').last()).toContainText('Resposta interrompida.');
   await expect(page.getByRole('button', { name: 'Enviar' })).toBeVisible();
 });
+
+test('sem a resposta nos dados do jogo, a IA pesquisa na wiki e mostra a fonte', async ({ page }) => {
+  const call = (name: string, args: object) => sse([{ model: 'teste/ia', choices: [{ delta: { tool_calls: [{ index: 0, id: name, function: { name, arguments: JSON.stringify(args) } }] } }] }]);
+  let web = 0;
+  await page.route('**/api/web', (route) => {
+    web++;
+    return route.fulfill({ status: 200, contentType: 'application/json', body: '{"results":[]}' });
+  });
+  await page.route('**/api/wiki?*', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ pages: [{ title: 'Tutorial:Lava farming', url: 'https://minecraft.wiki/w/Tutorial%3ALava_farming', text: 'Pointed dripstone under a lava source fills a cauldron.' }] }),
+    }),
+  );
+  await page.route('**/api/chat', (route) => {
+    const { messages } = route.request().postDataJSON() as { messages: { role: string; tool_call_id?: string }[] };
+    const last = messages[messages.length - 1];
+    if (last.role === 'user') return route.fulfill({ status: 200, contentType: 'text/event-stream', body: call('consultar_jogo', { pergunta: 'farm de lava' }) });
+    if (last.tool_call_id === 'consultar_jogo') return route.fulfill({ status: 200, contentType: 'text/event-stream', body: call('pesquisar_wiki', { busca: 'lava farm' }) });
+    return route.fulfill({ status: 200, contentType: 'text/event-stream', body: words('Segundo a Minecraft Wiki, a farm usa **Espeleotema Pontiagudo** e **Caldeirão**.') });
+  });
+  await page.goto('/');
+  await page.getByLabel('Pergunte sobre Minecraft Java 26.3').fill('como faz farm de lava?');
+  await page.keyboard.press('Enter');
+  const answer = page.locator('article').last();
+  await expect(answer).toContainText('Segundo a Minecraft Wiki');
+  await expect(answer.getByRole('region', { name: 'Pesquisado na Minecraft Wiki' })).toBeVisible();
+  await expect(answer.getByRole('link', { name: /Tutorial:Lava farming/ })).toHaveAttribute('href', 'https://minecraft.wiki/w/Tutorial%3ALava_farming');
+  await expect(answer).toContainText('Pesquisado em minecraft.wiki · fora dos arquivos do jogo');
+  // A web (paga) não é chamada quando a wiki já respondeu.
+  expect(web).toBe(0);
+});

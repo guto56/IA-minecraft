@@ -80,7 +80,14 @@ export type Answer =
   | { type: 'uses'; item: string; recipes: Recipe[]; total: number; text: string[]; source: string }
   | { type: 'list'; title: string; entries: { label: string; query: string; icon?: string; hint?: string }[]; text: string[]; source: string }
   | { type: 'clarify'; text: string[]; options: ClarifyOption[]; source: string }
-  | { type: 'not_understood'; text: string[]; suggestions: string[]; source: string };
+  | { type: 'not_understood'; text: string[]; suggestions: string[]; source: string }
+  /** Pesquisa fora dos dados do jogo (Minecraft Wiki ou web). */
+  | { type: 'web'; origin: 'wiki' | 'web'; query: string; results: WebResult[]; video?: WebResult; text: string[]; source: string };
+
+export interface WebResult {
+  title: string;
+  url: string;
+}
 
 const LEVEL_NAMES: Record<string, string> = { '1': 'Novato', '2': 'Aprendiz', '3': 'Profissional', '4': 'Especialista', '5': 'Mestre' };
 export const levelName = (l: string) => LEVEL_NAMES[l] ?? l;

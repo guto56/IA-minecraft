@@ -10,6 +10,22 @@ Assistente estilo chat para **Minecraft Java Edition 26.3** ("Wilderness Bound")
 2. A IA chama as ferramentas `consultar_jogo` e `buscar_nomes`, que rodam no navegador sobre `src/data/` (`src/ai/tools.ts`, usando o motor de `src/engine/`).
 3. O resultado das ferramentas vira card na tela e volta para a IA, que escreve a resposta curta (`src/ai/agent.ts`).
 
+### Pesquisa fora dos dados (só quando precisa)
+
+As fontes têm ordem fixa, garantida no código (`Turn` em `src/ai/tools.ts`) e não só no prompt:
+
+| Ordem | Ferramenta | Fonte | Custo |
+|---|---|---|---|
+| 1 | `consultar_jogo` | arquivos do jogo + curadoria | grátis |
+| 2 | `pesquisar_wiki` | minecraft.wiki (`/api/wiki`, API MediaWiki) | grátis |
+| 3 | `pesquisar_web` | OpenRouter web search (Exa) em minecraft.wiki, minecraft.net, YouTube e Reddit (`/api/web`) | ~US$ 0,008 por busca |
+
+- A wiki só roda depois de consultar os dados do jogo; a web só depois da wiki, e no máximo uma vez por pergunta.
+- Perguntas respondidas pelos dados do jogo não chamam wiki nem web.
+- Resultados ficam guardados no navegador por 7 dias (a mesma busca não é paga de novo).
+- Respostas pesquisadas aparecem com o card "Pesquisado na Minecraft Wiki/na web", os links, o vídeo (quando houver) e o aviso "fora dos arquivos do jogo".
+- Nomes de itens citados em inglês são trocados pelos nomes oficiais pt-BR do jar.
+
 ### Configurar a chave
 
 - **Vercel:** em *Project → Settings → Environment Variables*, crie `OPENROUTER_API_KEY` (e, se quiser trocar o modelo, `OPENROUTER_MODEL`; padrão `deepseek/deepseek-v4.1-flash`, com `google/gemini-2.5-flash` como reserva; compare modelos com `npx tsx scripts/dev/eval-models.ts <modelo...>`).
@@ -59,7 +75,7 @@ scripts/curate/        ferramenta de rascunho da curadoria (wiki → .cache)
 src/data/              JSON gerado + curated/ (farms, mobs, poções, dicas…)
 src/engine/            motor: normalização, sinônimos, intenções, entidades, respostas
 src/ai/                prompt, ferramentas e laço da IA
-api/                   função da Vercel /api/chat (proxy da OpenRouter)
+api/                   funções da Vercel: /api/chat (IA), /api/wiki (Minecraft Wiki), /api/web (busca na web)
 src/components/        chat, composer, sidebar, cards
 e2e/                   testes Playwright
 ```

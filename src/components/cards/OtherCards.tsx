@@ -8,7 +8,7 @@ import { useChat } from '../../store/chat';
 import { useAsk } from '../AskContext';
 import { ItemIcon } from '../ItemIcon';
 import { Slot } from '../Slot';
-import { IconChevron, IconPlay, IconStar } from '../Icons';
+import { IconChevron, IconExternal, IconPlay, IconStar } from '../Icons';
 import { Collapse } from '../Collapse';
 import { CardShell, IconButton } from './CardShell';
 
@@ -500,5 +500,40 @@ export function NotUnderstoodCard({ a }: { a: Extract<Answer, { type: 'not_under
         <Chip key={s} label={s} onClick={() => ask(s)} />
       ))}
     </div>
+  );
+}
+
+/* ------------------------- Pesquisa (wiki/web) ------------------------- */
+
+const hostOf = (url: string) => new URL(url).hostname.replace(/^(www|m)\./, '');
+
+export function WebCard({ a }: { a: Extract<Answer, { type: 'web' }> }) {
+  const wiki = a.origin === 'wiki';
+  return (
+    <CardShell title={wiki ? 'Pesquisado na Minecraft Wiki' : 'Pesquisado na web'} subtitle={`“${a.query}”`} icon={wiki ? 'book' : 'compass'}>
+      <div className="grid gap-3">
+        <p className="flex flex-wrap items-center gap-2 text-[13px] text-muted">
+          <Badge tone="gold">Fora dos arquivos do jogo</Badge>
+          <span>Pode descrever outra versão ou o Bedrock.</span>
+        </p>
+        {a.video ? <LiteYouTube url={a.video.url} title={a.video.title} /> : null}
+        <ul className="grid gap-1">
+          {a.results.map((r) => (
+            <li key={r.url}>
+              <a
+                href={r.url}
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-center gap-3 rounded-lg px-2 py-1.5 text-[13.5px] transition-colors duration-150 hover:bg-surface-2"
+              >
+                <span className="w-[108px] shrink-0 truncate font-mono text-[11.5px] text-muted">{hostOf(r.url)}</span>
+                <span className="min-w-0 flex-1 truncate text-fg">{r.title}</span>
+                <IconExternal width={14} height={14} className="shrink-0 text-muted transition-colors group-hover:text-fg" />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </CardShell>
   );
 }

@@ -1,16 +1,18 @@
 /**
- * Ferramentas que a IA chama. Rodam no navegador, sobre os dados extraídos do jar e a curadoria.
- * Devolvem um JSON enxuto para a IA (só fatos dos dados) e as respostas do motor para os cards.
+ * Ferramentas que a IA chama. Rodam no navegador, sobre os dados extraídos do jar e a curadoria;
+ * a wiki e a web só entram quando os dados não têm a resposta (ver `Turn`).
+ * Devolvem um JSON enxuto para a IA (só fatos) e as respostas para os cards.
  */
 import { ask } from '../engine';
 import type { Answer } from '../engine';
 import { potionLabel, levelName, stationLabel } from '../engine/answers';
 import { professionLabel } from '../engine/entities';
-import { itemName } from '../lib/kb';
+import { itemName, items } from '../lib/kb';
 import { directMaterials, materialLabel as materialName, rawMaterials } from '../lib/materials';
 import { searchEntities } from '../lib/search';
 import { KIND_LABEL as KIND_LABEL_PT } from '../lib/useSearch';
 import type { Recipe } from '../data/types';
+import { searchWeb, searchWiki, youtubeWatchUrl } from './research';
 
 const plain = (s: string) => s.replace(/\*\*/g, '');
 const pct = (c: number) => `${Math.round(c * 1000) / 10}%`;
@@ -133,7 +135,33 @@ export function factsOf(a: Answer): Record<string, unknown> {
       return { tipo: 'ambiguo', opcoes: a.options.map((o) => o.label), texto: 'Há mais de um item com esse nome. Pergunte ao usuário qual ou consulte uma das opções.' };
     case 'not_understood':
       return { tipo: 'nao_encontrado', sugestoes: a.suggestions };
+    case 'web':
+      return { tipo: a.origin === 'wiki' ? 'wiki' : 'web', busca: a.query, links: a.results.map((r) => r.title) };
   }
+}
+
+let enNames: { re: RegExp; en: string; pt: string }[] | undefined;
+
+/**
+ * Nomes oficiais em pt-BR (do jar) dos itens citados num texto em inglês da wiki/web,
+ * para a IA não traduzir nomes por conta própria.
+ */
+export function ptNamesIn(text: string, limit = 40): Record<string, string> {
+  enNames ??= Object.values(items)
+    .filter((i) => i.nameEn && i.name && i.nameEn.length > 2 && i.nameEn !== i.name)
+    .sort((a, b) => b.nameEn.length - a.nameEn.length)
+    .map((i) => ({ re: new RegExp(`\\b${i.nameEn.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}s?\\b`, 'i'), en: i.nameEn, pt: i.name }));
+  const out: Record<string, string> = {};
+  let rest = text;
+  for (const n of enNames) {
+    if (Object.keys(out).length >= limit) break;
+    if (n.re.test(rest)) {
+      out[n.en] = n.pt;
+      // Tira o nome achado para "Pointed Dripstone" não contar também como "Dripstone".
+      rest = rest.replace(new RegExp(n.re.source, 'gi'), ' ');
+    }
+  }
+  return out;
 }
 
 export interface ToolRun {
@@ -141,31 +169,131 @@ export interface ToolRun {
   args: Record<string, unknown>;
   /** Texto curto para a interface ("receita · Pistão"). */
   label: string;
-  /** Respostas do motor para virar cards. */
+  /** Respostas para virar cards. */
   answers: Answer[];
+  /** A ferramenta trouxe algo útil. */
+  found: boolean;
+  /** Recusada pela ordem das fontes (não rodou; não aparece na interface). */
+  refused?: boolean;
   /** JSON devolvido para a IA. */
   output: string;
 }
 
-export function runTool(name: string, rawArgs: string): ToolRun {
+/**
+ * O que já foi consultado nesta pergunta. Garante a ordem das fontes no código, não só no prompt:
+ * wiki só depois dos dados do jogo, web só depois da wiki e no máximo uma vez.
+ */
+export interface Turn {
+  game: boolean;
+  wiki: boolean;
+  web: number;
+}
+
+export const newTurn = (): Turn => ({ game: false, wiki: false, web: 0 });
+export const MAX_WEB_PER_TURN = 1;
+
+const refuse = (name: string, args: Record<string, unknown>, erro: string): ToolRun => ({ name, args, label: name, answers: [], found: false, refused: true, output: JSON.stringify({ erro }) });
+
+const fail = (name: string, args: Record<string, unknown>, label: string, e: unknown): ToolRun => ({
+  name,
+  args,
+  label,
+  answers: [],
+  found: false,
+  output: JSON.stringify({ erro: `a pesquisa falhou (${(e as Error).message}). Diga que não encontrei essa informação agora.` }),
+});
+
+export async function runTool(name: string, rawArgs: string, turn: Turn = newTurn(), signal?: AbortSignal): Promise<ToolRun> {
   let args: Record<string, unknown> = {};
   try {
     args = JSON.parse(rawArgs || '{}');
   } catch {
-    return { name, args, label: name, answers: [], output: JSON.stringify({ erro: 'argumentos inválidos' }) };
+    return refuse(name, args, 'argumentos inválidos');
   }
   if (name === 'consultar_jogo') {
+    turn.game = true;
     const pergunta = String(args.pergunta ?? '').slice(0, 300);
     // Sem contexto: a IA já manda a pergunta completa.
     const r = ask(pergunta);
     const t = r.traces[0];
     const label = t?.entity ? `${t.intentLabel} · ${t.entity.label}` : pergunta;
-    return { name, args, label, answers: r.answers, output: JSON.stringify({ pergunta, resultados: r.answers.map(factsOf) }) };
+    const found = r.answers.some((a) => a.type !== 'not_understood');
+    return { name, args, label, answers: r.answers, found, output: JSON.stringify({ pergunta, resultados: r.answers.map(factsOf) }) };
   }
   if (name === 'buscar_nomes') {
     const texto = String(args.texto ?? '').slice(0, 100);
     const found = searchEntities(texto, 10).map((e) => ({ nome: e.label, tipo: KIND_LABEL_PT[e.kind] ?? e.kind }));
-    return { name, args, label: `buscar "${texto}"`, answers: [], output: JSON.stringify(found.length ? { encontrados: found } : { nao_encontrado: true }) };
+    return { name, args, label: `buscar "${texto}"`, answers: [], found: found.length > 0, output: JSON.stringify(found.length ? { encontrados: found } : { nao_encontrado: true }) };
   }
-  return { name, args, label: name, answers: [], output: JSON.stringify({ erro: `ferramenta desconhecida: ${name}` }) };
+  if (name === 'pesquisar_wiki') {
+    if (!turn.game) return refuse(name, args, 'Chame "consultar_jogo" antes: os dados do jogo vêm primeiro.');
+    turn.wiki = true;
+    const busca = String(args.busca ?? '').slice(0, 120);
+    const label = `Minecraft Wiki · "${busca}"`;
+    try {
+      const pages = await searchWiki(busca, signal);
+      if (!pages.length) return { name, args, label, answers: [], found: false, output: JSON.stringify({ fonte: 'minecraft.wiki', nao_encontrado: true }) };
+      const answer: Answer = {
+        type: 'web',
+        origin: 'wiki',
+        query: busca,
+        results: pages.map((p) => ({ title: p.title, url: p.url })),
+        text: [],
+        source: pages[0].url,
+      };
+      return {
+        name,
+        args,
+        label: pages.map((p) => p.title).join(', '),
+        answers: [answer],
+        found: true,
+        output: JSON.stringify({
+          fonte: 'minecraft.wiki (pode descrever outra versão)',
+          paginas: pages.map((p) => ({ titulo: p.title, texto: p.text })),
+          nomes_oficiais_pt: ptNamesIn(pages.map((p) => p.text).join('\n')),
+        }),
+      };
+    } catch (e) {
+      if ((e as Error).name === 'AbortError') throw e;
+      return fail(name, args, label, e);
+    }
+  }
+  if (name === 'pesquisar_web') {
+    if (!turn.game) return refuse(name, args, 'Chame "consultar_jogo" antes: os dados do jogo vêm primeiro.');
+    if (!turn.wiki) return refuse(name, args, 'Chame "pesquisar_wiki" antes: a busca na web custa créditos e só vale se a wiki não tiver a resposta.');
+    if (turn.web >= MAX_WEB_PER_TURN) return refuse(name, args, 'Já pesquisei na web nesta pergunta. Responda com o que já tem ou diga que não encontrei.');
+    turn.web++;
+    const busca = String(args.busca ?? '').slice(0, 120);
+    const label = `Web · "${busca}"`;
+    try {
+      const hits = await searchWeb(busca, signal);
+      if (!hits.length) return { name, args, label, answers: [], found: false, output: JSON.stringify({ fonte: 'web', nao_encontrado: true }) };
+      const videoHit = hits.find((h) => youtubeWatchUrl(h.url));
+      const answer: Answer = {
+        type: 'web',
+        origin: 'web',
+        query: busca,
+        results: hits.map((h) => ({ title: h.title, url: h.url })),
+        video: videoHit ? { title: videoHit.title, url: youtubeWatchUrl(videoHit.url)! } : undefined,
+        text: [],
+        source: hits[0].url,
+      };
+      return {
+        name,
+        args,
+        label: `${hits.length} resultados (${[...new Set(hits.map((h) => new URL(h.url).hostname.replace(/^(www|m)\./, '')))].join(', ')})`,
+        answers: [answer],
+        found: true,
+        output: JSON.stringify({
+          fonte: 'web (pode descrever outra versão ou o Bedrock)',
+          resultados: hits.map((h) => ({ titulo: h.title, site: new URL(h.url).hostname.replace(/^www\./, ''), trecho: h.content })),
+          nomes_oficiais_pt: ptNamesIn(hits.map((h) => `${h.title}\n${h.content}`).join('\n')),
+        }),
+      };
+    } catch (e) {
+      if ((e as Error).name === 'AbortError') throw e;
+      return fail(name, args, label, e);
+    }
+  }
+  return refuse(name, args, `ferramenta desconhecida: ${name}`);
 }

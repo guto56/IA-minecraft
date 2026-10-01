@@ -212,7 +212,7 @@ export default function App() {
                   <motion.div layoutId="composer" transition={{ duration: 0.42, ease: EASE }}>
                     <Composer ref={composer} onSend={ask} />
                   </motion.div>
-                  <p className="mt-1.5 text-center text-[11.5px] text-muted">A IA só usa os dados do jogo. Se não tiver a informação, ela diz que não sabe.</p>
+                  <p className="mt-1.5 text-center text-[11.5px] text-muted">Responde com os dados do jogo. Se faltar, pesquisa na Minecraft Wiki e na web e mostra a fonte.</p>
                 </div>
               </div>
             </>
